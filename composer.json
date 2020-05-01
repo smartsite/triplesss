@@ -1,0 +1,22 @@
+{
+    "name": "smartsite/triplesss",
+    "description": "Super Simple Social",
+    "type": "package",
+    "require": {
+        "php": ">=7.2.0"
+    },
+    "license": "cc",
+    "authors": [
+        {
+            "name": "Peter Mariner",
+            "email": "smartsite99@gmail.com",
+            "homepage": "http://www.triplesss.me"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "smartsite\\triplesss\\": "src/"
+        }
+    }
+}
