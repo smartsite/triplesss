@@ -26,30 +26,41 @@ $channel = new Channel();
 $channel->setOwner($user);
 
 // New feed
+
 $feed = new Feed();
+
 $feed->setOwner($user);
 
 // Add the feed to a channel
+
 $channel->addFeed($feed);
 
 // Create a post
+
 $post = new Post();
+
 $text = new Text();
+
 $image = new Image();
 
 $post->add($text);
+
 $post->add($Image);
 
 $feed->add($post);
 
 // hide the post
+
 $post->setVisibity('me');
 
 // unhide the post
+
 $post->setVisibity('all');
 
 // like the post
+
 $reaction = new Reaction('like');
+
 $post->addReaction($user, $reaction);
 
 
