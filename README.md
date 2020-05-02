@@ -46,9 +46,11 @@ $channel->addFeed($feed);
 
 $post = new Post();
 
-$text = new Text();
+$text = new Text("Hello, Tripless!");
 
-$image = new Image();
+$imageSrc = file_get_contents("https://en.wikipedia.org/wiki/Lenna#/media/File:Lenna_(test_image).png");
+
+$image = new Image($imageSrc);
 
 $post->add($text);
 
