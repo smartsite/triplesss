@@ -128,4 +128,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Inspired by facebook's klunky, tired looking UX and how difficult Facebook and Insta are in regard to finding copntent you interacted with.
+* Inspired by facebook's klunky, tired looking UX and how difficult Facebook and Insta are in regard to finding content you engaged with.
