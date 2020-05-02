@@ -4,7 +4,7 @@ Super. Simple. Social.
 
 ## Getting Started
 
-TODO: PSR7 stuff
+TODO: Package stuff
 
 ### Prerequisites
 
