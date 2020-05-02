@@ -32,6 +32,8 @@ $channel = new Channel();
 
 $channel->setOwner($user);
 
+$channel->setName("My cool channel");
+
 ### New feed
 
 $feed = new Feed();
@@ -71,6 +73,18 @@ $post->setVisibity('all');
 $reaction = new Reaction('like');
 
 $post->addReaction($user, $reaction);
+
+### add som tags
+
+$post->addTags('lenna', 'girls', 'hat');
+
+### Update the feed
+
+$feed->update();
+
+### find stuff you're interested in
+
+$feed->findPosts('llamas', 'hats');
 
 
 ## Running the tests
