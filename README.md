@@ -1,6 +1,10 @@
 # Triplesss
 
-Super. Simple. Social.
+## Super. Simple. Social.
+
+A simple, yet reasonably well-featured social media platform which presents a RESTful API instead of a difficult to customise GUI. It means you can bolt it up to whatever front-end you like -  VueJs, React, even plain old HTML5 + pure Javascript. 
+
+Tags are integral to how Triplesss works. They present an easy way to group, categorise and search for posts that tend to get easily lost on other social platforms.
 
 ## Getting Started
 
@@ -122,6 +126,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* Inspired by facebook's klunky, tired looking UX and how difficult Facebook and Insta are in regard to finding copntent you interacted with.
