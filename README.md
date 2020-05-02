@@ -74,7 +74,7 @@ $reaction = new Reaction('like');
 
 $post->addReaction($user, $reaction);
 
-### add som tags
+### Add some tags
 
 $post->addTags('lenna', 'girls', 'hat');
 
