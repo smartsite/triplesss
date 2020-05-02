@@ -18,37 +18,52 @@ Give examples
 
 composer add smartsite/triplesss
 
-#New user
+# New user
+
 $user = new User('Fred');
 
-#New channel
+# New channel
+
 $channel = new Channel();
+
 $channel->setOwner($user);
 
-#New feed
+# New feed
+
 $feed = new Feed();
+
 $feed->setOwner($user);
 
-#Add the feed to a channel
+# Add the feed to a channel
+
 $channel->addFeed($feed);
 
-#Create a post
+# Create a post
+
 $post = new Post();
+
 $text = new Text();
 
 $image = new Image();
+
 $post->add($text);
+
 $post->add($Image);
+
 $feed->add($post);
 
-#Hide the post
+# Hide the post
+
 $post->setVisibity('me');
 
-#Unhide the post
+# Unhide the post
+
 $post->setVisibity('all');
 
-#Like the post
+# Like the post
+
 $reaction = new Reaction('like');
+
 $post->addReaction($user, $reaction);
 
 
