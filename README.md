@@ -22,7 +22,13 @@ Give examples
 
 ### Installing
 
-composer install smartsite/triplesss
+1. composer install smartsite/triplesss
+
+2. Create a new MySQL database called Triplesss
+
+3. Copy / paste tripless.sql into PHPMyAdmin to create tables under Triplesss
+
+4. Profit
 
 ### New user
 
