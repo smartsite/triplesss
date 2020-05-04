@@ -91,7 +91,7 @@ $feed->findPosts('llamas', 'hats');
 
 ## Running the tests
 
-TODO:
+easy tiger... this thing isn't even in alpha yet!
 
 ### Break down into end to end tests
 
