@@ -78,7 +78,7 @@ $post->addReaction($user, $reaction);
 
 ### Add some tags
 
-$post->addTags('lenna', 'girls', 'hat');
+$post->addTags('lenna', 'girls', 'hats');
 
 ### Update the feed
 
