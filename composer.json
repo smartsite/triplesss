@@ -1,22 +1,28 @@
 {
     "name": "smartsite/triplesss",
-    "description": "Super Simple Social",
-    "type": "package",
-    "require": {
-        "php": ">=7.2.0"
-    },
-    "license": "mit",
+    "type": "library",
+    "description": "Super. Simple. Social",
+    "keywords": ["social","network","api","social-network"],
+    "homepage": "https://triplesss.me",
+    "license": "MIT",
     "authors": [
         {
             "name": "Peter Mariner",
-            "email": "smartsite99@gmail.com",
-            "homepage": "http://www.triplesss.me"
+            "email": "pete@smartsite.com.au",
+            "homepage": "http://www.smartsite.com.au",
+            "role": "Top banana and floor sweep"
         }
     ],
-    "minimum-stability": "dev",
-    "autoload": {
-        "psr-4": {
-            "smartsite\\triplesss\\": "src/"
+    "require" : {
+        "php": ">=7.2"
+    },
+    "autoload" : {
+        "psr-0" : {
+            "Smartsite\\Triplesss" : "/"
+        },
+        "psr-4" : {
+            "Smartsite\\Triplesss\\Model\\" : "model/",
+            "Smartsite\\Triplesss\\Apil\\" : "api/"
         }
     }
 }
