@@ -22,7 +22,7 @@ Give examples
 
 ### Installing
 
-composer add smartsite/triplesss
+composer install smartsite/triplesss
 
 ### New user
 
