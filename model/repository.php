@@ -32,75 +32,7 @@ class Repository {
         $this->error = new Error;       
     }
 
-    /*
-    
-    function imageGetById(Int $id) {
-        $db = $this->db;
-        $s = 'SELECT * FROM image WHERE id='.$id;        
-        $p = $db->query($s);
-        $r = $db->fetchRow($p);
-        return $r;       
-    }
-
-    function getImageFiltered(String $tags = '', Int $user_id = -1) {
-        $db = $this->db;
-        // first, count how many tags there are 
-       
-        $s = 'SELECT * FROM image WHERE ';
-        $w = $this->tagSelect($tags);
-
-        if($user_id > -1) {
-            $w.= ' AND creator_id='.$user_id;
-        }        
-        $q = $s.$w;
-        //echo $q;
-        $p = $db->query($q);
-        $r = $db->fetchAll($p);
-        return $r;
-    }
-
-    function textAdd(String $text, Int $user_id, String $tags) {
-        $db = $this->db;
-        $text_id = 0;
-        $s = 'INSERT INTO text SET creator_id='.$user_id.', content='.$text.', text_id="'.$text_id.'", created="'.date("Y-m-d H:i_s").'", tags='.$tags;
-        echo $s;
-        $r = $db->query($s);
-        $db->freeResult($r);
-        if($db->sql_error()) {
-            return $db->sql_error();
-        } else {
-            return true;
-        }
-    }
-
-    function textGetById(Int $id) {
-        $db = $this->db;
-        $s = 'SELECT * FROM text WHERE id='.$id;        
-        $p = $db->query($s);
-        $r = $db->fetchRow($p);
-        return $r;       
-    }
-
-    function getTextFiltered(String $tags = '', Int $user_id = -1) {
-        $db = $this->db;
-        // first, count how many tags there are 
-       
-        $s = 'SELECT * FROM text WHERE ';
-        $w = $this->tagSelect($tags);
-
-        if($user_id > -1) {
-            $w.= ' AND creator_id='.$user_id;
-        }        
-        $q = $s.$w;
-        //echo $q;
-        $p = $db->query($q);
-        $r = $db->fetchAll($p);
-        return $r;
-    }
-
-    */
-
-    function imageAdd(String $link, String $path, String $type, String $mime, Int $userId, String $tags='') {
+    Public function imageAdd(String $link, String $path, String $type, String $mime, Int $userId, String $tags='') {
         $db = $this->db;
         $s = 'INSERT INTO `image` SET `link`="'.$link.'", `path`="'.$path.'", `created`="'.date("Y-m-d H:i_s").'", `type`="'.$type.'", `mime_type`="'.$mime.'", `creator_id`='.$userId.', `tags`="'.$tags.'"';
         $r = $db->query($s);
@@ -113,7 +45,7 @@ class Repository {
         }
     }
 
-    function textAdd(String $text, Int $user_id, String $tags) {
+    Public function textAdd(String $text, Int $user_id, String $tags) {
         $db = $this->db;
         $text_id = 0;
         $s = 'INSERT INTO `text` SET `creator_id`='.$user_id.', `content`="'.$text.'", `text_id`="'.$text_id.'", `created`="'.date("Y-m-d H:i_s").'", `tags`="'.$tags.'"';
@@ -129,7 +61,7 @@ class Repository {
 
     
 
-    function assetGetById(Int $id, String $asset_type) {
+    Public function assetGetById(Int $id, String $asset_type) {
         
         $this->checkAssetType($asset_type);        
         $db = $this->db;
@@ -139,7 +71,7 @@ class Repository {
         return $r;       
     }
 
-    function getAssetFiltered(String $tags = '', Int $user_id = -1, String $asset_type) {
+    Public function getAssetFiltered(String $tags = '', Int $user_id = -1, String $asset_type) {
         
         $this->checkAssetType($asset_type);        
         $db = $this->db;
@@ -158,7 +90,7 @@ class Repository {
         return $r;
     }
 
-    function getPostById(Int $id) {
+    Public function getPostById(Int $id) {
         $db = $this->db;
         $images = [];
         $texts = [];
@@ -203,12 +135,12 @@ class Repository {
         return $assets;
     }
 
-    function addPost(Post $post) {
+    Public function addPost(Post $post) {
         $items = $post->getItems();
     }
 
 
-    function getVisibilities() {
+    Public function getVisibilities() {
         $db = $this->db;
         $s = 'SELECT * FROM visibility';
         $p = $db->query($s);
@@ -216,7 +148,7 @@ class Repository {
         return $r;
     }
 
-    private function tagSelect($tags) {
+    Private function tagSelect($tags) {
         $w = '1 = 1 ';
         if($tags != '') {
             $w.= ' AND ';
@@ -237,7 +169,7 @@ class Repository {
         return $w;
     }
 
-    private function checkAssetType(String $asset_type) {
+    Private function checkAssetType(String $asset_type) {
         if(in_array($asset_type, ['text', 'image'])) {
             return true;     
         }

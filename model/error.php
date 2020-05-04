@@ -3,10 +3,10 @@ namespace  Triplesss\error;
 
 class Error {
     
-    Static $message = '';
-    Static $code = -1;
-    Static $type = null;
-    Static $level = 0;
+    Public $message = '';
+    Public $code = -1;
+    Public $type = null;
+    Public $level = 0;
     
     function __construct() {
         

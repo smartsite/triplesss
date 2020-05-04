@@ -1,10 +1,12 @@
 <?php
-namespace gallery;
+namespace Triplesss\gallery;
+
+use Triplesss\image\Image as Image; 
 
 class Gallery extends Image {
     
-    Static $id = -1;
-    Static $images = [];
+    Public $id = -1;
+    Public $images = [];
        
     function __construct() {
        

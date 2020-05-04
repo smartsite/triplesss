@@ -3,8 +3,8 @@ namespace  Triplesss\channel;
 
 class Channel {
     
-    Static $id = 0;
-    Static $subscribers=  [];
+    Public $id = 0;
+    public $subscribers = [];
     
     
     function __construct($subscriber) {

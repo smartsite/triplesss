@@ -3,9 +3,9 @@ namespace  Triplesss\post;
 
 class Comment extends Post {
     
-    Static $id = 0;
-    Static $text = '';
-    Static $image = '';          
+    Public $id = 0;
+    Public $text = '';
+    Public $image = '';          
     
     function __construct($content) {
         $this->Content = $content;

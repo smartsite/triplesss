@@ -3,8 +3,8 @@ namespace  Triplesss\collection;
 
 class Collection implements interfaceCollection {
     
-    Static $id = 0;
-    Static $items = [];
+    Public $id = 0;
+    Public $items = [];
       
     
     function __construct() {

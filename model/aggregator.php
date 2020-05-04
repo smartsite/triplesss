@@ -4,12 +4,12 @@ use Triplesss\feed\Feed;
 
 class Aggregator extends Collection {
     
-    Static $id = 0;
-    Static $feeds = [];
+    Public $id = 0;
+    Public $feeds = [];
     
     
-    function __construct($aggregator) {
-        $this->Aggregator = $aggregator;
+    function __construct() {
+       
     }
 
     function setId(Int $id) {
