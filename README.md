@@ -144,4 +144,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Inspired by facebook's klunky, tired looking UX and how difficult Facebook and Insta are in regard to finding content you engaged with.
+* Inspired by facebook's klunky, tired looking UX and how difficult Facebook and Insta are in regard to finding content you engaged with as opposed to getting bombarded with content that makes to want to gouge your eyes out.
+
+* Motivated by Getstream's desire to try and charge you for something you can easily do yourself 
