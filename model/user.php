@@ -2,8 +2,7 @@
 namespace  Triplesss\user;
 
 use \Triplesss\connection\Connection;
-use \Triplesss\notification\interfaceNotification;
-
+use \Triplesss\notification\Notification;
 
 class User {
     
@@ -22,10 +21,18 @@ class User {
     }
 
     public function addBuddy(User $user) {
+        /**
+         *   An actual  freind         
+         **/
+
         $this->addConnection($user, 1);
     }
 
     private function addConnection(User $user, $type) {
+         /**
+         *   Some other connection         
+         **/
+        
         $connection = new Connection($type);
         $connection->connect($this, $user, 1);
     }

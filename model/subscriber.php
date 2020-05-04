@@ -3,7 +3,7 @@ namespace Triplesss\user;
 
 class Subscriber extends User {
     
-    Static $id = 0;
+    Public $id = 0;
     
     
     function __construct($subscriber) {

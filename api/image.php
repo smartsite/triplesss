@@ -1,15 +1,11 @@
 <?php
 
-//require_once('auth.php');
+
 require_once('../model/image.php');
 use Triplesss\image\Image as Image;
+use Triplesss\visibility as Visibility;
 
-//header('Content-Type: application/json');
-
-//$post = $_POST;
-//$get = $_GET;
-
-// GET to read, POST to upload
+header('Content-Type: application/json');
 
 $content = trim(file_get_contents("php://input"));
 $postObj = json_decode($content);

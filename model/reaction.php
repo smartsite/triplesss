@@ -22,7 +22,7 @@ class Reaction {
             1 => 'meh',    
             2 => 'like',
             3 => 'love',
-            27 => 'ghasdghsghsdghsdgh',
+            666 => 'satan loves you',
         ];
     }
 

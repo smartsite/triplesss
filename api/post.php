@@ -1,8 +1,5 @@
 <?php
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 require '../model/auth.php';
 require '../model/image.php';
 require '../model/text.php';
@@ -13,6 +10,7 @@ require '../model/repository.php';
 use Triplesss\repository\Repository as Repository;
 use Triplesss\post\Post as Post;
 use Triplesss\content\Content as Content;
+use Triplesss\visibility\Visibility as Visibility;
 
 /**
  *   A Post is an object containing AT LEAST one Content object. 
@@ -27,17 +25,8 @@ use Triplesss\content\Content as Content;
 
 header('Content-Type: application/json');
 
-//$post = $_POST;
-//$get = $_GET;
-
-// GET to read, POST to upload
-
-
 $content = trim(file_get_contents("php://input"));
 $postObj = json_decode($content);
-
-//$img->setUserId($postObj->userid);
-//$img->setBaseFolder($postObj->basefolder);
 
 $im = $postObj->image;
 $txt = $postObj->comment;
@@ -53,7 +42,6 @@ $postContent->setContentType('text');
 $postContent->setContent($txt);
 $postContent->write();
 $post->addContent($postContent);
-//$textContent = $postContent;
 
 $postContent = new Content();
 $postContent->setUserId($user_id);
@@ -61,10 +49,7 @@ $postContent->setContentType('image');
 $postContent->setContent($im);
 $postContent->write();
 $post->addContent($postContent);
-//$imageContent = $post;
 
 $content = $post->getContent();
 
-
-
-//echo json_encode(['text' => $textContent, 'image' => $imageContent]);
+echo json_encode(['text' => $textContent, 'image' => $imageContent]);

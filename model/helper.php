@@ -1,5 +1,5 @@
 <?php
-namespace helper;
+namespace Triplesss\helper;
 
 class Helper  {
     
