@@ -1,15 +1,22 @@
 <?php
+
 namespace Triplesss\post;
 
 use Triplesss\repository\Repository;
 use Triplesss\content\Content;
+use Triplesss\visibility\Visibility;
 use Triplesss\reaction\Reaction;
 use Triplesss\user\User;
 use Triplesss\tag\Tag;
 
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 class Post {
     
     Public $id = 0;
+    Public $postId;
     //Public $userId;
     Public $contentType;
     Public $text = '';
@@ -20,6 +27,7 @@ class Post {
     Public $tags = null;
     Public $reactions = [];
     Public $repository;
+    Public $visibility;
            
     
     function __construct($owner) {
@@ -33,6 +41,14 @@ class Post {
 
     function getId() :Int {
         return $this->id;
+    }
+
+    function getPostId() :String {
+        return $this->postId;
+    }
+
+    public function getOwner() : Int {
+        return $this->owner;
     }
 
     function addContent(Content $content) {
@@ -68,8 +84,22 @@ class Post {
         //return ['text' => $this->text, 'images' => $this->images];       
     }
 
+    public function add() {
+        $postId = $this->repository->addPost($this);
+        $this->postId = $postId;
+        return $postId;        
+    }
+
     public function getItems() {
         return $this->items;
+    }
+
+    public function setVisibility(Visibility $v) {
+        $this->visibility = $v;
+    }
+
+    public function getVisibility() : Visibility {
+        return $this->visibility;
     }
 
     public function render() {

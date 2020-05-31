@@ -7,13 +7,13 @@ use Triplesss\repository\Repository as Repository;
 class Visibility {
     
     Private $repository;
-    Static $level = 0;
-    Static $levels = [];
+    Public $level = 0;
+    Public $levels = [];
           
     
-    function __construct($feed) {       
+    function __construct() {  //removed feed param     
         $this->repository = new Repository();
-        $this->Feed = $feed;
+        // /$this->Feed = $feed;
         $this->levels = $this->repository->getVisibilities();
     }
 

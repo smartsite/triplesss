@@ -6,8 +6,11 @@ require_once('db.php');
 require_once('error.php');
 
 use Triplesss\error\Error as Error;
+use Triplesss\feed\Feed as Feed;
 use Triplesss\post\Post as Post;
 use Triplesss\db\DB as Db;
+use Triplesss\content\content as Content;
+use Triplesss\visibility\Visibility as Visibility;
 
 /**
  * 
@@ -37,12 +40,14 @@ class Repository {
         $s = 'INSERT INTO `image` SET `link`="'.$link.'", `path`="'.$path.'", `created`="'.date("Y-m-d H:i_s").'", `type`="'.$type.'", `mime_type`="'.$mime.'", `creator_id`='.$userId.', `tags`="'.$tags.'"';
         $r = $db->query($s);
         //$db->freeResult($r);
-       
-        if($db->sql_error()) {
-            return $db->sql_error();
+        if($r) {
+            $id = $db->lastInsertedID();
+            $s = 'INSERT INTO content SET content_id='.$id.', content_type="image"';
+            $in =  $db->query($s);
+            return ["id" => $id];
         } else {
-            return ["id" => $db->lastInsertedID()];
-        }
+            return $db->sql_error();
+        }     
     }
 
     Public function textAdd(String $text, Int $user_id, String $tags) {
@@ -52,11 +57,14 @@ class Repository {
         $r = $db->query($s);
         //$db->freeResult($r);
        
-        if($db->sql_error()) {
-            return $db->sql_error();
+        if($r) {
+            $id = $db->lastInsertedID();
+            $s = 'INSERT INTO content SET content_id='.$id.', content_type="text"';
+            $in =  $db->query($s);
+            return ["id" => $id];
         } else {
-            return ["id" => $db->lastInsertedID()];
-        }
+            return $db->sql_error();
+        }  
     }
 
     
@@ -90,19 +98,12 @@ class Repository {
         return $r;
     }
 
-    Public function getPostById(Int $id) {
-        $db = $this->db;
-        $images = [];
-        $texts = [];
-
-        $s = 'SELECT * FROM post 
-                LEFT JOIN content_post ON post.content_post_id = content_post.post_id 
-                JOIN content ON content.content_id = content_post.content_id 
-                LEFT JOIN image ON content.content_type = "image" AND image.id = content_post.content_id 
-                LEFT JOIN text ON content.content_type = "text" AND text.id = content_post.content_id
-                WHERE post.post_id='.$id;
-        $p = $db->query($s);
-        $r = $db->fetchAll($p);
+    //Public function getPostById(Int $id) {
+    Public function getPostById(String $id) {
+       
+        $r = [];
+        $r =  array_merge($r, $this->getPostAsset('image', $id));
+        $r = array_merge($r, $this->getPostAsset('text', $id));  
 
         $assets = array_map(function($post_item) {
          
@@ -110,6 +111,7 @@ class Repository {
                
                return [
                     'owner' => $post_item['owner'], 
+                    'content_type' => $post_item['content_type'], 
                     'text_id' => $post_item['text_id'], 
                     'content' => $post_item['content'], 
                     'tags' =>    $post_item['tags'], 
@@ -122,6 +124,7 @@ class Repository {
               
                 return [
                     'owner' => $post_item['owner'], 
+                    'content_type' => $post_item['content_type'], 
                     'link' => $post_item['link'], 
                     'path' => $post_item['path'], 
                     'tags' =>    $post_item['tags'], 
@@ -135,8 +138,70 @@ class Repository {
         return $assets;
     }
 
+    Public function getPostAsset(String $type, String $post_id) {
+
+        if($this->checkAssetType($type)) {
+            $db = $this->db;
+            $s = 'SELECT * FROM content_post 
+                    JOIN post ON content_post.post_id = post.id 
+                    JOIN '.$type.' ON '.$type.'.id = content_post.content_id AND content_post.content_type="'.$type.'"   
+                    WHERE post.post_id="'.$post_id.'"';            
+          
+            $p = $db->query($s);
+            $r = $db->fetchAll($p);
+            return $r; 
+        }  
+    }
+
     Public function addPost(Post $post) {
+        // gets all the post items and add them to the post table
+        // first, insert ths post
+        $db = $this->db;
+        $owner = $post->getOwner();
+        $post_id = $this->newPostId();
+        $s = 'INSERT INTO post SET owner='.$owner.', post_id="'.$post_id.'", title=""';
+        $db->query($s);
+        $p_id = $db->lastInsertedID();
         $items = $post->getItems();
+
+        array_map(function(Content $item) use($db, $p_id) {
+            $id = $item->getContentId();
+            $content_type = $item->getContentType();
+            $qry = 'INSERT INTO content_post SET post_id='.$p_id.', content_id='.$id.', content_type="'.$content_type.'"';
+            $r = $db->query($qry);           
+        }, $items);  
+        
+        return $post_id;
+    }  
+    
+    Public function addPostToFeed(Post $post, Feed $feed) {
+        $db = $this->db;
+        //$p_id = $post->getId();
+        $p_id = $post->getPostId();
+        $f_id = $feed->getId();
+        $id = $this->newPostId();
+        $visibility = $post->getVisibility()->getLevel();
+        $qry = 'INSERT INTO feed_post SET id="'.$id.'", post_id="'.$p_id.'", feed_id='.$f_id.', visibility='.$visibility;
+        //echo $qry;
+        $p = $db->query($qry);   
+       if($p) {
+            return $db->lastInsertedID();
+       } else {
+            return $db->sql_error();
+       }
+    }
+
+    Public function getFeedPosts(Feed $feed) {
+        
+        $db = $this->db;
+        $s = 'SELECT post_id FROM feed_post WHERE feed_id='.$feed->id;
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+
+        $posts = array_map(function($p){          
+            return $this->getPostById($p['post_id']);
+        }, $r);
+        return $posts;
     }
 
 
@@ -177,6 +242,11 @@ class Repository {
         $this->error->setMessage('Invalid asset type');
         $this->error->setCode(50);
         return $this->error;        
+    }
+
+    Private function newPostId() :String {
+        $postId = bin2hex(openssl_random_pseudo_bytes(32));
+        return $postId;
     }
 
 }   

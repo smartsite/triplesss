@@ -16,59 +16,75 @@ class content {
     Public $repository;
     Public $tags;
     Public $userId;
+    Public $baseFolder;
+    Public $contentId;
           
     
     function __construct() {
         $this->repository = new Repository();
     }
 
-    function setId($id) {
+    Public function setId($id) {
         $this->id = $id;
     }
 
-    function getId() :Int {
+    Public function getId() :Int {
         return $this->id;
     }
 
-    function setUserId(Int $user_id) {
+    Public function setUserId(Int $user_id) {
         $this->userId = $user_id;
     }
 
-    function getUserId() : Int {
+    Public function getUserId() : Int {
         return $this->user_id;
     }
 
-    function setContentType($contentype) {
+    Public function setContentType($contentype) {
         $this->contentType = $contentype;
     }
 
-    function getContentType() {
+    Public function getContentId() : Int{
+        $idArray = $this->contentId;
+        return $idArray['id'];
+    }
+
+    Public function setBaseFolder(String $folder) {
+        $this->baseFolder = $folder;
+    }
+
+    Public function getContentType() {
         return $this->contentType;
     }
 
-    function setContent($content) {
+    Public function setContent($content) {
         $this->content = $content;        
     }
 
-    function getContent(Int $id) {
+    Public function getContent(Int $id) {
         
         //return $this->content;
     }
 
-    function write() {
+    Public function write() {
+        $id = -1;
         if($this->contentType == 'image') {
             $im = new Image();
-            $im->setBaseFolder('../storage');
+            $im->setBaseFolder($this->baseFolder);
             $im->setUserId($this->userId);
             $stored = $im->add($this->content);
-            return $this->repository->imageAdd($stored['name'], $stored['folder'], $stored['type'], $stored['mime_type'], $this->userId, '');           
+            // This is the database insert ID
+            $id = $this->repository->imageAdd($stored['name'], $stored['folder'], $stored['type'], $stored['mime_type'], $this->userId, '');           
         }
 
         if($this->contentType == 'text') {
             $txt = new Text();
             $txt->setText($this->content);
-            return $this->repository->textAdd($this->content, $this->userId, '');           
+            // This is the database insert ID
+            $id = $this->repository->textAdd($this->content, $this->userId, '');           
         }
+        $this->contentId = $id;
+        return $id;
     }
 
 
