@@ -22,7 +22,13 @@ Give examples
 
 ### Installing
 
-composer install smartsite/triplesss
+1. composer install smartsite/triplesss
+
+2. Create a new MySQL database called Triplesss
+
+3. Copy / paste tripless.sql into PHPMyAdmin to create tables under Triplesss
+
+4. Profit
 
 ### New user
 
@@ -91,7 +97,7 @@ $feed->findPosts('llamas', 'hats');
 
 ## Running the tests
 
-TODO:
+easy tiger... this thing isn't even in alpha yet!
 
 ### Break down into end to end tests
 
@@ -144,4 +150,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Inspired by facebook's klunky, tired looking UX and how difficult Facebook and Insta are in regard to finding content you engaged with.
+* Inspired by facebook's klunky, tired looking UX and how difficult Facebook and Insta are in regard to finding content you engaged with as opposed to getting bombarded with content that makes to want to gouge your eyes out.
+
+* Motivated by Getstream's desire to try and charge you for something you can easily do yourself 
