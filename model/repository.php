@@ -8,6 +8,8 @@ require_once('error.php');
 use Triplesss\error\Error as Error;
 use Triplesss\feed\Feed as Feed;
 use Triplesss\post\Post as Post;
+use Triplesss\user\User as User;
+use Triplesss\filter\Filter as Filter;
 use Triplesss\db\DB as Db;
 use Triplesss\content\content as Content;
 use Triplesss\visibility\Visibility as Visibility;
@@ -173,6 +175,13 @@ class Repository {
         
         return $post_id;
     }  
+
+    Public function editPost(Post $post, String $text, Image $image) {
+        $db = $this->db;
+        $owner = $post->getOwner();
+        // basically we just need to do an update on the text in the text table if it's not empty,
+        // and update the image if a replacement has been uploaded
+    }
     
     Public function addPostToFeed(Post $post, Feed $feed) {
         $db = $this->db;
@@ -184,17 +193,23 @@ class Repository {
         $qry = 'INSERT INTO feed_post SET id="'.$id.'", post_id="'.$p_id.'", feed_id='.$f_id.', visibility='.$visibility;
         //echo $qry;
         $p = $db->query($qry);   
-       if($p) {
+        if($p) {
             return $db->lastInsertedID();
-       } else {
+        } else {
             return $db->sql_error();
-       }
+        }
     }
 
-    Public function getFeedPosts(Feed $feed) {
+    Public function getFeedPosts(Feed $feed, Filter $filter=null) {
         
         $db = $this->db;
         $s = 'SELECT post_id FROM feed_post WHERE feed_id='.$feed->id;
+        if($filter) {
+            if($filter->type == 'userid' && $filter->userid) {
+                $s = 'SELECT feed_post.post_id FROM feed_post JOIN post ON post.post_id = feed_post.post_id 
+                WHERE feed_id='.$feed->id.' AND post.owner='.$filter->userid;
+            }           
+        }
         $p = $db->query($s);
         $r = $db->fetchAll($p);
 
@@ -204,8 +219,185 @@ class Repository {
         return $posts;
     }
 
+    
+    public function checkUserName(String $username) {
+        $db = $this->db;
+        $s = 'SELECT user_name FROM user WHERE user_name="'.$username.'"';
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        return count($r) > 0;        
+    }
 
-    Public function getVisibilities() {
+    public function temporaryPassword(Int $length = 10) :String {
+        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $count = mb_strlen($chars);
+    
+        for ($i = 0, $result = ''; $i < $length; $i++) {
+            $index = rand(0, $count - 1);
+            $result .= mb_substr($chars, $index, 1);
+        }    
+        return $result;
+    }
+
+    public function addUser(String $username) {
+        $db = $this->db;
+        $temppwd = $this->temporaryPassword();
+        $qry = 'INSERT INTO user SET user_name="'.$username.'", first_name="", last_name="", password="'.$temppwd.'"';
+        $p = $db->query($qry); 
+        if($p) {
+            return $db->lastInsertedID();
+        } else {
+            return $db->sql_error();
+        }  
+    }
+
+    public function getUserId(String $username) {
+        $db = $this->db;
+        $s = 'SELECT id FROM user WHERE user_name="'.$username.'" LIMIT 1';
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        if($r) {
+            return $r[0]['id'];
+        } else {
+            return -1;
+        }       
+    }
+
+    public function deleteUser(User $user) {
+        return true;
+    }
+
+    public function updateUser(Array $details) {
+        $db = $this->db;
+        $username = $details['user_name'];
+        $s = 'UPDATE user SET ';
+        
+        $q = array_map(function($d, $k) {
+            return '`'.$k.'`="'.$d.'"';
+        }, $details, array_keys($details));
+        $s.= implode(',', $q);
+        $s.= ' WHERE user_name="'.$username.'"';
+        $p = $db->query($s);
+        return $p;
+    }
+
+    public function verifyUser(String $key) {
+        $db = $this->db;
+        $s = 'SELECT id, user_name FROM user WHERE reg_link LIKE "%'.$key.'%"';
+        $p = $db->query($s);
+        $r = $db->fetchAssoc($p);
+        if($r) {
+            $id = $r['id'];
+            $s = 'UPDATE user SET active=1 WHERE id='.$id;
+            $p = $db->query($s);
+        }
+        return $r;
+    }
+
+    public function userLogin($username, $password, $hashed = false) {
+        $db = $this->db;
+        $error = [];
+        $userObj = $this->allUserDetails($username);
+        if($hashed) {
+            $password = hash ("sha256", $password);
+        }
+        
+        if($userObj){
+            if(strtoupper($userObj['password']) == strtoupper($password)) {
+                // winner, winner chicken dinner!
+               
+                $session_id =  $this->getSession();
+                $_SESSION['username'] = $username;
+                $expiry = time() + (1 * 1 * 5 * 60);  // 1 days x 24 hours x 60 mins x 60 secs ( 5 mins for testing !! )
+                $_SESSION['expires'] =  $expiry;
+                setcookie("userID", $userObj['id'],  $expiry, "/" );
+                setcookie("userName", $username,  $expiry, "/" );
+                $db->query("DELETE FROM session WHERE user_id='".$userObj['id']."'"); // clean up an old sessions for this user
+                $db->query("INSERT INTO session VALUES('".$session_id."', '".$userObj['id']."', '".$expiry."')");
+                $error['message'] = "logged in";
+                $error['username'] = $username;
+                $error['success'] = "true";
+                $this->failed_logins = 0;
+                
+            }else{
+                //echo "That password's wrong, baby!";
+                $error['message'] = "Incorrect password";
+                $error['success'] = "false";
+                //$this->failed_logins++;
+            }
+        }else{
+            // no result... that's bad!
+            $error['message'] = "Unknown user";
+            $error['success'] = "false";
+        }
+        return $error;
+    }
+
+    public function isUserLoggedIn() {
+        // first check cookie
+        $loggedIn = false;
+        $db = $this->db;     
+        if(!isset( $_COOKIE['userID'])){
+            // if no cookie, then check DB for non-expired session
+            if(isset($_COOKIE['PHPSESSID'])){
+                $sid = $_COOKIE['PHPSESSID'];
+                $result = $db->query("SELECT * FROM session WHERE session_id = '".$sid."'");
+                $db_session = $db->fetchAssoc( $result );
+                if( $db_session['expires'] > time()){
+                    //echo "Is good!";
+                    $loggedIn = true;
+                }
+            }    
+        }else{
+            $loggedIn = true;
+        }
+        return $loggedIn;
+    } 
+
+    public function userLogout($username) {
+        $db = $this->db;
+        $s = 'DELETE FROM session WHERE user_id='.$this->getUserId($username);
+        $p = $db->query($s);
+        if($p) { 
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function generateRegisterLink($username, $from, $reply) {
+        $db = $this->db;
+        $key = $this->randomString(12);
+        $link = gethostname().'/user_register.php?key='.$key;
+        $s = 'UPDATE user SET reg_link="/user_register.php?key='.$key.'" WHERE user_name="'.$username.'"';
+        $p = $db->query($s);
+        if($p) {
+            // send email;
+            $this->sendRegEmail($username, $link, $from, $reply);
+        }
+    }
+
+    
+
+    public function getUsers(Filter $filter, Bool $safe) {
+        $db = $this->db;
+        if($safe) {
+            $s = 'SELECT user_name, first_name, last_name, last_login, is_logged_in, user_level, active FROM users';
+        } else {
+            $s = 'SELECT * FROM users';
+        }
+       
+        if($filter->getType() == 'range') {
+            $range = $filter->getRange();
+            $s.= ' LIMIT '.$range[1].' OFFSET '.$range[0]; 
+        }
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        return $r;
+    }
+
+
+    public function getVisibilities() {
         $db = $this->db;
         $s = 'SELECT * FROM visibility';
         $p = $db->query($s);
@@ -213,7 +405,26 @@ class Repository {
         return $r;
     }
 
-    Private function tagSelect($tags) {
+    private function allUserDetails($username = '', $userid = -1) {
+        $db = $this->db;
+        $s = 'SELECT * FROM user WHERE ';
+        if($username != '') {
+            $s.= ' user_name="'.$username.'" ';
+        } elseif($userid != -1) {
+            $s.= ' id="'.$userid.'" ';
+        } else {
+            $s.= ' user_name="'.$username.'" AND id="'.$userid.'"';
+        }
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        if($r) {
+            return $r[0]; 
+        } else {
+            return false;
+        }
+    }
+
+    private function tagSelect($tags) {
         $w = '1 = 1 ';
         if($tags != '') {
             $w.= ' AND ';
@@ -234,7 +445,7 @@ class Repository {
         return $w;
     }
 
-    Private function checkAssetType(String $asset_type) {
+    private function checkAssetType(String $asset_type) {
         if(in_array($asset_type, ['text', 'image'])) {
             return true;     
         }
@@ -244,9 +455,58 @@ class Repository {
         return $this->error;        
     }
 
-    Private function newPostId() :String {
+    private function newPostId() :String {
         $postId = bin2hex(openssl_random_pseudo_bytes(32));
         return $postId;
     }
+
+    private function randomString(Int $length) :String {
+        $a = array_map(function($c) {
+            return chr($c);
+        }, array_merge(range(97, 97+25), range(65, 65+25)));        
+        
+        $k = [];
+        
+        for($i=0; $i<$length; $i++) {
+            $k[] = $a[rand(0, 51)];
+        }        
+        
+        return implode('', $k);
+    }
+
+    private function sendRegEmail($username, $link, $from, $reply) {
+        $db = $this->db;
+        $s = 'SELECT first_name, email FROM user WHERE user_name="'.$username.'" LIMIT 1';
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        if($p) {
+            $firstname = $r[0]['first_name'];
+            $email = $r[0]['email'];
+        }
+        $subject = "Confirm your registration";
+        $msg = 'Dear '.$firstname.', thanks for registering. Please click or tap on this link</a> to confirm your registration. http://'.$link;
+        $headers = 'From: '.$from. "\r\n" .
+                    'Reply-To:' .$reply. "\r\n" .
+                    'X-Mailer: PHP/' . phpversion();
+        return mail($email, $subject, $msg, $headers);
+    }
+
+
+    private function getSession(){
+        $sessionId = null;
+        
+        if(!session_id()){
+            session_start();
+            session_regenerate_id();
+            $sessionId = session_id();
+        }
+        return $sessionId;
+    }
+
+    private function clearSession(){
+        session_unset(); 
+        session_destroy(); 
+    }
+
 
 }   

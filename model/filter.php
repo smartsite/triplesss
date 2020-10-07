@@ -7,8 +7,16 @@ use Triplesss\tag\Tag as Tag;
 
 class Filter { 
 
+    /**
+     *  Types: tags, limit, range, user  
+     * 
+     */
+    
     Public $type;
     Public $tags;
+    Public $args;
+    Public $range;
+    Public $userid;
     
     function __construct() {
        
@@ -31,6 +39,22 @@ class Filter {
 
     public function getType() {
         return $this->type;
+    }
+
+    public function setRange($begin, $end) {
+        $this->range = [$begin, $end];
+    }
+
+    public function getRange() :Array {
+        return $this->range;
+    }
+
+    public function setUserid($userid) {
+        $this->userid = $userid;
+    }
+
+    public function getUserid() :Int {
+        return $this->userid;
     }
 
 

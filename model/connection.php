@@ -44,15 +44,12 @@ class Connection  {
         return $this->to;
     }
 
-
     private function setFrom(User $user) {
         $this->from = $user;
     }
 
     private function setTo(User $user) {
         $this->to = $user;
-    }
-
-    
+    }    
 
 }   

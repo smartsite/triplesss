@@ -7,7 +7,7 @@ require '../model/post.php';
 require '../model/feed.php';
 require '../model/content.php';
 require '../model/visibility.php';
-require '../model/repository.php';
+//require '../model/repository.php';
 
 
 use Triplesss\feed\Feed as Feed;
@@ -70,8 +70,5 @@ $post->setVisibility($v);
 $id = $post->add();
 $feed->addPost($post);
 echo json_encode(['postId' => $id]);
-//$imageContent = $postContent;
 
-//$content = $post->getContent();
-//echo json_encode($content);
-//echo json_encode($image_id);
+

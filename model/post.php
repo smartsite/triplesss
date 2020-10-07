@@ -90,6 +90,12 @@ class Post {
         return $postId;        
     }
 
+    public function edit(String $text, Image $image) { 
+        // TODO: handle more than one image :(
+        $status = $this->repository->editPost($this, $text, $image);
+        return $status;
+    }
+
     public function getItems() {
         return $this->items;
     }

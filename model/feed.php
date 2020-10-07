@@ -3,7 +3,6 @@ namespace  Triplesss\feed;
 
 use Triplesss\repository\Repository;
 use Triplesss\post\Post;
-use Triplesss\filter\Filter;
 
 class Feed {
     
@@ -17,7 +16,7 @@ class Feed {
     function __construct() {
         $this->repository = new Repository();
         $this->range = [0,100];
-        $this->sort_by = 'date, desc';
+        $this->sort_by = 'date_desc';
     }
 
     function setId($id) {
@@ -39,26 +38,30 @@ class Feed {
 
     public function getPosts() {
         $this->posts = $this->repository->getFeedPosts($this);
-        $sort_terms = explode(",", $this->sort_by);
+        $sort_terms = explode("_", $this->sort_by);
         $sort_term = $sort_terms[0];
         $sort_order = "desc";
         $range = $this->range;
 
-        $posts = [];
-        if($sort_terms[1]) {
-            $sort_order = $sort_terms[1];
+        $posts = [];       
+       
+        if($sort_term[1]) {
+            $sort_order = $sort_term[1];
         }
+        
         //TODO: properly implement sort terms, e.g. popularity, relevance
-
+                  
         if($this->sort_by == "date, desc") {
             $posts = array_reverse($this->posts);
         } else {
             $posts = $this->posts;
         }
-        
-        $p = array_slice($posts, $range[0], $range[1]);
-        $posts = $p;
 
+        $posts = array_reverse($this->posts);
+
+        $p = array_slice($posts, $range[0], $range[1]);
+        $posts = $p;        
+       
         return $posts;        
     }
 
@@ -66,7 +69,7 @@ class Feed {
         $this->filter = $filter;
     }
 
-    public function sortBy($sort_by = "date, desc") {
+    public function sortBy($sort_by = "date_desc") {
         $this->sort_by = $sort_by;
     }
 
@@ -74,15 +77,22 @@ class Feed {
         $this->range = $range;
     }
 
-    public function getFilteredPosts(Filter $filter) {
+    public function getFilteredPosts() {
+        $filter = $this->filter;
         $filterType = $filter->getType();
         $posts = [];
         if($filterType == 'tag') {
             $tags = $filter->getTags();
-            // loop through posts to find tag matches
+            // TODO: loop through posts to find tag matches
+        }
+
+        if($filterType == 'userid') {
+                      
+            $op = $this->repository->getFeedPosts($this, $filter);
+            $posts = end($op);
+            $this->posts = $posts;         
         }
         return $posts;
     }    
-
 
 }
