@@ -37,4 +37,8 @@ $filter->setUserid($userid);
 $feed->setFilter($filter);
 
 $posts = $feed->getFilteredPosts();
+if(!$posts) {
+    $posts[0] = null;
+    $posts[1] = null;
+}
 echo json_encode($posts);
