@@ -79,7 +79,7 @@ class User {
         return $repository->updateUser($details);
     }
 
-    public function sendRegisterLink($username, $from, $reply) {
+    public function sendRegisterLink(String $username, String $from, String $reply) {
         $repository = $this->repository;
         $repository->generateRegisterLink($username, $from, $reply);
     }
@@ -111,7 +111,11 @@ class User {
         return $repository->getUserId($this->username);
     }
 
-    public function login($username, $password) {
+    public function setUserId(Int $userid) {
+        $this->userid = $userid;
+    }
+
+    public function login(String $username, String $password) {
         $repository = $this->repository;
         return $repository->userLogin($username, $password);
     }
@@ -127,6 +131,12 @@ class User {
         } else {
             return false;
         }        
+    }
+
+    public function getFeeds() :Array {
+        // Get the list of feeds that belong to this user
+        $repository = $this->repository;
+        return  $repository->getUserFeeds($this->userid);
     }
 
     /*

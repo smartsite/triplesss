@@ -47,21 +47,24 @@ $post->setContentType('text');
 
 $p1 = $post;
 
-$postContent = new Content();
-$postContent->setUserId($user_id);
-$postContent->setContentType('text');
-$postContent->setContent($txt);
-$postContent->write();
-$post->addContent($postContent);
-//$textContent = $postContent;
+if($txt != '') {
+    $postContent = new Content();
+    $postContent->setUserId($user_id);
+    $postContent->setContentType('text');
+    $postContent->setContent($txt);
+    $postContent->write();
+    $post->addContent($postContent);
+}
 
-$postContent = new Content();
-$postContent->setUserId($user_id);
-$postContent->setBaseFolder($basefolder);
-$postContent->setContentType('image');
-$postContent->setContent($im);
-$postContent->write();
-$post->addContent($postContent);
+if($im != '') {
+    $postContent = new Content();
+    $postContent->setUserId($user_id);
+    $postContent->setBaseFolder($basefolder);
+    $postContent->setContentType('image');
+    $postContent->setContent($im);
+    $postContent->write();
+    $post->addContent($postContent);
+}
 
 $v = new Visibility();
 $v->setLevel(0);

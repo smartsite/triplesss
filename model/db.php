@@ -1,10 +1,11 @@
 <?php
 
 namespace  Triplesss\db;
-use \Triplesss\db\DBSettings as DBSettings;
+//use \Triplesss\db\DBSettings as DBSettings;
+use \Triplesss\settings\Settings as Settings;
 
-class DB extends DBSettings {
-	
+//class DB extends DBSettings {
+class DB extends Settings {	
 	// Connection to the database
 	function __construct() {
 		// Load settings from parent class

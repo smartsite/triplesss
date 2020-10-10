@@ -3,7 +3,7 @@
 require '../model/auth.php';
 require '../model/feed.php';
 require '../model/filter.php';
-require '../model/repository.php';
+//require '../model/repository.php';
 
 use Triplesss\feed\Feed as Feed;
 use Triplesss\filter\Filter as Filter;

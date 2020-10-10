@@ -1,10 +1,11 @@
 <?php
 namespace  Triplesss\repository;
 
-require_once('dbsettings.php');
+require_once('settings.php');
 require_once('db.php');
 require_once('error.php');
 
+use Triplesss\settings\Settings as Settings;
 use Triplesss\error\Error as Error;
 use Triplesss\feed\Feed as Feed;
 use Triplesss\post\Post as Post;
@@ -33,6 +34,7 @@ class Repository {
     Public $error;
        
     function __construct() {
+        $this->settings = new Settings();
         $this->db = new Db(); 
         $this->error = new Error;       
     }
@@ -107,13 +109,15 @@ class Repository {
         $r =  array_merge($r, $this->getPostAsset('image', $id));
         $r = array_merge($r, $this->getPostAsset('text', $id));  
 
-        $assets = array_map(function($post_item) {
+        $assets = array_map(function($post_item) use ($id) {
          
             if($post_item['content_type'] == 'text') {
                
                return [
+                    'post_id'=> $id,
                     'owner' => $post_item['owner'], 
                     'content_type' => $post_item['content_type'], 
+                    'content_id' => $post_item['content_id'],
                     'text_id' => $post_item['text_id'], 
                     'content' => $post_item['content'], 
                     'tags' =>    $post_item['tags'], 
@@ -125,8 +129,10 @@ class Repository {
             if($post_item['content_type'] == 'image') {
               
                 return [
+                    'post_id'=> $id,
                     'owner' => $post_item['owner'], 
                     'content_type' => $post_item['content_type'], 
+                    'content_id' => $post_item['content_id'],
                     'link' => $post_item['link'], 
                     'path' => $post_item['path'], 
                     'tags' =>    $post_item['tags'], 
@@ -296,6 +302,7 @@ class Repository {
 
     public function userLogin($username, $password, $hashed = false) {
         $db = $this->db;
+        $session_timeout = $this->getSetting('session_timeout');
         $error = [];
         $userObj = $this->allUserDetails($username);
         if($hashed) {
@@ -305,10 +312,11 @@ class Repository {
         if($userObj){
             if(strtoupper($userObj['password']) == strtoupper($password)) {
                 // winner, winner chicken dinner!
-               
+
+                $session_time = $this->getSetting('session_time');
                 $session_id =  $this->getSession();
                 $_SESSION['username'] = $username;
-                $expiry = time() + (1 * 1 * 5 * 60);  // 1 days x 24 hours x 60 mins x 60 secs ( 5 mins for testing !! )
+                $expiry = time() + ($session_time);  // 1 days x 24 hours x 60 mins x 60 secs ( 5 mins for testing !! )
                 $_SESSION['expires'] =  $expiry;
                 setcookie("userID", $userObj['id'],  $expiry, "/" );
                 setcookie("userName", $username,  $expiry, "/" );
@@ -343,10 +351,13 @@ class Repository {
                 $sid = $_COOKIE['PHPSESSID'];
                 $result = $db->query("SELECT * FROM session WHERE session_id = '".$sid."'");
                 $db_session = $db->fetchAssoc( $result );
-                if( $db_session['expires'] > time()){
-                    //echo "Is good!";
-                    $loggedIn = true;
+                if($db_session) {
+                    if( $db_session['expires'] > time()) {
+                        //echo "Is good!";
+                        $loggedIn = true;
+                    }
                 }
+                
             }    
         }else{
             $loggedIn = true;
@@ -354,15 +365,22 @@ class Repository {
         return $loggedIn;
     } 
 
-    public function userLogout($username) {
+    public function userLogout() {
         $db = $this->db;
-        $s = 'DELETE FROM session WHERE user_id='.$this->getUserId($username);
-        $p = $db->query($s);
-        if($p) { 
-            return true;
+        if(isset( $_COOKIE['userID'])) { 
+            $s = 'DELETE FROM session WHERE user_id='.$_COOKIE['userID'];
+            $p = $db->query($s);
+            if($p) { 
+                setcookie('userID', null, -1, '/'); 
+                setcookie('userName', null, -1, '/'); 
+                session_destroy();
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
-        }
+        }        
     }
 
     public function generateRegisterLink($username, $from, $reply) {
@@ -396,6 +414,18 @@ class Repository {
         return $r;
     }
 
+    public function getUserFeeds($userid) {
+        $db = $this->db;
+        $s = 'SELECT id, feed_name, feed_description FROM feed WHERE owner_id='.$userid.' AND active=1 AND status="current"';
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        if($r) {
+            return $r;
+        } else {
+            return [];
+        }       
+    }
+
 
     public function getVisibilities() {
         $db = $this->db;
@@ -422,7 +452,7 @@ class Repository {
         } else {
             return false;
         }
-    }
+    }    
 
     private function tagSelect($tags) {
         $w = '1 = 1 ';
@@ -508,5 +538,14 @@ class Repository {
         session_destroy(); 
     }
 
+    private function getSetting($setting) {
+        $s = $this->settings;
+        $value = false;
+        $settings = $s->getSettings();
+        if(array_key_exists($setting, $settings)) {
+            $value = $settings[$setting];
+        }
+        return $value;
+    }
 
 }   

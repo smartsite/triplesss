@@ -21,9 +21,9 @@ class Auth {
         return $repository->userLogin($username, $password);
     }
 
-    function logout($username){
+    function logout(){
         $repository = $this->repository;
-        return $repository->userLogout($username);
+        return $repository->userLogout();
     }    
     
     function isLoggedIn(){

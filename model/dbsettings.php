@@ -1,5 +1,7 @@
 <?php
 
+// TODO: retire this class and change all refs to use the Settings class 
+
 namespace  Triplesss\db;
 
 class DBSettings
