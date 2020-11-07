@@ -1,0 +1,908 @@
+<html>
+    <head>
+        <title>User post test</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https//fonts.googleapis.com/css2?family=Raleway&display=swap rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="css/vivify.min.css" rel="stylesheet" type="text/css">
+        <link href="css/user.css" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>       
+        <style>
+            .wrap.loggedout {
+                height:100%;
+            }
+
+            #profile {
+                background-color: #fff;        
+            }
+
+            #profile .avatar img {
+                width:80px;
+                height:80px;
+            }
+
+            #profile h3 {
+                margin: 0;
+                padding: 0;
+                margin-left: 90px;
+                margin-top: -75px;
+                float: left;
+                font-size: 22px;
+            }
+
+            #profile .bio {
+                float: left;
+                margin-left: 90px;
+                margin-top: -50px;
+                font-size: 14px;
+            }
+
+            #commentbox {
+                position:fixed;
+                top:60px;
+            }
+
+            .optionmenu {
+                text-align:left;
+                width:200px;
+                background:none;
+            }
+
+            .reactions {
+                text-align:left;
+                width:100px;
+                background:none;
+                margin-top:-35px;
+            }
+
+            .reactions button.like {
+                border:none;
+                background: none;
+                color:red;
+              
+            }
+
+            .report.red {
+                color:red;
+            }
+
+            .reactions button:focus {
+                outline: none;
+            }
+
+            .post-comments, .post-likes {
+                line-height: 25px;
+                font-size: 15px;
+                vertical-align: top;
+            }
+
+            #comments {
+                overflow-y: scroll;
+                width:95%;
+                margin-left:2.5%;
+                height: 220px;
+                margin-top:30px;
+                /* border: 1px solid #999; */
+                border-radius:5px;
+            }
+
+            .comment_user {                
+                font-weight: bold;
+                background-color: #f0c88075;
+                padding: 7px;
+                /* padding-right: 5px; */
+                display: inline-block;
+                /* margin: 5px; */
+                line-height: 22px;
+                border-top-left-radius: 10px;;
+            }
+
+            .comment_text {                
+               
+                background: #eee;
+                padding: 7px;
+                display: inline-block;
+                /* margin: 5px; */
+                line-height: 22px;
+                border-bottom-right-radius: 10px;;
+            }
+
+            .comment_wrap {
+                overflow: hidden;
+                margin: 5px 0px;
+            }
+
+            .post button i {
+                color:#000;
+            }
+
+            button.cancel {
+                position: absolute;
+                top: 0;
+                right: 15px;
+            }
+
+            #reportbox input {
+                width:30px;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- <h2>User feed test</h2> -->
+        <div class="toprow">
+            <div id="head-wave"><img src="img/head_wave.svg" /></div>
+            <h3>               
+                <span id="avatar">
+                    <img src="img/profile.png" />
+                </span>
+                <span id="uname"></span></h3>
+            <button id="log-out">log out</button>
+            <div class="clear"></div>
+        </div>    
+        </select>
+        <div class="wrap">
+            <div id="profile" class="add">
+                <div class="avatar">
+                    <img src="img/profile.png" />
+                </div>
+                <h3></h3>
+                <div class="bio"></div>
+            </div>            
+            <div id="addpost" class="add">
+                <label>Select a channel</label>
+                <select id="feed_id"></select>
+                <p>Post something</p>
+                <form id="add-post" method="POST">
+                   <textarea id="add-comment" rows="3" cols="36"></textarea><br /><br />
+                   <input type="hidden" id="userid" name="userid" value="2">
+                   <input type="hidden" id="feedid" name="feedid" value="<?php //echo $feed->getId();  ?>">
+                   <input id="image" name="image" type="file" accept="image/x-png,image/gif,image/jpeg" />
+                   <button id="post-comment">Post</button>
+                </form>
+            </div>
+           
+            <div id="keycheck" class="add">
+                <h3>Login</h3>
+                <form id="add-user" method="POST">                  
+                    <label>user name</label>
+                    <input type="text" id="username" name="username" value="">
+                    <label>password</label>
+                    <input type="password" id="password" name="password" value="">
+                    <br />
+                    <br />
+                   <button id="log-in">Log in</button>                  
+                </form>
+            </div> 
+            <div id="fail" class="add">
+                <h3>Login failed</h3>  
+                <p>Please check you have the correct details! </p>               
+            </div>
+            <div id="reportbox" class="vivify postbox lowlight">
+                <p>Report this post for </p>
+                <input type="radio" name="report" value="nudity"><label>nudity</label><br />
+                <input type="radio" name="report" value="graphic"><label>graphic / violent</label><br />
+                <input type="radio" name="report" value="racist"><label>racism</label><br />
+                <input type="radio" name="report" value="threat"><label>threats / inciting violence</label><br />
+                <input type="radio" name="report" value="spam"><label>spam / marketing</label><br />
+                <button onClick="sendReport(this)">Send report</button>
+                <button class="cancel">&#10005;</button>
+            </div>  
+            <div id="tagbox" class="vivify postbox lowlight">
+                <p>Add or edit tags</p>
+                <input type="text" /><br /><br />      
+                <button id="tagpost">Save</button>
+                <button class="cancel">&#10005;</button>
+            </div>
+            <div id="deletebox" class="vivify postbox lowlight">
+                <p>Delete this post?</p>
+                <button id="delete-yes">Yes, delete it</button>&nbsp;  <button class="cancel">No! keep it</button> 
+            </div>  
+            <div id="privacybox" class="vivify postbox lowlight">
+                <p>Adjust who can see this post</p>
+                <select id="visibility">
+                    <option value=0>Me</options>
+                    <option value=1>Group</options>
+                    <option value=2>Friends</options>
+                    <option value=3>Friends of friends</options>
+                    <option value=4>Anyone</options>
+                </select>
+                <button id="privacypost">Save</button>
+                <button class="cancel">&#10005;</button>
+            </div> 
+            <div id="commentbox" class="vivify postbox lowlight">
+                <p>Add a comment</p>
+                <textarea id="post-comment-text" rows="5" cols="36"></textarea><br />  
+                <button id="comment-post">Post</button>
+                <button class="cancel">&#10005;</button>
+                <div id="comments"></div>
+            </div> 
+            <div id="hidebox" class="vivify postbox lowlight">
+                <p>Hide this post from your feed ( it will come back when you reload the page )?</p>
+                <button id="hide-post">Yep!</button>
+            </div>    
+            <div id="feed" class="feed">
+            </div>
+            <div id="follow" class="vivify postbox lowlight">
+            </div>
+            <div id="lbox" class="lightbox"></div>           
+        </div>
+
+        <script src="/js/user.js"></script>
+
+        <script language="Javascript">
+
+            var lightbox;
+            let toppos = 0;
+
+            
+
+            let postMarkup = (post, container) => {               
+                
+               
+                post.map(function(p) {
+                   
+                    if(p[0]) {
+                        const postId = p[0].post_id;
+                        let postWrap = newDiv('post');
+                        let contentWrap = newDiv('content-wrap');
+                        postWrap.id = postId;
+                        //postWrap.setAttribute('data-post_id', postId);
+                        
+                        let contentWrapImage = newDiv('postcontent image');
+                        let contentWrapText = newDiv('postcontent text');
+                        
+                        //postWrap.appendChild(postMenu());                    
+                        postWrap.appendChild(postMenu2()); 
+                        postWrap.appendChild(reactions(p));                         
+
+                        console.log(p);    
+
+                        p.map(function(po) {                      
+                            if(po.content_type == "text") {
+                                contentWrapText.innerText = po.content;
+                                contentWrap.appendChild(contentWrapText);
+                            }
+                            if(po.content_type == "image") {
+                                const img =  document.createElement('img');
+                                img.src = po.path + "/" + po.link;
+                                contentWrapImage.appendChild(img);
+                                contentWrap.appendChild(contentWrapImage);
+                            }
+                        })
+
+                        postWrap.appendChild(contentWrap);                          
+                        container.appendChild(postWrap);
+                    }                   
+                });
+                getReactions();                
+            }
+
+            let clearPostBox = () => {                
+                document.getElementById('add-comment').value = '';
+                document.getElementById('image').value = '';
+            }
+
+            let setSelect = (selectObj, index) => {
+                Array.from(selectObj.options).forEach((op, i)=>{
+                    console.log(i);
+                });               
+            }
+
+
+            let feed = () => {
+                const user_id = getCookie('userID'); 
+                let container = document.querySelectorAll('.feed')[0];
+                container.innerHTML = '';
+                return fetch('Triplesss/api/aggregator.php?userid=' + user_id, {
+                            method: "GET"                                                    
+                }) 
+                .then(function(response) {
+                    response.json().then(function(d){
+                        postMarkup(d, container);  
+                        // menuHandler();                     
+                    });
+                });       
+            }
+
+            let getFeed = () => {
+                //let feed_id = 4;
+                //feed(feed_id )
+                feed();
+            }
+          
+
+            let feedlist = () => {
+                //const userid = getCookie('userID');
+                const userid = 2;
+                const saved_feedid = getCookie('feed_id');
+                const feedSelect = document.getElementById('feed_id');
+                fetch('Triplesss/api/feeds.php?userid=' + userid, {
+                    method: "GET"                                                    
+                }) 
+                .then(function(response) {
+                    response.json().then(function(d){
+                        /*
+                        const feed_id = d[0].id;
+                        if(saved_feedid) {
+                            feed(saved_feedid);
+                        } else {
+                            feed(feed_id);
+                        }
+                        */
+                       feed();
+                       
+                        if(d.length > 0) {
+                            d.map(function(r){
+                                const option = document.createElement('option');
+                                option.text = r.feed_name;
+                                option.value = r.id;
+                                feedSelect.add(option);
+                                if(saved_feedid == r.id) {
+                                    option.selected = true; 
+                                }
+                            })
+                        } else {
+                            // Every user has at least ONE feed so this should neve rhappen
+                        }
+                    })
+                })
+            }
+            
+           
+
+            let sendReport = (e) => {
+               
+                let groupId = e.parentElement.className.replace("reportbox vivify ", "");
+                let postId = e.parentElement.getAttribute('data-post_id');
+                let post = document.getElementById(postId);
+                let postButton = post.getElementsByClassName('report')[0];
+
+                //console.log(groupId);
+
+                e.parentElement.classList.add('fadeOut');
+                window.setTimeout(function(){
+                    e.parentElement.classList.add('lowlight');
+                    lightboxshow(false);
+                    var wrapper = document.getElementsByClassName('post ' + groupId)[0];                    
+                    postButton.classList.add('red');
+                    e.parentElement.classList.remove('fadeOut');
+                }, 300)
+            }
+
+            /*
+            let postComment = () => {
+                const comment = document.getElementById('post-comment-text').value;
+                const user_id = getCookie('userID');
+                const post_id = document.getElementById('commentbox').getAttribute('data-post_id');
+                const feed_id = document.getElementById('feed_id');
+
+                const data = {};
+                data.comment = comment;
+                data.userid = user_id;
+                data.postid = post_id;
+                data.feedid = feed_id;                
+                
+                return fetch('Triplesss/api/comment.php', {
+                    method: "POST",
+                    body: JSON.stringify(data)                           
+                }) 
+                .then(function(response) {
+                    response.json().then(function(d){
+                        console.log(d);
+                        document.getElementById('post-comment-text').value = '';
+                        getComments(post_id);
+                    });
+                });
+            }
+            */
+
+            let doPost = (data) => {
+                return fetch('Triplesss/api/post.php', {
+                            method: "POST",
+                            body: JSON.stringify(data)                           
+                }) 
+                .then(function(response) {
+                    response.json().then(function(d){
+                        var postId = d.postId; 
+                        clearPostBox();  
+                        console.log(postId);
+                    })
+                })
+            }
+
+                        
+            let addPost = () => {
+                var img = document.getElementById('image').files[0];
+                var user_id = document.getElementById('userid').value;
+                var feed_id = document.getElementById('feed_id').value;
+                var comment = document.getElementById('add-comment').value;
+            
+                // Check if there's an image
+                var reader = new FileReader();
+
+                reader.onload = (function(t) {
+                    return function(e) {
+                        var im = e.target.result;
+                        var data = {'comment': comment, 'image' : im, 'userid': user_id, 'feedid': feed_id, 'basefolder' : '../../storage' };
+                        doPost(data).then(function(){
+                            //feed(feed_id);
+                            feed();
+                        });                  
+                    }
+                })(img); 
+            
+                //reader.readAsDataURL(img);
+                if(typeof img === 'object') {
+                    reader.readAsDataURL(img);
+                } else { 
+                    // we don't have an image... just text
+                    var image = '';
+                    var data = {'comment': comment, 'image' : image, 'userid': user_id, 'feedid': feed_id, 'basefolder' : '../../storage' };
+                    doPost(data).then(function(){
+                        //feed(feed_id);
+                        feed();
+                    });    
+                }
+            } 
+
+            let getTags = (el) => { 
+                const data = {};
+                const post_id =  el.parentElement.id;    
+                const user_id = getCookie('userID');                                        
+                data.post_id = post_id; 
+                data.user_id = user_id;
+
+                return fetch('Triplesss/api/post_tags.php?user_id=' + user_id + '&post_id=' + post_id, {
+                    method: "GET"                                                 
+                }) 
+                .then(function(response) {                   
+                    
+                    response.json().then(function(d){
+                       // show tags in the textbox   
+                       let tags = "";
+                       if(d.tags) {
+                            if(d.tags.length > 0) {
+                                const tag_array = d.tags.split(',');
+                                tags = tag_array.map((tag)=>{
+                                    return "#" + tag;
+                                }).join(' ');
+                            }                            
+                        }                       
+                       document.querySelectorAll('#tagbox input')[0].value = tags;                    
+                    })                    
+                })
+            }
+
+
+            let editTags = (el) => {
+                const data = {};
+                const post_id =  el.parentElement.getAttribute('data-post_id');    
+                const user_id = getCookie('userID');  
+                const tags = document.querySelectorAll('#tagbox input')[0].value;               
+                data.post_id = post_id; 
+                data.user_id = user_id;
+                data.tags = tags;
+
+                return fetch('Triplesss/api/post_tags.php', {
+                            method: "POST",
+                            body: JSON.stringify(data)                           
+                }) 
+                .then(function(response) {
+                    response.json().then(function(d){
+                       
+                       if(d == true) {
+                            
+                       } else {
+                           // show error modal
+                       }
+
+                       document.getElementById('tagbox').classList.add('lowlight');
+                       lightboxshow(false);  
+                       setScrollPos();
+                       hideAllMenus();
+                    })
+                })
+            }
+
+
+            let setPostVisibility = (level, el, user_id) => {
+                const data = {};
+                const post_id =  el.parentElement.getAttribute('data-post_id');
+                data.level = level;                              
+                data.post_id = post_id; 
+                data.user_id = user_id;
+
+                return fetch('Triplesss/api/post_visibility', {
+                            method: "POST",
+                            body: JSON.stringify(data)                           
+                }) 
+                .then(function(response) {
+                    response.json().then(function(d){
+                       
+                       if(d == true) {
+                            let postBox = document.getElementById(post_id);
+                            postBox.parentNode.removeChild(postBox);
+                       } else {
+                           // show error modal
+                       }
+
+                       document.getElementById('deletebox').classList.add('lowlight');
+                       lightboxshow(false);  
+                       setScrollPos();
+                       hideAllMenus();
+                    })
+                })
+            }
+
+            let deletePost = (el) => {
+
+                const post_id = el.parentElement.getAttribute('post_id');
+                const user_id = getCookie('userID');
+                const text = document.getElementById('edit-comment').value;
+                const data = {};
+
+                data.post_id = post_id;
+                data.text = text;
+                data.user_id = user_id;
+                document.documentElement.classList.add('lb');                  
+                setPostVisibility(-1, el, user_id);
+            }       
+            
+               
+            let menushow = (wrapper, s) => {
+                if(s === true) {
+                    wrapper.querySelectorAll('.options')[0].classList.remove('hide');
+                    wrapper.querySelectorAll('.options')[0].classList.add('swoopInRight'); 
+                    wrapper.querySelectorAll('.options')[0].classList.remove('swoopOutRight'); 
+                } else {
+                    wrapper.querySelectorAll('.options')[0].classList.add('swoopOutRight'); 
+                    wrapper.querySelectorAll('.options')[0].classList.remove('swoopInRight');
+                    window.setTimeout(function() {
+                        wrapper.querySelectorAll('.options')[0].classList.add('hide');
+                    }, 500);
+                }                
+            }
+     
+
+            let savePost = (el) => {
+                const post_id = el.parentElement.getAttribute('data-post_id');
+                const user_id = getCookie('userID');
+                const text = document.getElementById('edit-comment').value;             
+                const post = document.getElementById(post_id);              
+                const postText = post.querySelectorAll('.content-wrap .text')[0];              
+                const data = {};
+
+                data.post_id = post_id;
+                data.text = text;
+                data.user_id = user_id;
+                document.documentElement.classList.add('lb');
+
+                return fetch('Triplesss/api/post_edit.php', {
+                            method: "POST",
+                            body: JSON.stringify(data)                           
+                }) 
+                .then(function(response) {
+                    response.json().then(function(d){
+                        //var postId = d.postId;                          
+                        if(d.text) {
+                            postText.innerHTML = d.text;                           
+                        }
+                       
+                        document.getElementById('editbox').classList.add('lowlight');
+                        lightboxshow(false);  
+                        setScrollPos();             
+                        hideAllMenus();
+                    })
+                })
+            }
+
+            let postMenu2 = () => {
+                let div = newDiv('optionmenu');
+                let options = ['Report','Hide'];
+                let icons = ['&#10029;','&#128374;'];
+                options.map((op, i)=> {
+                    let span = document.createElement('span');
+                    span.className = op.toLocaleLowerCase();
+                    span.innerHTML = icons[i];
+                    span.setAttribute('data-action', op);
+                    div.append(span);
+                })
+                return div;    
+            }
+
+                                            
+
+            let postAction = (action, el) => {                
+                                          
+                if(action == 'Tag' || action == 'Edit' || action == 'Report') {
+                    const boxname = action.toLowerCase() + "box";
+                    const box = document.getElementById(boxname);
+                    //const post_id = el.parentElement.getAttribute('data-post_id');
+                    const post_id = el.parentElement.id;
+
+                    box.classList.remove('lowlight');   
+                    box.setAttribute('data-post_id', post_id);
+                    document.documentElement.classList.add('lb');
+                                                             
+                    lightboxshow(true);  
+                   
+                    if(action == 'Edit') {
+                        if(el.parentElement.querySelectorAll('.content-wrap .postcontent.text')) {
+                            const text =  el.parentElement.querySelectorAll('.content-wrap .postcontent.text')[0].innerText;
+                            box.querySelectorAll('textarea')[0].value = text; 
+                        }                      
+                    }    
+
+                    if(action == 'Tag') {
+                        getTags(el);
+                    } 
+                                        
+                }
+
+                if(action == 'Hide') {                    
+                    el.parentElement.classList.add('hide');
+                    lightboxshow(false);
+                }     
+            }  
+
+           
+
+            let hideAllMenus = () => {
+                const menus = document.querySelectorAll('.post .options');
+                menus.forEach((menu) => {
+                    menu.classList.remove('swoopInRight');
+                    menu.classList.add('hide');
+                });                                    
+            }
+
+            let menuHandler = () => {
+                var posts =  document.querySelectorAll('.postcontent');               
+
+                posts.forEach(function(el) {
+                    var hammertime = new Hammer(el);
+                    var wrapper =  el.parentElement.parentElement;                      
+
+                    /*
+                    hammertime.on('tap', function(ev) {
+                        if(ev.tapCount == 2) {                       
+                                                                                               
+                            wrapper.querySelectorAll('.options')[0].classList.remove('hide');
+                            menushow(wrapper, true);                                                                            
+                        }
+
+                        if(ev.tapCount == 1) {                                                       
+                           
+                            if(!wrapper.querySelectorAll('.options')[0].classList.contains('hide')) {
+                                lightboxshow(false);
+                                menushow(wrapper, false);                                  
+                                // hide any open boxes
+                            }                                
+                        } 
+                      
+                    });
+                    */    
+                });
+
+                //const postoptions =  document.querySelectorAll('.post .options span');   
+                const postoptions =  document.querySelectorAll('.post .optionmenu span');   
+
+                postoptions.forEach(function(el) {
+                    var hammertime = new Hammer(el);
+                    hammertime.on('tap', function(ev) {
+                      
+                        var wrapper =  el.parentElement;                     
+                        var data = ev.target.dataset;
+                        wrapper.classList.remove('show'); 
+                        postAction(data.action, wrapper);                     
+                       
+                    });
+                }); 
+            }
+            
+            /*
+            let isloggedin = () => { 
+               
+               var uname = document.getElementById('uname');
+               var userid = document.getElementById('userid');
+              
+               fetch('Triplesss/api/logged_in.php', {
+                           method: "GET"                                                   
+                   }
+               ).then(function(response) {                  
+                   
+                   
+                   response.json().then(function(d){
+                          
+                       //console.log(d);
+                       if(d === true) {
+                           //showBox(true, 'profile');
+                           showBox(false, 'keycheck');
+                           showBox(false, 'fail');
+                           //showBox(true, 'addpost');
+                           uname.innerText = getCookie('userName'); 
+                           userid.value = getCookie('userID'); 
+                           document.getElementById('log-out').classList.remove('hidden');
+                           getProfile();
+                           
+                           //feedlist();   
+                           getFeed();                         
+
+                       }  else {
+                           //showBox(false, 'profile');
+                           showBox(true, 'keycheck');
+                           showBox(false, 'fail');
+                           document.getElementById('log-out').classList.add('hidden');
+                       }
+                   });                    
+
+               })
+           };
+           */
+
+           let getProfile = () => {
+                var user_id = getCookie('userID'); 
+                let url = 'Triplesss/api/profile.php?userid=' + user_id;
+
+                fetch(url, {
+                       method: "GET",                                           
+                   }) 
+                   .then(function(response) {
+                       response.json().then(function(d){                                                   
+                          
+                            //console.log(d);
+                            d.map(function(el) {
+                                const profileImage = document.querySelectorAll('#avatar img')[0];
+                                //const profileText = document.querySelectorAll('.bio-text')[0];
+                                if(el) {
+                                    if(el.content_type == 'image') {
+                                        const src = el.path + '/' + el.link;
+                                        profileImage.src = src;
+                                    }                                   
+                                }                              
+                           })                   
+                        })
+                    }
+               )
+            }
+
+
+            let feedProfile = (user_id) => {
+               
+                let url = 'Triplesss/api/profile.php?userid=' + user_id;
+
+                fetch(url, { 
+                    method: "GET"
+                })
+                .then(function(response) {
+                    response.json().then(function(d){    
+                        d.map(function(el) {
+                            const profileImage = document.querySelectorAll('#profile .avatar img')[0];
+                            const profileName = document.querySelectorAll('#profile h3')[0];
+                            const profileText = document.querySelectorAll('#profile .bio')[0];
+                            if(el.content_type == 'image') {
+                                const src = el.path + '/' + el.link;
+                                profileImage.src = src;
+                                profileName.innerText = el.user_name;
+                            } 
+
+                            if(el.content_type == 'text') { 
+                                profileText.innerText = el.content;
+                            }  
+                        })
+                    });
+                });
+            };       
+
+            
+            
+            window.onload = () => {
+                let postButton = document.getElementById("post-comment");
+                const feedId = document.getElementById('feed_id');
+                const loginButton = document.getElementById("log-in"); 
+                const logoutButton = document.getElementById("log-out");                
+                const username = document.getElementById("username");
+                const password = document.getElementById("password");
+                const cancelButton = document.querySelectorAll('.cancel');
+                //const hidePostButton = document.getElementById('savepost');
+                const deletePostButton = document.getElementById('delete-yes');
+                const tagPostButton = document.getElementById('tagpost');
+                //let reactButtons = document.querySelectorAll('.post-button');
+                const commentPostButton = document.getElementById('comment-post');               
+                const reportButton = document.querySelectorAll('.report');
+             
+
+
+                lightbox = document.getElementById("lbox");
+                lowlightelements(true, document.querySelectorAll('.tabgox'));            
+               
+                showBox(false, 'keycheck');
+                showBox(false, 'fail');  
+                showBox(false, 'addpost');  
+                showBox(false, 'profile');                   
+               
+                isloggedin();                    
+
+                              
+                loginButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    dologin();                    
+                })
+
+                logoutButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    dologout();                    
+                })
+                
+                postButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    addPost();
+                })  
+
+                commentPostButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    postComment(e);
+                })                              
+                
+                cancelButton.forEach((button) => {
+                    button.addEventListener('click', function(e) {
+                       
+                        lightboxshow(false);
+                        setScrollPos();
+                        hideAllMenus();
+                        this.parentElement.classList.add('lowlight');
+                    })
+                })                
+                
+
+                deletePostButton.addEventListener('click', function(e) {
+                    e.preventDefault(); 
+                    setScrollPos(); 
+                    deletePost(this);                  
+                })  
+
+
+                tagPostButton.addEventListener('click', function(e) {
+                    e.preventDefault(); 
+                    setScrollPos(); 
+                    editTags(this);                  
+                })  
+
+
+                feed_id.addEventListener('change', function(e) {
+                    let fid = this.value;                  
+                    setCookie('feed_id', fid, 1); 
+                    //feed(fid);
+                    feed();
+                });
+
+                feedProfile(2);                                             
+                
+                /*
+                reactButtons.forEach(function(el) {
+                   
+                });
+                */               
+                             
+
+                var postoptions =  document.querySelectorAll('.post .options span');     
+
+                postoptions.forEach(function(el) {
+                    var hammertime = new Hammer(el);
+                    hammertime.on('tap', function(ev) {
+                        var wrapper =  el.parentElement;                     
+                        var data = ev.target.dataset;
+                        wrapper.classList.remove('show'); 
+                        postAction(data.action, wrapper);                     
+                       
+                    });
+                });                              
+                
+            }
+
+        </script>
+    </body>
+</html>
+
+
+
+

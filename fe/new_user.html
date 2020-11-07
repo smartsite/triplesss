@@ -1,0 +1,450 @@
+<html>
+    <head>
+        <title>Create user test</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https//fonts.googleapis.com/css2?family=Raleway&display=swap rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="css/vivify.min.css" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>       
+
+        <style>
+            
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body{
+                font-family: 'Raleway', sans-serif;              
+            }
+
+            
+            .add, .details {
+                padding:5px;
+                background-color:#e7e7e7;
+            }
+             
+            
+            .lightbox {
+                position:fixed;
+                width:100%;
+                height:100%;
+                left:0;
+                right:0;
+                top:0;
+                bottom:0;
+                background-color: #000;
+                opacity: 0.7;
+                z-index:1;
+                display:none;
+            }
+
+            .lightbox.active{
+                z-index: 1;
+                display:block;
+            }
+
+            
+
+
+            .red {
+                color:rgb(200,30,30);
+            }
+
+            .lime {
+                color:rgb(20,180,20);
+            }
+
+            #add-user input, #add-user select {
+                padding:3px;
+            }
+
+            #add-user label {
+                width:120px;
+                display:block;
+                margin-top:5px;
+            }
+
+            .hidden {
+                display:none;
+            }
+
+            .unhidden {
+                display:block;
+            }
+
+            .field_error {
+                background:lightpink;
+                border:1px solid red;
+            }
+
+
+            @keyframes redFadeOut {from { color:red; opacity: 1 }to  { color: white; opacity: 0}}
+            @keyframes fadeIn {from { opacity: 0 }to  { opacity: 1}}
+            @keyframes fadeOut {from { opacity: 1 }to  { opacity: 0}}
+
+            .like-button-click { animation: redFadeOut 0.75s; }
+
+            .fadeIn {animation: fadeIn 0.5s; }
+            .fadeOut {animation: fadeOut 0.5s; }     
+  
+        </style>
+    </head>
+    <body>
+        <h2>New user test</h2>
+        <div class="wrap">
+            <div id="namecheck" class="add">
+                <h3>Enter a user name</h3>
+                <form id="add-user" method="POST">                  
+                  
+                   <input type="text" id="username" name="username" value="">
+                   <input type="hidden" id="userid" name="userid" value="1">
+                    <br />
+                    <br />
+                   <button id="post-user">Check availability</button>
+                   <span id="available"></span>
+                </form>
+            </div>
+
+            <div id="details" class="details hidden">
+                <h3>Add details</h3>
+                <form id="add-user" method="POST">                  
+                    <label>First name</label>
+                    <input type="text" id="firstname" name="firstname" value=""><br />
+                    <label>Last name</label>
+                    <input type="text" id="lastname" name="lastname" value=""><br />
+                    <label>email</label>
+                    <input type="email" id="email" name="email" value=""><br />
+                    <label>address</label>
+                    <input type="text" id="address1" name="address1" value=""><br />
+                    <label></label>
+                    <input type="text" id="address2" name="address2" value=""><br />
+                    <label>State</label>
+                    <select id="state">
+                        <option value="SA">SA</option>
+                        <option value="SA">VIC</option>
+                        <option value="SA">NSW</option>
+                        <option value="SA">QLD</option>
+                        <option value="SA">WA</option>
+                        <option value="SA">NT</option>
+                        <option value="SA">TAS</option>
+                    </select>
+                    <label>Suburb</label>
+                    <select id="suburb">
+                    </select>    
+                    <input type="hidden" id="postcode" name="postcode" value=""><br />
+                    <label>Mobile Phone</label>
+                    <input type="phone" id="mobile" name="mobile" value=""><br />
+                    <label>Password</label>
+                    <input type="password" id="password1" name="password1" value=""><br />
+                    <label>Password (again)</label>
+                    <input type="password" id="password2" name="password2" value=""><br />                 
+                    <br />
+                   <button id="register-user">Register</button>
+                   <span id="available"></span>
+                </form>
+            </div>
+            <div id="confirm" class="details hidden">
+                <h3>Confirm your registration</h3>
+                <p>Thanks for registering!</p>
+                <p>An email has been sent to <span id="confirm-email"></span>, 
+                    and it should arrive within the next 5 minutes. Just tap or click on the link in the email 
+                    to confirm your registration.</p>
+                <p>Didn't get the email? Try the following:</p>
+                <ul>
+                    <li>Check your spam / junk mail folder</li>
+                    <li>Make sure you have waited 5 minutes!</li>
+                    <li>Make sure you are checking the email address shown above</li>
+                    <li>Try and <a id="resend" href="">re-send</a> the registration email</li>                     
+                </ul>     
+                <p>If you still have no luck, <a href="mailto:registerhelp@surfsouthoz.com">contact us</a> and we'll help!</p>
+            </div>    
+           
+            <div id="lbox" class="lightbox"></div>           
+        </div>
+
+        <script language="Javascript">
+
+            let lightbox;
+
+            let showBox = (show, id) => {
+                if(show == true) {
+                    document.getElementById(id).classList.remove('hidden');
+                    document.getElementById(id).classList.add('fadeIn');
+                    window.setTimeout(function() {
+                        document.getElementById(id).classList.remove('fadeIn');
+                    }, 1000)
+                } else {
+                    document.getElementById(id).classList.add('hidden');
+                    document.getElementById(id).classList.remove('fadeIn');
+                }
+            }
+            
+
+            let fieldError = (t, status) => {
+                t.classList.add('field_error'); 
+                if(status == true) {
+                    t.classList.remove('field_error');                     
+                } 
+                return status;
+            }
+            
+            let usernameStatus = (avail) => {
+                var availableBox = document.getElementById("available");
+               
+                if(avail == true) {
+                    availableBox.innerHTML = "&#10006;";                  
+                    availableBox.style = "color: transparent; text-shadow:0 0 0 rgb(220,20,20)";
+                    showBox(false, 'details');
+                   
+                } else {
+                    availableBox.innerHTML = "&#10004;";                  
+                    availableBox.style = "color: transparent; text-shadow:0 0 0 rgb(20,200,20)";
+                    showBox(true, 'details');
+                }
+            }
+
+            let getSuburbs = (username) => {              
+              let data = {};
+              let suburb_select = document.getElementById('suburb');
+              let state = document.getElementById('state').value;
+              fetch('Triplesss/api/au_suburbs.php?state=' + state, {
+                    method: "GET",                     
+                }
+              ).then(function(response) {
+                response.json().then(function(d){
+                      
+                        d.map(function(s) {
+                           
+                            let suburb =  s.suburb;
+                            let postcode = s.postcode;
+                            let option = document.createElement('option');
+                            option.text = suburb + " (" + postcode + ")";
+                            option.value = suburb + "|" + postcode;
+                            suburb_select.add(option);
+                        })                                 
+                    })
+                });
+            };  
+
+
+            let checkUser = (username) => {              
+              let data = {};
+              data.username = username;
+              fetch('Triplesss/api/checkuser', {
+                        method: "POST",
+                        body: JSON.stringify(data)                           
+                  }
+              ).then(function(response) {                  
+                  response.json().then(function(d){
+                        usernameStatus(d);                                    
+                  })
+              });             
+            }            
+
+            let checkNameFieldLength = (t, length) => {
+                return t.value.length > length;	
+            }
+
+            let checkNames = (t) => {                
+                return fieldError(t, t.value.length > 2 && isAlpha(t.value));                
+            }
+
+            let checkPostcode = (t) => {               
+                return fieldError(t, t.value.length == 4);                
+            }
+
+            let checkPassword = (t) => {
+                const mediumRegex = new RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})");
+                const strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+                return fieldError(t, strongRegex.test(t.value));
+            }
+
+            let checkEmail = (t) => {
+                const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return fieldError(t, re.test(t.value));
+            }
+
+            let checkAddress = (t) => {                
+                return fieldError(t, checkNameFieldLength(t,3));
+            }
+
+            let checkPhone = (t) => {                
+                return fieldError(t,  !isNaN(t.value) && t.value.length === 10 );
+            }          
+            
+            let addUser = () => {
+              
+                let conf = document.getElementById("confirm-email");
+                let user_id = document.getElementById("userid");
+                let data = {};
+
+                data.user_name = document.getElementById('username').value;
+                data.first_name = document.getElementById('firstname').value;
+                data.last_name = document.getElementById('lastname').value;
+                data.email = document.getElementById('email').value;
+                data.address_1 = document.getElementById('address1').value;
+                data.address_2 = document.getElementById('address2').value;
+                data.city = document.getElementById('suburb').value;
+                data.state = document.getElementById('state').value;
+                data.postcode = document.getElementById('postcode').value;
+                data.phone = document.getElementById('mobile').value;
+                conf.innerText =  data.email;
+
+                fetch('Triplesss/api/register', {
+                            method: "POST",
+                            body: JSON.stringify(data)                           
+                    }
+                ).then(function(response) {
+                    
+                    response.json().then(function(d){
+                        console.log(d);
+                        if(d.hasOwnProperty('userid')) {
+                            var userid = d.userid * 1;
+                            if(userid > 0) {
+                                user_id.value = userid;
+                                showBox(false, 'details');
+                                showBox(false, 'namecheck');
+                                showBox(true, 'confirm');
+                            } else {
+                                // something went wrong :(    
+                            }
+                        } else {
+                            // something went wrong :(    
+                        }                                                       
+                    })                   
+                    
+                });
+            } 
+
+            let lowlightelements = (s, el) => {                      
+                el.forEach(function(el) { 
+                    if(s === true) {
+                        el.classList.add('lowlight');
+                    } else {
+                        el.classList.remove('lowlight');
+                    }    
+                });   
+            }
+
+            
+            let lightboxshow = (s) => {
+                if(s === true) {
+                    lightbox.classList.add('active');                   
+                } else {
+                    lightbox.classList.remove('active');
+                }
+                lowlightelements(s, document.querySelectorAll('.post'));
+            } 
+
+            let isAlpha = (text) => {
+                if(text.match(/^[0-9a-zA-Z]+$/)) {
+                    return true;
+                } else {                   
+                    return false;
+                } 
+            }
+            
+            let validusername = (text) => {
+                if(text.length > 4 && text.length < 33 && isAlpha(text)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            let checkFields = () => {
+                var textFields = document.querySelectorAll("#details input");
+                var allgood = 0;
+             
+                for(var el of Object.entries(textFields)) {
+                    let val = el[1].value;
+                    let id = el[1].id;
+                    const password1 = document.getElementById('password1').value;
+                    const password2 = document.getElementById('password2').value;
+                    let f = el[1];                    
+
+                    switch (id) {
+                      
+                        case "password1":
+                            allgood+= 1& checkPassword(f);
+                        break;
+
+                        case "password2":
+                            allgood+= 1 & checkPassword(f);
+                            allgood+= 1 & fieldError(f, password1 == password2 && password2 != '');  
+                        break;
+                        
+                        case "email":
+                            allgood+= 1 & checkEmail(f);
+                        break;
+                        
+                        case "firstname":
+                            allgood+= 1 & checkNames(f);				
+                        break;
+                        
+                        case "lastname":
+                            allgood+= 1 & checkNames(f);				
+                        break;
+
+                        case "mobile":
+                            allgood+= 1 & checkPhone(f);				
+                        break;
+                        
+                        case "address1":
+                            allgood+= 1 & checkAddress(f);				
+                        break;
+
+                        case "address2":
+                            allgood+= 1 & checkAddress(f);				
+                        break;                                                                      
+                        
+                    }                    
+                }
+                
+                if(allgood == 9) {
+                    addUser();
+                }
+            }                             
+            
+            
+            window.onload = () => {                
+           
+                const postButton = document.getElementById("post-user");
+                const registerButton = document.getElementById("register-user");
+                const username = document.getElementById("username");
+
+                postButton.setAttribute('disabled', true);
+                //lightbox = document.getElementById("lbox");
+                //lowlightelements(true, document.querySelectorAll('.tabgox'));            
+               
+                username.addEventListener('keyup', function(e) {
+                    let text = e.target.value;
+                    if(validusername(text)) {                       
+                        postButton.removeAttribute('disabled');
+                    } else {                  
+                        postButton.setAttribute('disabled', false);
+                    }                  
+                })
+
+                getSuburbs();
+
+                postButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    checkUser(username.value);
+                    //addPost();
+                })
+
+                registerButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    checkFields();                    
+                })
+                
+            }
+
+        </script>
+    </body>
+</html>
+
+
+
+

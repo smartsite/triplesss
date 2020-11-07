@@ -1,0 +1,609 @@
+<html>
+    <head>
+        <title>User post test</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https//fonts.googleapis.com/css2?family=Raleway&display=swap rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="css/vivify.min.css" rel="stylesheet" type="text/css">
+        <link href="css/user.css" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>       
+        <style>
+            .wrap.loggedout {
+                /* height:100%; */
+            }
+
+            .wrap {
+                height:100%;
+            }
+
+            #profile {
+                background-color: #fff;        
+            }
+
+            #profile .avatar img {
+                width:80px;
+                height:80px;
+            }
+
+            #profile h3 {
+                margin: 0;
+                padding: 0;
+                margin-left: 90px;
+                margin-top: -75px;
+                float: left;
+                font-size: 22px;
+            }
+
+            #profile .bio {
+                float: left;
+                margin-left: 90px;
+                margin-top: -50px;
+                font-size: 14px;
+            }
+      
+
+            .optionmenu {
+                text-align:left;
+                width:200px;
+                background:none;
+            }              
+         
+
+            button.cancel {
+                position: absolute;
+                top: 0;
+                right: 15px;
+            }
+
+            #follow {
+                background-color: rgba(210,210,210,.75)
+            }
+
+            .follow {
+                background-color: #fff;
+                padding: 5px;
+                border-radius: 5px;
+                margin-bottom: 10px;
+            }
+
+            .follow .avatar {
+                overflow: hidden;
+                border-radius: 30px;
+                width:40px;
+                height:40px;
+                border: 2px solid #999;
+            }
+
+            .follow .avatar img {
+                width:40px;
+                height:40px;
+            }
+
+            .follow h3 a {
+                text-decoration: none;
+                color:#333;
+            }
+
+            #connections h3, #follow h3 {
+                margin:10px 0;   
+            }
+
+            #connections .follow h3, #follow .follow h3 {
+                margin: 0;
+                padding: 0;
+                margin-left: 55px;
+                margin-top: -31px;
+                float: left;
+                font-size: 16px;
+            }
+
+            .follow .buttons {
+                width: 160px;               
+                position: absolute;
+                right: 15px;              
+                margin-top: -30px;
+            }
+
+            .follow .buttons button {
+                margin-left:5px;
+            }
+
+            #search input {
+                padding:5px;
+            }
+
+            #connections h4 {
+                line-height:22px;
+                margin:0;
+            }
+
+            #followbox {
+                padding-top:55px;
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <!-- <h2>User feed test</h2> -->
+        <div class="toprow">
+            <div id="head-wave"><img src="img/head_wave.svg" /></div>
+            <h3>               
+                <span id="avatar">
+                    <img src="img/profile.png" />
+                </span>
+                <span id="uname"></span></h3>
+            <button id="log-out">log out</button>
+            <div class="clear"></div>
+        </div>    
+        </select>
+        <div class="wrap">
+               
+            <div id="addpost" class="add">
+                <label>Select a channel</label>
+                <select id="feed_id"></select>
+                <p>Post something</p>
+                <form id="add-post" method="POST">
+                   <textarea id="add-comment" rows="3" cols="36"></textarea><br /><br />
+                   <input type="hidden" id="userid" name="userid" value="2">
+                   <input type="hidden" id="feedid" name="feedid" value="<?php //echo $feed->getId();  ?>">
+                   <input id="image" name="image" type="file" accept="image/x-png,image/gif,image/jpeg" />
+                   <button id="post-comment">Post</button>
+                </form>
+            </div>
+            <div id="profile" class="add"></div>
+            <div id="feed" class="add"></div>
+            <div id="search" class="add">
+                <label>enter user name</label><br />
+                <input type="text" id="user-name" name="user-name" value="">
+                <button id="search-user">Search</button>
+            </div>
+           
+            <div id="keycheck" class="add">
+                <h3>Login</h3>
+                <form id="add-user" method="POST">                  
+                    <label>user name</label>
+                    <input type="text" id="username" name="username" value="">
+                    <label>password</label>
+                    <input type="password" id="password" name="password" value="">
+                    <br />
+                    <br />
+                   <button id="log-in">Log in</button>                  
+                </form>
+            </div> 
+            <div id="fail" class="add">
+                <h3>Login failed</h3>  
+                <p>Please check you have the correct details! </p>               
+            </div>           
+            <div id="privacybox" class="vivify postbox lowlight">
+                <p>Adjust who can see this post</p>
+                <select id="visibility">
+                    <option value=0>Me</options>
+                    <option value=1>Group</options>
+                    <option value=2>Friends</options>
+                    <option value=3>Friends of friends</options>
+                    <option value=4>Anyone</options>
+                </select>
+                <button id="privacypost">Save</button>
+                <button class="cancel">&#10005;</button>
+            </div>            
+            <div id="hidebox" class="vivify postbox lowlight">
+                <p>Hide this post from your feed ( it will come back when you reload the page )?</p>
+                <button id="hide-post">Yep!</button>
+            </div>
+            <div id="followbox" class="vivify postbox lowlight">
+                <p></p>
+                <button id="connect-request">Send</button>
+                <button id="connect-accept">Accept</button>
+                <button id="connect-remove">Disconnect</button>
+                <button class="cancel">&#10005;</button>
+            </div>
+            <div id="nouser" class="add">
+                <h4>Oh no!</h4>
+                <p>No user with that name could be found. This might be because the link is incorrect.</p>
+                <p>User names are cAsE Sensitive, so maybe you could check that?</p>
+                <p>It's also possible this user no longer exists. How very sad that would be. :(</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+            </div>       
+            <div id="follow" class="add">                
+            </div>
+            <div id="connections" class="add">                
+                <h4>Connections</h4>
+            </div>
+            <div id="lbox" class="lightbox"></div>           
+        </div>
+
+        <script src="/js/user.js"></script>
+
+        <script language="Javascript">
+
+            var lightbox;
+            let toppos = 0;     
+        
+
+            let setSelect = (selectObj, index) => {
+                Array.from(selectObj.options).forEach((op, i)=>{
+                    console.log(i);
+                });               
+            }                                      
+                          
+               
+            let menushow = (wrapper, s) => {
+                if(s === true) {
+                    wrapper.querySelectorAll('.options')[0].classList.remove('hide');
+                    wrapper.querySelectorAll('.options')[0].classList.add('swoopInRight'); 
+                    wrapper.querySelectorAll('.options')[0].classList.remove('swoopOutRight'); 
+                } else {
+                    wrapper.querySelectorAll('.options')[0].classList.add('swoopOutRight'); 
+                    wrapper.querySelectorAll('.options')[0].classList.remove('swoopInRight');
+                    window.setTimeout(function() {
+                        wrapper.querySelectorAll('.options')[0].classList.add('hide');
+                    }, 500);
+                }                
+            }              
+            
+
+           let getProfile = () => {
+                var user_id = getCookie('userID'); 
+                let url = 'Triplesss/api/profile.php?userid=' + user_id;
+
+                fetch(url, {
+                       method: "GET",                                           
+                   }) 
+                   .then(function(response) {
+                       response.json().then(function(d){                                                   
+                          
+                            //console.log(d);
+                            d.map(function(el) {
+                                const profileImage = document.querySelectorAll('#avatar img')[0];
+                                //const profileText = document.querySelectorAll('.bio-text')[0];
+                                if(el) {
+                                    if(el.content_type == 'image') {
+                                        const src = el.path + '/' + el.link;
+                                        profileImage.src = src;
+                                    }                                   
+                                }                              
+                           })                   
+                        })
+                    }
+                )
+            }
+
+            let followUser = (e) => {
+                const user_id = getCookie('userID'); 
+                const target_id = e.target.getAttribute('data-id');
+                const action = e.target.getAttribute('data-action');
+                const box = document.getElementById('followbox');
+
+                let url = 'Triplesss/api/connection.php?to=' + user_id + '&from=' + target_id + '&action=' + action;
+                fetch(url, { 
+                    method: "GET"
+                })
+                .then(function(response) {
+                    response.json().then(function(d){                         
+                        doSearch();
+                        connections();
+                    });
+                });
+            }
+
+            let connectClick = (e) => {
+                const user_id = getCookie('userID'); 
+                const target_id = e.target.getAttribute('data-id');
+                const action = e.target.getAttribute('data-action');
+                const username = e.target.getAttribute('data-username');
+                const box = document.getElementById('followbox');
+
+                const connectButton = document.getElementById("connect-request"); 
+                const acceptButton = document.getElementById("connect-accept");
+                const removeButton = document.getElementById("connect-remove");
+
+                connectButton.classList.remove('hidden');
+                acceptButton.classList.remove('hidden');
+                removeButton.classList.remove('hidden');
+
+                box.classList.remove('lowlight');   
+                box.setAttribute('data-user_id', target_id);
+
+                let msg = '';
+                if(action == 'request') {
+                    acceptButton.classList.add('hidden');
+                    removeButton.classList.add('hidden');
+                    msg = 'Send a connect request to ' + username + '?';
+                }
+
+                if(action == 'disconnect') {
+                    acceptButton.classList.add('hidden');
+                    connectButton.classList.add('hidden');
+                    msg = 'Disconnect from ' + username + '?';
+                }
+
+                if(action == 'accept') {
+                    removeButton.classList.add('hidden');
+                    connectButton.classList.add('hidden');
+                    msg = 'Accept connection request from ' + username + '?';
+                }
+
+                box.querySelectorAll('p')[0].innerText = msg;
+                document.documentElement.classList.add('lb');                                                
+                lightboxshow(true);  
+            }
+
+
+            let feedProfile = (user_id) => {
+               
+                let url = 'Triplesss/api/profile.php?userid=' + user_id;
+
+                fetch(url, { 
+                    method: "GET"
+                })
+                .then(function(response) {
+                    response.json().then(function(d){    
+                        d.map(function(el) {
+                            const profileImage = document.querySelectorAll('#profile .avatar img')[0];
+                            const profileName = document.querySelectorAll('#profile h3')[0];
+                            const profileText = document.querySelectorAll('#profile .bio')[0];
+                            if(el.content_type == 'image') {
+                                const src = el.path + '/' + el.link;
+                               
+                                profileImage.src = src;
+                                profileName.innerText = el.user_name;
+                            } 
+
+                            if(el.content_type == 'text') { 
+                                profileText.innerText = el.content;
+                            }  
+                        })
+                    });
+                });
+            }; 
+            
+            let doConnect = (action) => {
+                
+                const user_id = getCookie('userID'); 
+                const followBox = document.getElementById('followbox');
+                const target_id = followBox.getAttribute('data-user_id');
+                let url = 'Triplesss/api/connection.php?to=' + user_id + '&from=' + target_id + '&action=' + action;
+                console.log(url);
+               
+                fetch(url, { 
+                    method: "GET"
+                })
+                .then(function(response) {
+                    response.json().then(function(d){    
+                        followBox.classList.add('lowlight'); 
+                        lightboxshow(false);
+                        doSearch();
+                        connections();
+                    });
+                });                
+            }
+
+            let listProfile = (p) => {
+                         
+                console.log(p);
+                const follow = newDiv('follow');
+                const avatar = newDiv('avatar');
+                const buttons = newDiv('buttons');
+                const username = document.createElement('h3');
+                const userLink = document.createElement('a');
+                userLink.href="/userpage/" + p.user_name;
+                userLink.innerText = p.user_name;
+                username.append(userLink);
+
+                const declineButton = document.createElement('button');
+                const followButton = document.createElement('button');
+                followButton.setAttribute('data-id', p.id);
+                followButton.setAttribute('data-action', 'follow');
+                followButton.setAttribute('data-username', p.user_name);
+                
+                followButton.innerText = 'Follow';              
+                followButton.addEventListener('click', function(e) { followUser(e); })
+                
+                const connectButton = document.createElement('button');
+                connectButton.setAttribute('data-id', p.id);
+                connectButton.setAttribute('data-username', p.user_name);
+                if(p.relation == 'friend') {
+                    connectButton.innerText = 'Disconnect';  
+                    connectButton.setAttribute('data-action', 'disconnect');             
+                    connectButton.addEventListener('click', function(e) { connectClick(e); })
+                    buttons.append(connectButton);
+                } else if(p.relation == 'follow'){
+                    connectButton.innerText = 'Connect';   
+                    connectButton.setAttribute('data-action', 'request'); 
+                    connectButton.addEventListener('click', function(e) { connectClick(e); })  
+                    followButton.setAttribute('data-action', 'unfollow');
+                    followButton.innerText = 'Unfollow'; 
+                    buttons.append(followButton);
+                    buttons.append(connectButton);  
+                } else if (p.relation == 'friend_request') {
+                    // user has requested a connection                   
+                    connectButton.innerText = 'Approve';   
+                    connectButton.setAttribute('data-action', 'accept'); 
+                    connectButton.addEventListener('click', function(e) { connectClick(e); })  
+                    buttons.append(connectButton); 
+                } else if (p.relation == 'request_friend') {
+                    // pending connetion to user                   
+                    connectButton.innerText = 'Requested';   
+                    connectButton.setAttribute('disabled', true); 
+                    buttons.append(connectButton); 
+                } else {
+                    connectButton.innerText = 'Connect';   
+                    connectButton.setAttribute('data-action', 'request');              
+                    connectButton.addEventListener('click', function(e) { connectClick(e); })
+                    buttons.append(followButton);
+                    buttons.append(connectButton);
+                }                
+
+                /*
+                if(p.buttons.length > 0) {
+                    buttons.append(followButton);
+                    buttons.append(connectButton);
+                } 
+                */              
+                
+                let avatar_src = 'img/profile.png'; 
+
+                if(p.avatar) {
+                    avatar_src = p.avatar;
+                }
+                const avatar_image = newImage(avatar_src);
+                avatar.append(avatar_image);
+                //username.innerText = p.user_name;
+                follow.append(avatar);
+                follow.append(username);
+                follow.append(buttons);
+                return follow;               
+            }
+
+            let connections = () => {
+                const user_id = getCookie('userID'); 
+                let url = 'Triplesss/api/connections.php?userid=' + user_id;
+                
+                fetch(url, { 
+                    method: "GET"
+                })
+                .then(function(response) {
+                    const connectionBox = document.getElementById('connections');
+                    connectionBox.innerHTML = '';
+                    const heading = document.createElement('h3');
+                    heading.innerText = 'Connections';
+                    connectionBox.append(heading);
+                    response.json().then(function(d) {                      
+                        d.map(function(p) {
+                            p.buttons = ['follow', 'connect'];
+                            const profile = listProfile(p);
+                            connectionBox.append(profile);
+                        })                        
+                    }); 
+                });  
+            }
+            
+            let feedlist = () => {};
+            let hideAllMenus = () => {};
+
+            let doSearch = () => {
+                const user_id = getCookie('userID'); 
+                const searchBox = document.getElementById('user-name');
+                const user_name = searchBox.value;  
+                
+                if(user_name != '') {
+                    showBox(true, 'follow');                 
+                    let url = 'Triplesss/api/search_user.php?userid=' + user_id + '&username=' + user_name;
+                    
+                    fetch(url, { 
+                        method: "GET"
+                    })
+                    .then(function(response) {
+                        const followBox = document.getElementById('follow');
+                        followBox.innerHTML = '';
+                        const heading = document.createElement('h3');
+                        heading.innerText = 'Matches';
+                        followBox.append(heading);
+                        response.json().then(function(d) {                      
+                            if(d.length > 0) {
+                                d.map(function(p) {
+                                    p.buttons = ['follow', 'connect'];
+                                    const profile = listProfile(p);
+                                    followBox.append(profile);
+                                })   
+                            } else {
+                                const empty = {};
+                                empty.user_name = "none found";
+                                empty.buttons = [];
+                                const profile = listProfile(empty);
+                                followBox.append(profile);
+                            }
+                                                
+                        }); 
+                    }); 
+                }     
+            }
+
+                        
+            window.onload = () => {
+                const logoutButton = document.getElementById("log-out");  
+                const loginButton = document.getElementById("log-in"); 
+                const searchButton = document.getElementById("search-user"); 
+                const connectButton = document.getElementById("connect-request"); 
+                const acceptButton = document.getElementById("connect-accept");
+                const removeButton = document.getElementById("connect-remove");
+                const cancelButton = document.querySelectorAll('.cancel');
+
+
+                lightbox = document.getElementById("lbox");
+                              
+                showBox(false, 'keycheck');
+                showBox(false, 'fail');  
+                showBox(false, 'addpost');   
+                showBox(false, 'nouser');   
+                showBox(false, 'profile');   
+                showBox(false, 'feed'); 
+                showBox(false, 'follow');                
+               
+                isloggedin(function(d) {
+                    if(d == 'true') {
+                        showBox(false, 'keycheck');
+                        //showBox(true, 'follow');
+                    } else {
+                        showBox(true, 'keycheck');
+                        //showBox(false, 'follow');
+                    }
+                });
+                
+
+                logoutButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    dologout();                    
+                })
+
+                loginButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    dologin();                    
+                })   
+                
+                searchButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    doSearch();                    
+                })  
+
+                cancelButton.forEach((button) => {
+                    button.addEventListener('click', function(e) {
+                       
+                        lightboxshow(false);
+                        setScrollPos();
+                        hideAllMenus();
+                        this.parentElement.classList.add('lowlight');
+                    })
+                })
+
+                connectButton.addEventListener('click', function(e) {
+                    e.preventDefault();                    
+                    doConnect('request');                    
+                })
+
+                acceptButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    doConnect('accept');                    
+                })
+
+                removeButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    doConnect('remove');                    
+                })
+
+                connections();
+                
+            }
+
+        </script>
+    </body>
+</html>
+
+
+
+
