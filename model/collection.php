@@ -1,7 +1,7 @@
 <?php
 namespace  Triplesss\collection;
 
-class Collection implements interfaceCollection {
+class Collection {
     
     Public $id = 0;
     Public $items = [];

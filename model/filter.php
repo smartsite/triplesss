@@ -16,7 +16,7 @@ class Filter {
     Public $tags;
     Public $args;
     Public $range;
-    Public $userid;
+    Public $userid = -1;
     
     function __construct() {
        
@@ -49,12 +49,21 @@ class Filter {
         return $this->range;
     }
 
-    public function setUserid($userid) {
+    public function setUserid(Int $userid) {
         $this->userid = $userid;
     }
 
     public function getUserid() :Int {
         return $this->userid;
+    }
+
+    // these can be partial usernames, e.g. surf could filter "surfsouthoz" and "surfgurrl77"
+    public function setUserName($username) {
+        $this->username = $username;
+    }
+
+    public function getUserName() :string {
+        return $this->username;
     }
 
 

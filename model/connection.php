@@ -1,17 +1,25 @@
 <?php
 namespace  Triplesss\connection;
 use \Triplesss\user\User;
+use \Triplesss\repository\Repository;
 
-class Connection  {
-    
+/**
+ *   Relationships between users, e.g. follower, friend etc.
+ * 
+ */
+
+class Connection  {    
    
     Public $type; 
-    Public $id;
+    //Public $id;
     Public $from;
     Public $to;
+    Public $repository;
         
-    public function __construct($id) {
-        $this->id = $id;
+    //public function __construct($id) {
+    public function __construct() {    
+        //$this->id = $id;
+        $this->repository = new Repository(); 
     }
 
     public function setType($type) {
@@ -26,14 +34,12 @@ class Connection  {
         $this->from = $from;
         $this->to = $to;
         $this->type = $type;
+        return $this->repository->addConnection($from, $to, $this);
     }
 
     public function getTypes() {
-        return [
-            0 =>  'null',
-            1 =>  'freind',
-            2 =>  'follower'        
-        ];
+        $types = $this->repository->getConnectionTypes();
+        return $types;
     }
 
     public function getFrom() {

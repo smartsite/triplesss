@@ -2,6 +2,11 @@
 
 // It's possible we might be able to do this with the Feed endpoint!
 
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+
 require '../model/auth.php';
 require '../model/feed.php';
 require '../model/filter.php';

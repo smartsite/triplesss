@@ -13,7 +13,7 @@ class Tag {
     }
 
     public function add(String $key) : Bool {
-        if(in_array($key, $this->keys)) {
+        if(!in_array($key, $this->keys)) {
             array_push($this->keys, $key);
             return true;
         } else {

@@ -8,6 +8,7 @@ class Users {
     
     Public $id = 0;
     Public $filter;
+    Public $user_id = -1;
     
     
     function __construct() {
@@ -24,7 +25,7 @@ class Users {
     public function getUsers() {
         
         $filter = $this->filter;
-        $users =  $this->repository->getUsers($filter);
+        $users =  $this->repository->getUsers($filter, true);
         $this->users = $users;
         return $users;
     }
@@ -35,5 +36,13 @@ class Users {
          */
         
         $this->filter = $filter;
+    }
+
+    public function setUserId(Int $user_id) {
+        $this->user_id = $user_id;
+    }
+
+    public function getUserId() {
+        return $this->user_id;
     }
 }

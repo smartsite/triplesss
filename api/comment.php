@@ -1,5 +1,8 @@
 <?php
 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 require '../model/auth.php';
 require '../model/user.php';
 require '../model/image.php';
@@ -7,15 +10,17 @@ require '../model/text.php';
 require '../model/post.php';
 require '../model/feed.php';
 require '../model/content.php';
+require '../model/comment.php';
 require '../model/visibility.php';
 require '../model/notification.php';
 //require '../model/repository.php';
 
 
+use Triplesss\user\User;
 use Triplesss\feed\Feed as Feed;
 use Triplesss\post\Post as Post;
-use Triplesss\user\User;
 use Triplesss\content\Content as Content;
+use Triplesss\post\Comment as Comment;
 use Triplesss\visibility\Visibility;
 use Triplesss\notification\Notification;
 
@@ -26,8 +31,7 @@ use Triplesss\notification\Notification;
  *   Content objects can be images or text, so a Post can contain either,
  *   or both of these. A simple Post object contains a single text Content object. 
  * 
- *   A single image with a caption is represented by a Post object with 
- *   one text type Content object and one Image type content object.
+ *   A comment is just a post with a post as a parent!
  * 
  */
 
@@ -37,21 +41,28 @@ header('Content-Type: application/json');
 $content = trim(file_get_contents("php://input"));
 $postObj = json_decode($content);
 
-$im = $postObj->image;
+//$im = $postObj->image; // Only allow text for now!
+$im = null;
 $txt = $postObj->comment;
 $user_id = $postObj->userid;
 $feed_id = $postObj->feedid;
-$basefolder = $postObj->basefolder;
+$post_id = $postObj->postid;
+//$basefolder = $postObj->basefolder;
+$basefolder = '';
 
-$feed = new Feed();
-$feed->setId($feed_id);
-$post = new Post($user_id);
-$post->setContentType('text');
+$post2 = new Post(0);
+$post2->setPostId($post_id);
+$owner = $post2->getOwnerFull();
+
+$owner_user = new User();
+$owner_user->setUserId($owner['id']);
 
 $user = new User();
 $user->setUserId($user_id);
 
-$p1 = $post;
+$comment = new Comment($user_id);
+$comment->setContentType('text');
+$comment->setParentId($post_id);
 
 if($txt != '') {
     $postContent = new Content();
@@ -59,9 +70,10 @@ if($txt != '') {
     $postContent->setContentType('text');
     $postContent->setContent($txt);
     $postContent->write();
-    $post->addContent($postContent);
+    $comment->addContent($postContent);
 }
 
+/*
 if($im != '') {
     $postContent = new Content();
     $postContent->setUserId($user_id);
@@ -69,17 +81,25 @@ if($im != '') {
     $postContent->setContentType('image');
     $postContent->setContent($im);
     $postContent->write();
-    $post->addContent($postContent);
+    $comment->addContent($postContent);
 }
+*/
 
-$id = $post->add();
-$v = new Visibility();
+$v = new Visibility(); // initially, EVERYONE can see comments... which is probably not the best
 $v->setLevel(0);
-$post->setVisibility($v, $id);
+$comment->visibility = $v;
+$id = $comment->add();
 
-$notification = new Notification($user);
-$notification->setType('post');
+
+$notification = new Notification($owner_user);
+$notification->setFromUser($user);
+
+$notification->setType('comment');
 $notification->notify();
 
-$feed->addPost($post);
-echo json_encode(['postId' => $id]);
+
+
+// should return the comment count!
+$comments = $comment->getAll();
+
+echo json_encode(['count' => count($comments), 'comments' => $comments]);

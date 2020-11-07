@@ -1,4 +1,5 @@
 <?php
+
 namespace  Triplesss\repository;
 
 require_once('settings.php');
@@ -10,10 +11,16 @@ use Triplesss\error\Error as Error;
 use Triplesss\feed\Feed as Feed;
 use Triplesss\post\Post as Post;
 use Triplesss\user\User as User;
+use Triplesss\users\Users as Users;
 use Triplesss\filter\Filter as Filter;
 use Triplesss\db\DB as Db;
 use Triplesss\content\content as Content;
+use Triplesss\post\comment as Comment;
+use Triplesss\reaction\Reaction as Reaction;
+use Triplesss\connection\Connection as Connection;
+use Triplesss\notification\Notification;
 use Triplesss\visibility\Visibility as Visibility;
+use Triplesss\collection\Aggregator;
 
 /**
  * 
@@ -102,25 +109,53 @@ class Repository {
         return $r;
     }
 
+    Public function getPostOwnerById(String $id) {
+        $db = $this->db;
+        $s = 'SELECT user.id, user_name FROM user JOIN post ON post.owner = user.id WHERE post_id="'.$id.'"';
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        if($r) {
+            return $r[0];
+        } else {
+            return ['id' => -1, 'user_name'=> ''];
+        }
+        
+    }
+
     //Public function getPostById(Int $id) {
     Public function getPostById(String $id) {
        
+        $db = $this->db;
         $r = [];
         $r =  array_merge($r, $this->getPostAsset('image', $id));
         $r = array_merge($r, $this->getPostAsset('text', $id));  
+        $comments = $this->getPostComments($id);
+        
+        $likes = 0;
+        // TODO: remove hard coded 'like' count, use reaction object instead
+        $s = 'SELECT COUNT(*) AS likes FROM reaction WHERE post_id="'.$id.'" AND level = 2';
+        $p = $db->query($s);
+        $l = $db->fetchAll($p);
+        if($l) {
+            $likes = $l[0]['likes'];
+        }
+  
 
-        $assets = array_map(function($post_item) use ($id) {
+        $assets = array_map(function($post_item) use ($id, $comments, $likes) {
          
             if($post_item['content_type'] == 'text') {
                
                return [
                     'post_id'=> $id,
                     'owner' => $post_item['owner'], 
+                    'user_name' => $post_item['user_name'], 
                     'content_type' => $post_item['content_type'], 
                     'content_id' => $post_item['content_id'],
                     'text_id' => $post_item['text_id'], 
                     'content' => $post_item['content'], 
                     'tags' =>    $post_item['tags'], 
+                    'comment_count' => count($comments), 
+                    'likes' =>  $likes, 
                     'creator_id' => $post_item['creator_id'],
                     'visibility' =>   $post_item['visibility']                   
                 ];               
@@ -131,11 +166,14 @@ class Repository {
                 return [
                     'post_id'=> $id,
                     'owner' => $post_item['owner'], 
+                    'user_name' => $post_item['user_name'], 
                     'content_type' => $post_item['content_type'], 
                     'content_id' => $post_item['content_id'],
                     'link' => $post_item['link'], 
                     'path' => $post_item['path'], 
                     'tags' =>    $post_item['tags'], 
+                    'comment_count' => count($comments), 
+                    'likes' =>  $likes, 
                     'mime_type' =>    $post_item['mime_type'], 
                     'creator_id' => $post_item['creator_id'],
                     'visibility' =>   $post_item['visibility']                       
@@ -146,14 +184,15 @@ class Repository {
         return $assets;
     }
 
-    Public function getPostAsset(String $type, String $post_id) {
+    Public function getPostAsset(String $type, String $post_id, Int $visibility = 0) {
 
         if($this->checkAssetType($type)) {
             $db = $this->db;
             $s = 'SELECT * FROM content_post 
                     JOIN post ON content_post.post_id = post.id 
+                    JOIN user ON post.owner = user.id 
                     JOIN '.$type.' ON '.$type.'.id = content_post.content_id AND content_post.content_type="'.$type.'"   
-                    WHERE post.post_id="'.$post_id.'"';            
+                    WHERE post.post_id="'.$post_id.'" AND post.visibility >='.$visibility;            
           
             $p = $db->query($s);
             $r = $db->fetchAll($p);
@@ -170,7 +209,9 @@ class Repository {
         $s = 'INSERT INTO post SET owner='.$owner.', post_id="'.$post_id.'", title=""';
         $db->query($s);
         $p_id = $db->lastInsertedID();
-        $items = $post->getItems();
+        $post->postId =  $post_id;
+        //$items = $post->getItems();
+        $items = $post->items;
 
         array_map(function(Content $item) use($db, $p_id) {
             $id = $item->getContentId();
@@ -182,19 +223,61 @@ class Repository {
         return $post_id;
     }  
 
+    Public function updatePost(String $p_id, String $text) {
+        $db = $this->db;
+        $qry = 'UPDATE `text` JOIN content_post on content_id = text.id AND content_type="text" 
+                JOIN `post` ON  post.id = content_post.post_id SET `content`="'.$text.'" WHERE post.post_id="'.$p_id.'"';
+        $r = $db->query($qry);
+       
+        if($r) {
+            return $text;
+        } else {
+            return false;
+        }        
+    }
+    
+
+    Public function postVisibility(String $p_id, Int $visibility) {
+        $db = $this->db;
+        $qry = 'UPDATE `post` SET visibility = '.$visibility.' WHERE post.post_id="'.$p_id.'"';
+        $r1 = $db->query($qry);
+
+        $qry = 'UPDATE `text` JOIN content_post on content_id = text.id AND content_type="text" 
+        JOIN `post` ON  post.id = content_post.post_id SET visibility = '.$visibility.' WHERE post.post_id="'.$p_id.'"';
+        $r = $db->query($qry);
+
+        $qry = 'UPDATE `image` JOIN content_post on content_id = image.id AND content_type="image" 
+        JOIN `post` ON  post.id = content_post.post_id SET visibility = '.$visibility.' WHERE post.post_id="'.$p_id.'"';
+        $r = $db->query($qry);
+
+        return $r1;        
+    }
+
+    Public function deletePost(String $p_id) {
+        return $this->postVisibility($p_id, -1);
+    }
+
     Public function editPost(Post $post, String $text, Image $image) {
         $db = $this->db;
-        $owner = $post->getOwner();
+        $owner =  $post->getOwner();
+
         // basically we just need to do an update on the text in the text table if it's not empty,
         // and update the image if a replacement has been uploaded
     }
     
-    Public function addPostToFeed(Post $post, Feed $feed) {
+    Public function addPostToFeed(Post $post, String $parent = '', Feed $feed = null) {
         $db = $this->db;
         //$p_id = $post->getId();
         $p_id = $post->getPostId();
-        $f_id = $feed->getId();
-        $id = $this->newPostId();
+       
+        if($parent == '') {
+            $f_id = $feed->getId();
+            $id = $this->newPostId();
+        } else {
+            $f_id = -1; // this indicates it's a comment, because it belongs to a post, not a feed
+            $id = $parent;            
+        }
+       
         $visibility = $post->getVisibility()->getLevel();
         $qry = 'INSERT INTO feed_post SET id="'.$id.'", post_id="'.$p_id.'", feed_id='.$f_id.', visibility='.$visibility;
         //echo $qry;
@@ -206,23 +289,163 @@ class Repository {
         }
     }
 
-    Public function getFeedPosts(Feed $feed, Filter $filter=null) {
+    Public function getLikeCount(String $post_id) {
+        $db = $this->db;
+        $count = 0;
+        $s = 'SELECT count(*) AS count FROM post_comment WHERE feed_post_id="'.$post_id.'"';
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        if($r) {
+            $count = $r[0]['count'];
+        }
+        return $count;
+    }
+
+    Public function getFeedPosts(Feed $feed, Filter $filter=null, Int $visibility = 0) {
         
         $db = $this->db;
         $s = 'SELECT post_id FROM feed_post WHERE feed_id='.$feed->id;
         if($filter) {
             if($filter->type == 'userid' && $filter->userid) {
                 $s = 'SELECT feed_post.post_id FROM feed_post JOIN post ON post.post_id = feed_post.post_id 
-                WHERE feed_id='.$feed->id.' AND post.owner='.$filter->userid;
+                WHERE feed_id='.$feed->id.' AND post.owner='.$filter->userid.' AND feed_post.visibility >= '.$visibility ;
             }           
         }
+        
         $p = $db->query($s);
         $r = $db->fetchAll($p);
 
-        $posts = array_map(function($p){          
-            return $this->getPostById($p['post_id']);
-        }, $r);
+        $posts = array_filter(array_map(function($p){          
+            $p = $this->getPostById($p['post_id']);
+            return $p;
+        }, $r));
         return $posts;
+    }
+
+    Public function getAggregatedPosts(Aggregator $aggregator) {
+        /**
+         *   Get everything posted by a user's connections that's set to friend level visibility
+         *   Sorted by reverse post id for now ( by default ), which is crappy, but the applied
+         *   filter can probably overcome that limitation
+         */
+        
+        $db = $this->db;
+
+        $filter = $aggregator->filter;
+        $userid = $aggregator->userid;
+        // query to fetch all post ids for connected users 
+        $s = 'SELECT owner, post.post_id FROM feed_post
+            JOIN post ON  feed_post.post_id = post.post_id 
+            JOIN
+            (SELECT DISTINCT * FROM 
+            (SELECT from_id con FROM connection WHERE connection_type IN (1,2)  AND to_id = '.$userid.' AND from_id <> '.$userid.' UNION 
+            SELECT to_id con FROM connection WHERE connection_type IN (1,2) AND from_id = '.$userid.' AND to_id <> '.$userid.') connected) connection 
+            ON connection.con = post.owner ORDER BY post.id DESC';
+
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        $posts = [];
+        if($r) {
+            $posts = array_filter(array_map(function($post) {
+                $post_id = $post['post_id'];
+                $p = $this->getPostById($post_id);
+                return $p;
+            }, $r));
+        }
+        return $posts;
+    }    
+
+    Public function addPostComment(Comment $comment) {
+        $db = $this->db;
+        $c = $comment;
+        
+        // We are essentially casting the comment as a post
+        $post = new Post($c->owner);
+        $post->postId = $this->newPostId();
+        $post->images = [];
+        $post->items = $c->items;
+        $post->reactions = $c->reactions;
+        $post->visibility = $c->visibility;
+        $post->add();
+
+        $id = $c->parent_post;
+        $p_id = $post->postId;
+        $visibility = $c->visibility->level;
+
+        $qry = 'INSERT INTO post_comment SET feed_post_id="'.$id.'", post_id="'.$p_id.'", visibility='.$visibility;
+        $p = $db->query($qry);   
+        if($p) {
+            return $db->lastInsertedID();
+        } else {
+            return $db->sql_error();
+        }     
+        
+    }
+
+    Public function addReaction(Post $post, Reaction $reaction) {
+        $post_id = $post->postId;
+        $user_id = $reaction->user->userid;
+        $level = $reaction->get()->level;
+        
+        $db = $this->db;
+        $s = 'INSERT INTO reaction SET user_id='.$user_id.', post_id="'.$post_id.'", level='.$level;
+        $p = $db->query($s);
+        return $p;
+    }
+
+    Public function getPostReactions(Post $post, Reaction $reaction = null) {
+        $db = $this->db;
+        $post_id = $post->postId;
+        $s = 'SELECT user_id, user_name, level FROM reaction JOIN user ON user_id = user.id WHERE post_id="'.$post_id.'"';
+        if($reaction) {
+            $level = $reaction->get()->level;
+            $s.= ' AND level='.$level;
+        }
+       
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        return $r;
+    }
+
+    Public function getUserReactions(Int $user_id, Int $count = 100) {
+        $db = $this->db;
+        $s = 'SELECT level, post_id FROM reaction WHERE user_id ='.$user_id.' ORDER BY id DESC LIMIT '.$count;
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        return $r;
+    }
+
+    /*
+    Public function getPostLikes(Post $post_id) {
+        // todo - get likes for this post!
+        $db = $this->db;
+        $s = 'SELECT count(*) FROM reaction WHERE post_id='.$post_id.' AND level =' ;
+        return [];
+    }
+    */
+
+
+    Public function getPostComments(String $parent_id, Filter $filter=null) {
+        // We only support text assets at the moment, but images can be added by duplicating the query
+        // and UNION it with content_type = 'image'
+
+        $db = $this->db;
+           
+        $s = 'SELECT post_comment.feed_post_id parent_id, post_comment.post_id, content, owner, user.user_name, creator_id, text.visibility, text.created FROM post_comment 
+        JOIN post ON post.post_id = post_comment.post_id 
+        JOIN content_post ON  content_post.post_id = post.id 
+        JOIN user ON user.id = owner 
+        JOIN text ON text.id = content_post.content_id AND  content_post.content_type = "text"
+        WHERE post_comment.feed_post_id = "'.$parent_id.'" 
+        AND content_type = "text"';
+
+        if(!$filter) {
+            $s.= " ORDER BY text.created DESC";
+        }
+
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        return $r;             
     }
 
     
@@ -395,23 +618,165 @@ class Repository {
         }
     }
 
-    
+    public function getConnectedUsers(User $user, Connection $connection = null) { 
+        $db = $this->db;
+        $user_id = $user->userid;
+        $connection_level = 2; // friend by default
+        if($connection) {
+            $connection_level = $connection->type;
+        }
+        
+        /*
+        $s = 'SELECT DISTINCT user.id, user_name, connection_types.name relation FROM connection JOIN user ON connection.from_id = user.id 
+                JOIN connection_types ON connection_types.id = connection.connection_type 
+                WHERE connection.connection_type IN (1,'.$connection_level.') AND connection.to_id='.$user_id;
+                     
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        $rv = [];
+        
+            // get the reverse connection for freinds
+            
+            $s = 'SELECT DISTINCT user.id, user_name, "friend" relation FROM connection JOIN user ON connection.to_id = user.id 
+                JOIN connection_types ON connection_types.id = connection.connection_type 
+                WHERE connection.from_id='.$user_id.' AND connection_type=2' ;
+             $p = $db->query($s);
+             $rv = $db->fetchAll($p);
+        
+        return array_merge($r, $rv);
+        */
+
+        $s = 'SELECT DISTINCT * FROM (SELECT user.id, user_name, connection_types.name relation FROM connection JOIN user ON connection.from_id = user.id 
+        JOIN connection_types ON connection_types.id = connection.connection_type 
+        WHERE connection.connection_type IN (1,'.$connection_level.') AND connection.to_id='.$user_id.' UNION  
+        SELECT user.id, user_name, "friend" relation FROM connection JOIN user ON connection.to_id = user.id 
+        JOIN connection_types ON connection_types.id = connection.connection_type 
+        WHERE connection.from_id='.$user_id.' AND connection_type=2) con';
+
+        
+        $p = $db->query($s);
+        $rv = $db->fetchAll($p);
+        return $rv;
+
+    }
+
+
+    public function getConnectionRequests(User $user) { 
+        $db = $this->db;
+        $user_id = $user->userid;
+        $connection_level = 9; // request
+       
+        $s = 'SELECT DISTINCT * FROM (SELECT user.id, user_name, "friend_request" relation FROM connection JOIN user ON connection.to_id = user.id 
+                JOIN connection_types ON connection_types.id = connection.connection_type 
+                WHERE connection.connection_type = '.$connection_level.' AND connection.from_id='.$user_id.' UNION 
+                SELECT user.id, user_name, "request_friend" relation FROM connection JOIN user ON connection.from_id = user.id 
+                JOIN connection_types ON connection_types.id = connection.connection_type 
+                WHERE connection.connection_type = '.$connection_level.' AND connection.to_id='.$user_id.') s';
+              
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        return $r;
+    }
+
+
+    public function getConnectionTypes() {
+        $db = $this->db;
+        $s = 'SELECT * FROM connection_types';
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        return $r;
+    }
+
+    public function addConnection(User $from, User $to, Connection $connection) {
+        $db = $this->db;
+        $from_id = $from->userid;
+        $to_id = $to->userid;
+        $type = $connection->getType();
+
+        // insert or update if connection exists
+        $p = false;
+
+        if($type == 2 ) {
+            // update reverse 9 connections
+            $s = 'UPDATE connection SET connection_type=2 WHERE connection_type=9 AND (to_id='.$from_id.' AND from_id='.$to_id.' 
+                    AND to_id='.$from_id.' AND from_id='.$to_id.')';
+            $p = $db->query($s);        
+        }
+        if($type != 0) {
+            $s = 'INSERT INTO connection VALUES ('.$type.', '.$from_id.', '.$to_id.') ON DUPLICATE KEY UPDATE connection_type='.$type;
+            $p = $db->query($s);
+        } else {
+            $s = 'DELETE FROM connection WHERE from_id='.$from_id.' AND to_id='.$to_id;
+            $p = $db->query($s);
+            $s = 'DELETE FROM connection WHERE to_id='.$from_id.' AND from_id='.$to_id;
+            $p = $db->query($s);
+        }      
+       
+        return $p;
+    }
+
+    public function removeConnection(User $from, User $to, Connection $connection) {
+        // addConnection type=0 does this!
+    }
+
+    public function setNotification(Notification $notification) {
+        $db = $this->db;
+        $u = $notification->to_user;
+        $user_id = $u->userid;
+        $message = $notification->getMessage();
+        $type =  $notification->typeid;
+
+        $s = 'INSERT INTO notification (`type`, `user_id`, `notification_id`, `message`) VALUES ('.$type.', '.$user_id.', "", "'.$message.'" )'; 
+        $p = $db->query($s);
+        return $p;
+    }
+
+    public function getNotifications(User $user) {
+        $db = $this->db;
+        $user_id = $user->userid;
+        $s = 'SELECT * FROM  notification WHERE user_id= '.$user_id.' ORDER BY timestamp DESC';
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        return $r;
+    }
+      
 
     public function getUsers(Filter $filter, Bool $safe) {
         $db = $this->db;
         if($safe) {
-            $s = 'SELECT user_name, first_name, last_name, last_login, is_logged_in, user_level, active FROM users';
+            $s = 'SELECT id, user_name, first_name, last_name, last_login, session.expires, user_level, active    
+                  FROM user LEFT JOIN session ON session.user_id = user.id AND expires > NOW()';
         } else {
             $s = 'SELECT * FROM users';
-        }
+        }               
        
         if($filter->getType() == 'range') {
             $range = $filter->getRange();
             $s.= ' LIMIT '.$range[1].' OFFSET '.$range[0]; 
         }
+        
+        if($filter->getType() == 'like') {
+            $like = $filter->getUsername();           
+            $s.= ' WHERE user_name LIKE "'.$like.'%" AND active=1 AND user_name NOT LIKE "admin"';             
+            $s.= ' LIMIT 10'; 
+        }
+              
         $p = $db->query($s);
         $r = $db->fetchAll($p);
         return $r;
+    }
+
+    public function getUserName(User $user) {
+        $db = $this->db;
+        $user_id = $user->userid;
+        $s = 'SELECT user_name FROM user WHERE id='.$user_id;
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        if($r) {
+            return $r[0]['user_name'];
+        } else {
+            return false;
+        }        
     }
 
     public function getUserFeeds($userid) {
@@ -473,6 +838,33 @@ class Repository {
             $w.= '('.implode(' OR ', $ss).')';
         }
         return $w;
+    }
+
+    public function getTags(Content $content) {
+        $db = $this->db;
+        $tags = '';
+        if($content->contentType == 'image' || $content->contentType == 'text') {
+            $s = 'SELECT tags FROM '.$content->contentType. ' WHERE id='.$content->contentId.' LIMIT 1';
+            $p = $db->query($s);
+            $r = $db->fetchAll($p);
+            $tags = $r[0]['tags'];
+        }
+        return $tags;    
+    }
+
+    public function setTags(Array $content, String $tags) {
+        $db = $this->db;
+        $p = false;
+        $error = [];
+        if($content['content_type'] == 'image' || $content['content_type'] == 'text') {
+            $s = 'UPDATE '.$content['content_type'].' SET tags="'.$tags.'" WHERE id='.$content['content_id'].' LIMIT 1';
+            $p = $db->query($s);           
+        } else {
+            $error['message'] = "Invalid content type";
+            $error['success'] = "false";
+            $p = $error;
+        }
+        return $p;
     }
 
     private function checkAssetType(String $asset_type) {

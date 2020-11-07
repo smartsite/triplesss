@@ -27,8 +27,8 @@ class Feed {
         return $this->id;
     }
 
-    function addPost(Post $post) {
-        $this->repository->addPostToFeed($post, $this);
+    function addPost(Post $post, String $parent='') {
+        $this->repository->addPostToFeed($post, $parent, $this);
         array_push($this->posts, $post);
     }
 
@@ -43,10 +43,11 @@ class Feed {
         $sort_order = "desc";
         $range = $this->range;
 
-        $posts = [];       
+        $posts = [];   
+        $st = explode(',', $sort_term);    
        
-        if($sort_term[1]) {
-            $sort_order = $sort_term[1];
+        if($st[1]) {
+            $sort_order = trim($st[1]);
         }
         
         //TODO: properly implement sort terms, e.g. popularity, relevance

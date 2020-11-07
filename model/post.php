@@ -10,8 +10,8 @@ use Triplesss\user\User;
 use Triplesss\tag\Tag;
 
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+//ini_set('display_errors', 1);
+//error_reporting(E_ALL);
 
 class Post {
     
@@ -25,6 +25,8 @@ class Post {
     Public $owner = null; // Alias for userId
     Public $items = [];
     Public $tags = null;
+    Public $likes = 0;
+    Public $comments = [];
     Public $reactions = [];
     Public $repository;
     Public $visibility;
@@ -47,9 +49,18 @@ class Post {
         return $this->postId;
     }
 
+    function setPostId(String $post_id) {
+        $this->postId = $post_id;
+    }
+
     public function getOwner() : Int {
         return $this->owner;
     }
+
+    public function getOwnerFull() :Array {
+        return $this->repository->getPostOwnerById($this->postId);
+    }
+
 
     function addContent(Content $content) {
         array_push($this->items, $content);
@@ -90,18 +101,37 @@ class Post {
         return $postId;        
     }
 
+    public function updateContent(String $post_id, String $text) { 
+        // TODO: handle more than one image :(
+        $status = $this->repository->updatePost($post_id, $text);
+        return $status;
+    }
+
+    public function delete(String $post_id) { 
+        $status = $this->repository->deletePost($post_id);
+        return $status;
+    }
+
     public function edit(String $text, Image $image) { 
         // TODO: handle more than one image :(
         $status = $this->repository->editPost($this, $text, $image);
         return $status;
     }
 
+    
     public function getItems() {
+        //$text = $this->repository->getPostAsset('text', $this->postId);
+        //$image = $this->repository->getPostAsset('image', $this->postId);
+        //$this->items = [$text, $image];
+        $items = $this->repository->getPostById($this->postId);
+        $this->items = $items;
         return $this->items;
     }
+    
 
-    public function setVisibility(Visibility $v) {
+    public function setVisibility(Visibility $v, String $post_id) {
         $this->visibility = $v;
+        return $this->repository->postVisibility($post_id, $v->getLevel());
     }
 
     public function getVisibility() : Visibility {
@@ -112,24 +142,49 @@ class Post {
         // output markup for a post. Not really needed with a F/E framework.
     }
 
-    public function addTag(Tag $tag) {
-        $this->tags = $tag;
+    public function addTag(String $tag) {
+       $tags = $this->tags; 
+       $tags->add($tag);
+       $this->tags = $tag;       
+    }
+
+    public function setTags(Tag $tagObj) {
+        $this->tags = $tagObj;
+    }
+
+    public function saveTags() {
+        $tagArray= $this->tags->keys;
+        $repository = $this->repository;
+        $tags = implode(",",  $tagArray);  
+        $items = $this->getItems();
+        array_map(function($content) use($tags, $repository){
+            $repository->setTags($content, $tags); 
+        }, $items);      
+       
     }
 
     public function addReaction(Reaction $reaction) : Bool {
         // first, see if user has reacted
-        $added = false;
+        //$added = false;
+
+        $repository = $this->repository;
+        return $repository->addReaction($this, $reaction);  
+
         /*
         if(!$this->userReacted($user)) {
             array_push($this->reactions, $reaction);
             $added = true;
         }
         */
-        array_push($this->reactions, $reaction);
-        return $added;
+        
+        //array_push($this->reactions, $reaction);
+        //return $added;
     }
 
     public function getReactions() :Array {
+        $repository = $this->repository;
+        $post = $this;
+        $this->reactions = $repository->getPostReactions($post);
         return $this->reactions;
     } 
 
@@ -142,6 +197,12 @@ class Post {
                 unset($reactions[$key]);                
             }
         }, $this->reactions, array_keys($this->reactions));
+    }
+
+    public function getComments() {
+        $repository = $this->repository;
+        $this->comments = $repository->getPostComments($this->postId);
+        return $this->comments;
     }
 
     public function userReacted(User $user) {

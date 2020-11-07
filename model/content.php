@@ -17,7 +17,7 @@ class content {
     Public $tags;
     Public $userId;
     Public $baseFolder;
-    Public $contentId;
+    Public $contentId; 
           
     
     function __construct() {
@@ -86,6 +86,18 @@ class content {
         $this->contentId = $id;
         return $id;
     }
+
+    Public function getTags() {
+        $this->tags =  $this->repository->getTags($this);
+        return $this->tags;
+    }
+
+    Public function setTags($tags) {
+        $this->tags = $tags;
+        return $this->repository->setTags($this);
+    }
+
+
 
 
 }
