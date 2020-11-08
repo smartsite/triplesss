@@ -2,11 +2,14 @@
 
 ## Super. Simple. Social.
 
-A simple, yet reasonably well-featured social media platform which presents a RESTful API instead of a difficult to customise GUI. It means you can bolt it up to whatever front-end you like -  VueJs, React, even plain old HTML5 + pure Javascript. 
+A white label social media platform written in PHP / MySQL, presenting a RESTful API. You can write the UX any way you like -  VueJs, React, even plain old HTML5 + pure Javascript. 
 
-The API and class structure have been strongly influenced by [stream-php](https://github.com/GetStream/stream-php),without depending on https://getstream.io.
+The API and class structure have been strongly influenced by [stream-php](https://github.com/GetStream/stream-php), without depending on https://getstream.io.
 
 Tags are integral to how Triplesss works. They present an easy way to group, categorise and search for posts that tend to get easily lost on other social platforms.
+
+It's simple, yet reasonably well-featured. There's signicifant scope to extend features.
+
 
 ## Getting Started
 
@@ -22,7 +25,13 @@ Give examples
 
 ### Installing
 
-composer add smartsite/triplesss
+1. composer install smartsite/triplesss
+
+2. Create a new MySQL database called Triplesss
+
+3. Copy / paste tripless.sql into PHPMyAdmin to create tables under Triplesss
+
+4. Profit
 
 ### New user
 
@@ -78,7 +87,7 @@ $post->addReaction($user, $reaction);
 
 ### Add some tags
 
-$post->addTags('lenna', 'girls', 'hat');
+$post->addTags('lenna', 'girls', 'hats');
 
 ### Update the feed
 
@@ -91,7 +100,7 @@ $feed->findPosts('llamas', 'hats');
 
 ## Running the tests
 
-TODO:
+easy tiger... this thing isn't even in alpha yet!
 
 ### Break down into end to end tests
 
@@ -144,4 +153,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Inspired by facebook's klunky, tired looking UX and how difficult Facebook and Insta are in regard to finding content you engaged with.
+* Inspired by facebook's klunky, tired looking UX and how difficult Facebook and Insta are in regard to finding content you engaged with as opposed to getting bombarded with content that makes to want to gouge your eyes out.
+
+* Motivated by Getstream's desire to try and charge you for something you can easily do yourself 
