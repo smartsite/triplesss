@@ -2,11 +2,14 @@
 
 ## Super. Simple. Social.
 
-A simple, yet reasonably well-featured social media platform which presents a RESTful API instead of a difficult to customise GUI. It means you can bolt it up to whatever front-end you like -  VueJs, React, even plain old HTML5 + pure Javascript. 
+A white label social media platform written in PHP / MySQL, presenting a RESTful API. You can write the UX any way you like -  VueJs, React, even plain old HTML5 + pure Javascript. 
 
 The API and class structure have been strongly influenced by [stream-php](https://github.com/GetStream/stream-php), without depending on https://getstream.io.
 
 Tags are integral to how Triplesss works. They present an easy way to group, categorise and search for posts that tend to get easily lost on other social platforms.
+
+It's simple, yet reasonably well-featured. There's signicifant scope to extend features.
+
 
 ## Getting Started
 
