@@ -63,11 +63,14 @@ if($txt != '') {
 }
 
 if($im != '') {
+    $maxWidth=1024;
+    $maxHeight=640;
     $postContent = new Content();
     $postContent->setUserId($user_id);
     $postContent->setBaseFolder($basefolder);
     $postContent->setContentType('image');
     $postContent->setContent($im);
+    $postContent->setImageConstraints($maxWidth, $maxHeight);
     $postContent->write();
     $post->addContent($postContent);
 }

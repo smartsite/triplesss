@@ -27,7 +27,9 @@ class Settings
          *    User session  settings
          */  
         
-        $settings['session_time'] = 1 * 30 * 60 * 60; // 30 mins for testing!
+		$settings['session_time'] = 1 * 30 * 60 * 60; // 30 mins for testing!
+		
+		$settings['hostname'] = 'http://dev2020-vbox';
 		
 		return $settings;
 	}

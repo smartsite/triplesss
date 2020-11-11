@@ -301,6 +301,35 @@ class Repository {
         return $count;
     }
 
+    Public function createFeed($owner_id, $name, $description) {
+        $db = $this->db;
+        $created = date("Y-m-d");
+        $s = 'INSERT INTO feed (owner_id, feed_name, feed_description, created, active, status) VALUES 
+                ('.$owner_id.', "'.$name.'", "'.$description.'", "'.$created.'", 1, "current")';
+        $p = $db->query($s);
+        $id = $db->lastInsertedID();
+        return $id;              
+    }
+
+    Public function getFeed(Int $id) {
+        $db = $this->db; 
+        $feed = false;
+        $s = 'SELECT * FROM feed WHERE id="'.$id.'" LIMIT 1';
+        $p = $db->query($s);
+        $r = $db->fetchRow($p);
+        if($r) {
+            $feed = $r;
+        }
+        return $feed;
+    }
+
+    Public function updateFeedStatus($id, $active, $status) {
+        $db = $this->db; 
+        $s = 'UPDATE feed SET active='.$active.', status="'.$status.'" WHERE id='.$id;
+        $p = $db->query($s);
+        return $p;
+    }
+
     Public function getFeedPosts(Feed $feed, Filter $filter=null, Int $visibility = 0) {
         
         $db = $this->db;
@@ -341,19 +370,21 @@ class Repository {
             (SELECT from_id con FROM connection WHERE connection_type IN (1,2)  AND to_id = '.$userid.' AND from_id <> '.$userid.' UNION 
             SELECT to_id con FROM connection WHERE connection_type IN (1,2) AND from_id = '.$userid.' AND to_id <> '.$userid.') connected) connection 
             ON connection.con = post.owner ORDER BY post.id DESC';
-
+          
         $p = $db->query($s);
         $r = $db->fetchAll($p);
         $posts = [];
         if($r) {
             $posts = array_filter(array_map(function($post) {
-                $post_id = $post['post_id'];
-                $p = $this->getPostById($post_id);
-                return $p;
+                if(!is_null($post)) {
+                    $post_id = $post['post_id'];
+                    $p = $this->getPostById($post_id);
+                    return array_values($p);
+                }
             }, $r));
         }
         return $posts;
-    }    
+    }       
 
     Public function addPostComment(Comment $comment) {
         $db = $this->db;
@@ -453,8 +484,9 @@ class Repository {
         $db = $this->db;
         $s = 'SELECT user_name FROM user WHERE user_name="'.$username.'"';
         $p = $db->query($s);
-        $r = $db->fetchAll($p);
-        return count($r) > 0;        
+        $rows = $db->fetchAll($p);
+        $r = $rows[0];
+        return !is_null($r);        
     }
 
     public function temporaryPassword(Int $length = 10) :String {
@@ -609,8 +641,8 @@ class Repository {
     public function generateRegisterLink($username, $from, $reply) {
         $db = $this->db;
         $key = $this->randomString(12);
-        $link = gethostname().'/user_register.php?key='.$key;
-        $s = 'UPDATE user SET reg_link="/user_register.php?key='.$key.'" WHERE user_name="'.$username.'"';
+        $link = $this->getSetting('hostname').'/register_confirm?key='.$key;
+        $s = 'UPDATE user SET reg_link="/register_confirm?key='.$key.'" WHERE user_name="'.$username.'"';
         $p = $db->query($s);
         if($p) {
             // send email;
@@ -653,7 +685,6 @@ class Repository {
         JOIN connection_types ON connection_types.id = connection.connection_type 
         WHERE connection.from_id='.$user_id.' AND connection_type=2) con';
 
-        
         $p = $db->query($s);
         $rv = $db->fetchAll($p);
         return $rv;
@@ -906,7 +937,7 @@ class Repository {
             $email = $r[0]['email'];
         }
         $subject = "Confirm your registration";
-        $msg = 'Dear '.$firstname.', thanks for registering. Please click or tap on this link</a> to confirm your registration. http://'.$link;
+        $msg = 'Dear '.$firstname.', thanks for registering. Please click or tap on this link to confirm your registration. https://'.$link;
         $headers = 'From: '.$from. "\r\n" .
                     'Reply-To:' .$reply. "\r\n" .
                     'X-Mailer: PHP/' . phpversion();

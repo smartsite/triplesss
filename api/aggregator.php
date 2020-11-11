@@ -44,8 +44,8 @@ $ag = $aggregator->getPosts();
 $posts = array_filter(array_map(function($u) {
     $fu = new User();
     $fu->setUserId($u[0]['owner']);
-    $u['avatar'] = $fu->getAvatar();   
+    $u[0]['avatar'] = $fu->getAvatar();   
     return $u;
 }, $ag));
 
-echo json_encode($posts);
+echo json_encode($posts, true);

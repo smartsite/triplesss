@@ -47,8 +47,13 @@ class DB extends Settings {
 		return $result->fetch_array( $resultType );
 	}
 	
-	function fetchAll( $result , $resultType = MYSQLI_ASSOC ) {
-		return $result->fetch_all( $resultType );
+	function fetchAll( $result , $resultType = MYSQLI_ASSOC ) {		
+		$row_count = $result->num_rows;
+		$rows = [];
+		for($i=0; $i < $row_count; $i++) {
+			array_push($rows, $this->fetchAssoc($result) );
+		}
+		return $rows;
 	}
 	
 	function fetchRow( $result ) {

@@ -18,6 +18,8 @@ class content {
     Public $userId;
     Public $baseFolder;
     Public $contentId; 
+    Public $maxImageWidth;
+    Public $maxImageHeight;
           
     
     function __construct() {
@@ -66,12 +68,22 @@ class content {
         //return $this->content;
     }
 
+    public function getImageConstraints() :Array{
+        return ['width' => $this->maxImageWidth, 'height' => $this->maxImageHeight];
+    }
+
+    public function setImageConstraints($width, $height) {
+            $this->maxImageWidth = $width; 
+            $this->maxImageHeight = $height;
+    }
+
     Public function write() {
         $id = -1;
         if($this->contentType == 'image') {
             $im = new Image();
             $im->setBaseFolder($this->baseFolder);
             $im->setUserId($this->userId);
+            $im->setConstraints($this->maxImageWidth,  $this->maxImageHeight);
             $stored = $im->add($this->content);
             // This is the database insert ID
             $id = $this->repository->imageAdd($stored['name'], $stored['folder'], $stored['type'], $stored['mime_type'], $this->userId, '');           

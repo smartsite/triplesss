@@ -7,6 +7,9 @@ use Triplesss\post\Post;
 class Feed {
     
     Public $id = 0;
+    Public $owner;
+    Public $name;
+    Public $description;
     Public $posts = [];
     Public $repository;
     Public $filter;
@@ -19,6 +22,23 @@ class Feed {
         $this->sort_by = 'date_desc';
     }
 
+    Public function new(Int $owner_id, String $name, String $description)  {
+        return $this->repository->createFeed($owner_id, $name, $description);       
+    }
+
+    Public function get() {
+        $id = $this->id;
+        $feed = $this->repository->getFeed($id);
+        if($feed) {
+            $this->id = $feed['id'];
+            $this->owner = $feed['owner'];
+            $this->name = $feed['name'];
+            $this->description = $feed['description'];
+        }
+        return $this;
+    }
+
+    
     function setId($id) {
         $this->id = $id;
     }
@@ -94,6 +114,11 @@ class Feed {
             $this->posts = $posts;         
         }
         return $posts;
-    }    
+    }  
+    
+    Public function updateStatus(Int $active, String $status) {
+        $id = $this->id;
+        return $this->repository->updateFeedStatus($id, $active, $status);
+    }
 
 }

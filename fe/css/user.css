@@ -37,6 +37,45 @@ body{
     display:block;
 }
 
+#menu {
+    position:fixed;
+    width:330px;
+    top:60px;  
+    right:-350px;  
+    transition: right 0.3s ease-in-out;   
+    z-index:100;
+}
+
+#menu.show {
+    z-index:100;
+    right:0px;
+}
+
+.menuwrap {
+    background: rgba(0,0,0,0.5);
+    padding: 4px;
+    border-radius: 5px 0px 0px 5px;
+}
+
+.menuwrap button {
+    width:40px;
+    height:40px;
+    margin-right:2px;
+}
+
+#menubutton {
+    font-size: 22px;
+    background: rgba(255,255,2655, 0.7);
+    border: none;
+    border-radius: 3px;
+    margin-top: 10px;
+    margin-right: 0;
+    border: 1px solid #aaa;
+    cursor:pointer;
+    width: 35px;
+    height: 35px;
+}
+
 #add-user input, #add-user select {
     padding:3px;
 }

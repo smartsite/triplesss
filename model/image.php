@@ -25,6 +25,8 @@ class Image {
         private $imageName;
         private $imageType;
         private $imageMimeType;
+        public $maxWidth;
+        public $maxHeight;
         private $rawImageData;
 
         /*
@@ -38,12 +40,18 @@ class Image {
         }
 
         public function add($imageData){
-            // API call to add an image 
-            //$folder = $this->selectStorage();
+            // The API call to add an image calls this
+            // $folder = $this->selectStorage();
             $this->imageFolder = $this->selectStorage();
             $this->rawImageData = $imageData;   
             $this->setImageType($imageData);
             $this->imageName = $this->getUserId()."_".uniqid().$this->getImageType();
+            $imgObj = imagecreatefromstring($this->imageData);
+            $imResized = imagescale($imgObj, $this->maxWidth);
+            ob_start();
+            imagejpeg( $imResized);
+            $this->imageData = ob_get_clean();
+
             file_put_contents( $this->imageFolder."/". $this->imageName, $this->imageData);
             //echo json_encode('{"folder": "'.  $this->imageFolder.'","name":"'.$imageName.'"}');   
             
@@ -60,6 +68,15 @@ class Image {
 
         public function getImageById(Int $id) {
 
+        }
+
+        public function getConstraints() :Array{
+                return ['width' => $this->maxWidth, 'height' => $this->maxHeight];
+        }
+
+        public function setConstraints($width, $height) {
+                $this->maxWidth = $width; 
+                $this->maxHeight = $height;
         }
 
         public function getImageName() :String {
@@ -166,6 +183,7 @@ $img = new Image();
 $img->setUserId($userId);
 $img->setBaseFolder("../storage");
 $img->add($imageData);
+
 */
 
 
