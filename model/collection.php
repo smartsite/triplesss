@@ -1,11 +1,16 @@
 <?php
+
+/**
+ * 
+ *   Parent (abstract) class for all collections
+ */
+
 namespace  Triplesss\collection;
 
 class Collection {
     
     Public $id = 0;
-    Public $items = [];
-      
+    Public $items = [];      
     
     function __construct() {
        
@@ -27,5 +32,8 @@ class Collection {
         unset($this->items[$id]);
     }
 
+    function get() {
+        return $this;
+    }
 
 }

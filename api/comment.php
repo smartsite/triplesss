@@ -74,6 +74,9 @@ if($txt != '') {
 }
 
 /*
+
+// we don't support images in comments... yet ;)
+
 if($im != '') {
     $postContent = new Content();
     $postContent->setUserId($user_id);
@@ -93,10 +96,9 @@ $id = $comment->add();
 
 $notification = new Notification($owner_user);
 $notification->setFromUser($user);
-
+$notification->setPostId($post_id);
 $notification->setType('comment');
 $notification->notify();
-
 
 
 // should return the comment count!

@@ -1,8 +1,5 @@
 <?php
 
-//ini_set('display_errors', 1);
-//error_reporting(E_ALL);
-
 require '../model/user.php';
 require '../model/repository.php';
 
@@ -18,7 +15,6 @@ header('Content-Type: application/json');
 $content = trim(file_get_contents("php://input"));
 $postObj = json_decode($content);
 
-//$username = "admin";
 $username = $postObj->username;
 $user = new User();
 

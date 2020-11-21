@@ -5,20 +5,16 @@ require '../model/post.php';
 require '../model/user.php';
 require '../model/content.php';
 require '../model/reaction.php';
-require '../model/visibility.php';
 require '../model/notification.php';
-
 
 use Triplesss\user\User as User;
 use Triplesss\post\Post as Post;
-use Triplesss\content\Content as Content;
-use Triplesss\visibility\Visibility;
 use Triplesss\reaction\Reaction as Reaction;
 use Triplesss\notification\Notification;
 
 /**
  *   Any reaction to a post - like, unlike, meh... is handled here.
- *   This endpoint should also let  a user remove their reaction, 
+ *   This endpoint should also let a user remove their reaction, but it doesn't yet!
  */
 
 
@@ -48,12 +44,9 @@ $reaction = new Reaction($level, $user);
 $post->addReaction($reaction);
 $reactions =  $post->getReactions();
 
-//$notification = new Notification($user);
-//$notification->setType('reaction');
-//$notification->notify();
-
 $notification = new Notification($owner_user);
 $notification->setFromUser($user);
+$notification->setPostId($post_id);
 $notification->setType('reaction');
 $notification->notify();
 

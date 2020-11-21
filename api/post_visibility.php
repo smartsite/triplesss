@@ -1,10 +1,14 @@
 <?php
 
 require '../model/auth.php';
+require '../model/user.php';
 require '../model/post.php';
 require '../model/visibility.php';
+require '../model/notification.php';
 
+use Triplesss\user\User;
 use Triplesss\post\Post as Post;
+use Triplesss\notification\Notification;
 use Triplesss\visibility\Visibility;
 
 /**
@@ -23,9 +27,26 @@ $postObj = json_decode($content);
 $post_id = $postObj->post_id;
 $user_id = $postObj->user_id;
 $visibility = $postObj->level;
+$is_admin = $postObj->is_admin;
 
 $post = new Post($user_id);
-$post->setId($post_id); 
+$post->setPostId($post_id);
+$post_items = $post->getItems();
+$one_item = $post_items[0]; 
+$post_owner = $one_item['owner'];
+
+// send a notification if an admin deletes a user's post
+if($is_admin) {
+    $to_user = new User();
+    $to_user->setUserId($post_owner);
+    $notification = new Notification($to_user);
+    $notification->setPostId($post_id);
+    $from_user = new User();
+    $from_user->setUserId(1); // Admin user
+    $notification->setFromUser($from_user);
+    $notification->setType('admin_deleted');
+    $notification->notify();
+}
 
 $v = new Visibility();
 $v->setLevel($visibility);

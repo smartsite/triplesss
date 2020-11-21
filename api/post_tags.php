@@ -11,7 +11,7 @@ use Triplesss\content\Content as Content;
 
 
 /**
- *   Get or set tags
+ *   Get or set tags for a post or user
  *      
  */
 
@@ -54,17 +54,7 @@ if($content != '') {
     $tags = array_filter(array_map(function($item) {
         return $item['tags'];
     }, $items));
-    //var_dump($tags);
+  
     count($tags) > 0 ? $t = $tags[0] : $t = [];
     echo json_encode(['tags' => $t]);
 }
-
-
-
-
-
-
-
-//echo json_encode(['text' => $text]);
-
-

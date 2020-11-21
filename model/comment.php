@@ -18,24 +18,12 @@ class Comment extends Post {
     Public $post;
     Public $parent_post = 0;  
     Public $filter;
-    Public $owner;
-    //Public $repository;              
+    Public $owner;        
     
     function __construct($owner) {
         $this->repository = new Repository();
-        $this->owner = $owner;
-        //$this->content = $content;
+        $this->owner = $owner;     
     }
-
-    /*
-    function setId($id) {
-        $this->id = $id;
-    }
-
-    function getId() :Int {
-        return $this->id;
-    }
-    */
 
     function addPost(Post $post) {        
         $this->post = $post;
@@ -53,15 +41,7 @@ class Comment extends Post {
         // this does the magic!
         return $this->repository->addPostComment($this);
     }
-
-    /*
-    function setContent($content) {
-        $this->content = $content;
-    }
-    */
-
-    
-
+  
     function setParentId(String $id) {
         $this->parent_post = $id;
     }
@@ -81,8 +61,5 @@ class Comment extends Post {
 
     function addFilter(Filter $filter) {
         $this->filter = $filter;
-    }    
-
-    
-
+    }   
 }

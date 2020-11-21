@@ -1,14 +1,10 @@
 <?php
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 require '../model/auth.php';
 require '../model/user.php';
 require '../model/users.php';
 require '../model/filter.php';
 require '../model/feed.php';
-//require '../model/repository.php';
 
 use Triplesss\filter\Filter;
 use Triplesss\user\User;

@@ -1,8 +1,9 @@
 <?php
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
+/**
+ * 
+ *   Non-generic endpoint - regional postcodes for South Australia
+ */
 
 require '../model/dbsettings.php';
 require '../model/db.php';
@@ -18,7 +19,6 @@ if($content == '') {
 } else {
     $state = $postObj->state;
 }
-
 
 
 $db = new Db();

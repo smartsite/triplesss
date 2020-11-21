@@ -1,23 +1,14 @@
 <?php
 
-// It's possible we might be able to do this with the Feed endpoint!
-
-
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
-
 require '../model/auth.php';
 require '../model/feed.php';
 require '../model/filter.php';
-//require '../model/repository.php';
 
 use Triplesss\feed\Feed as Feed;
 use Triplesss\filter\Filter as Filter;
 
-
 /**
- *   Whatever a user posts to feed_id = 0 becomes a profile.
+ *   Whatever a user posts to feed_id = 0 becomes a profile
  *   Since the sort order is descending date by default, we only need the last one!
  */
 
@@ -33,8 +24,7 @@ if(isset($_GET)) {
 }
 
 $feed = new Feed();
-$feed->setId(0);
-
+$feed->setId(0); // the user profile feed
 
 $filter = new Filter();
 $filter->setType('userid');

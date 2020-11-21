@@ -19,7 +19,6 @@ use Triplesss\content\Content as Content;
 use Triplesss\visibility\Visibility;
 use Triplesss\notification\Notification;
 
-//use Triplesss\visibility\Visibility as Visibility;
 
 /**
  *   A Post is an object containing AT LEAST one Content object. 
@@ -82,6 +81,7 @@ $post->setVisibility($v, $id);
 
 $notification = new Notification($user);
 $notification->setType('post');
+$notification->setPostId($id);
 $notification->notify();
 
 $feed->addPost($post);

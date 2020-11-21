@@ -5,13 +5,12 @@ require '../model/repository.php';
 
 
 /**
- *   A single post object rendered as HTML
+ *   A single post object rendered as HTML ( only used in non-AJAX / non-JS framework front ends)
  *     
  */
 
 
 header('Content-Type: application/json');
-
 
 
 if(isset($_GET)) {   
@@ -21,7 +20,6 @@ if(isset($_GET)) {
     $po = json_decode($content, true);    
 }
 
-// extract po
 extract($po);
 
 $uniq = uniqid();

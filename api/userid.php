@@ -1,16 +1,13 @@
 <?php
 
-
 require '../model/auth.php';
 require '../model/user.php';
 
 use Triplesss\user\User as User;
 
-
 /**
- *   Just returns a user id from an are at the end of a url
+ *   Just returns a user id from end of a url
  */
-
 
 header('Content-Type: application/json');
 

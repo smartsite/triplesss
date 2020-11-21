@@ -1,8 +1,5 @@
 <?php
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 require '../model/auth.php';
 require '../model/filter.php';
 require '../model/notification.php';
@@ -11,11 +8,9 @@ require '../model/user.php';
 
 use Triplesss\auth\Auth;
 use Triplesss\user\User;
-use Triplesss\notification\Notification;
-
 
 /**
- *   Get this user's connections to other users
+ *   Get this user's notifications
  *   
  */
 
@@ -36,7 +31,12 @@ $n = $user->getNotifications();
 
 $notifications = array_filter(array_map(function($u) {
     $fu = new User();
-    $fu->setUserId($u['user_id']);
+    if($u['type'] == 1 || $u['type'] == 2) {
+        $fu->setUserId($u['to_user_id']);
+    } else {
+        $fu->setUserId($u['from_user_id']);
+    }
+  
     $u['avatar'] = $fu->getAvatar();   
     return $u;
 }, $n));

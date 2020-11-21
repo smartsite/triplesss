@@ -36,16 +36,20 @@ if(isset($_GET)) {
 $filter_options = '';
 $filter = new Filter($filter_options);
 
-$aggregator = new Aggregator();
-$aggregator->setUserId($userid);
-$aggregator->setFilter($filter);
-$ag = $aggregator->getPosts();
+$posts = [];
 
-$posts = array_filter(array_map(function($u) {
-    $fu = new User();
-    $fu->setUserId($u[0]['owner']);
-    $u[0]['avatar'] = $fu->getAvatar();   
-    return $u;
-}, $ag));
+if($userid > 0) {
+    $aggregator = new Aggregator();
+    $aggregator->setUserId($userid);
+    $aggregator->setFilter($filter);
+    $ag = $aggregator->getPosts();
+
+    $posts = array_filter(array_map(function($u) {
+        $fu = new User();
+        $fu->setUserId($u[0]['owner']);
+        $u[0]['avatar'] = $fu->getAvatar();   
+        return $u;
+    }, $ag));
+}
 
 echo json_encode($posts, true);

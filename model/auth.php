@@ -1,5 +1,11 @@
 <?php
 
+/**
+ *   User authentication, log in, log out
+ * 
+ */
+
+
 namespace Triplesss\auth;
 
 require '../model/repository.php';
@@ -8,7 +14,7 @@ use Triplesss\repository\Repository;
 
 class Auth {       
 
-    private $failed_logins;
+    private $failed_logins; // We'll use this later to monitor log in issues
     public $repository;
    
     public function __construct() {

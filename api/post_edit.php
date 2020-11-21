@@ -18,6 +18,8 @@ use Triplesss\content\Content as Content;
  *   A single image with a caption is represented by a Post object with 
  *   one text type Content object and one Image type content object.
  * 
+ *   TODO: add / remove images from a post ( hard! )
+ * 
  */
 
 
@@ -33,7 +35,6 @@ $user_id = $postObj->user_id;
 $post = new Post($user_id);
 $post->setContentType('text');
 
-// TODO: images... which is hard!
 if($txt != '') {
     $text = $post->updateContent($post_id, $txt);
 } else {
@@ -42,5 +43,3 @@ if($txt != '') {
 }
 
 echo json_encode(['text' => $text]);
-
-

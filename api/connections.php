@@ -1,8 +1,5 @@
 <?php
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 require '../model/auth.php';
 require '../model/filter.php';
 require '../model/connection.php';
@@ -17,7 +14,6 @@ use Triplesss\user\User;
  *   Get this user's connections to other users
  *   
  */
-
 
 header('Content-Type: application/json');
 

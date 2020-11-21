@@ -1,13 +1,12 @@
 <?php
 
-
 require '../model/user.php';
 require '../model/repository.php';
 
 use Triplesss\user\User;
 
 /**
- *   Verify user account
+ *   Verify a newly registered user account
  *    
 **/
 

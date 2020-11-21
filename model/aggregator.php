@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * 
+ *   Merges  / combines two or more feeds and allows posts to be sorted and / or filtered
+ * 
+ */
+
 namespace  Triplesss\collection;
 use Triplesss\feed\Feed;
 use Triplesss\filter\Filter;
@@ -45,7 +51,5 @@ class Aggregator extends Collection {
     public function getFilter() {
         return $this->filter;
     }
-
-
 
 }

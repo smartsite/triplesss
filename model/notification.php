@@ -12,6 +12,7 @@ class Notification {
     Public $repository;
     Public $from_user;
     Public $to_user;
+    Public $post_id;
     
     public function __construct(User $user) {
         $this->to_user = $user;
@@ -61,7 +62,13 @@ class Notification {
             4 =>  'reply',
             5 =>  'reaction',
             6 =>  'request',
-            7 =>  'accept'          
+            7 =>  'accept',
+            8 =>  'report_nudity',
+            9 =>  'report_graphic',
+            10 => 'report_racism',
+            11 => 'report_threat',
+            12 => 'report_spam',
+            13 => 'admin_deleted'             
         ];
     }
 
@@ -71,21 +78,49 @@ class Notification {
         $message = $this->message;
        
         $username = $this->to_user->getName();
-        
-        if($type_idx == 7 || $type_idx == 6 || $type_idx == 3 || $type_idx == 5) {
-            $username = $this->from_user->getName();
+        $user_id = $this->from_user->userid;
+        $link = '';
+
+        if($type_idx == 1 || $type_idx == 2 ) {
+            $username = $this->to_user->getName();            
+            $user_id = $this->to_user->userid;
+            $link = '<a href="javascript:userPageView('.$user_id.')">'.$username.'</a>';
         }
+        
+        if($type_idx == 7 || $type_idx == 6 || $type_idx == 3 || $type_idx == 5 ) {
+            $username = $this->from_user->getName();
+            $link = '<a href="javascript:userPageView('.$user_id.')">'.$username.'</a>';           
+        }
+
+        if($type_idx > 7 && $type_idx < 13 ) {
+            // Post reports
+            $username = $this->from_user->getName();
+            $link = '<a href="javascript:userPageView('.$user_id.')">'.$username.'</a>';           
+        }
+
+        $post_id = $this->post_id;
+        $post = '<a href="javascript:gotoPost(&quot;'.$post_id.'&quot;)";>post</a>';
         
         $templates = [
             0 => 'system message: '.$message,
-            1 => $username.' posted a status update',
-            2 => $username.' posted something new',
-            3 => $username.' commented on your post',
-            4 => $username.' replied to your comment',
-            5 => $username.' reacted to your post',
-            6 => $username.' sent you a contact request',
-            7 => $username.' accepted your contact request'
+            1 => $link.' posted a status update',
+            2 => $link.' '.$post.'ed something new',
+            3 => $link.' commented on your '.$post,
+            4 => $link.' replied to your comment',
+            5 => $link.' reacted to your '.$post,
+            6 => $link.' sent you a contact request',
+            7 => $link.' accepted your contact request',
+            8 => $link.' reported a '.$post.' for nudity',
+            9 => $link.' reported a '.$post.' for graphic content',
+            10 => $link.' reported a '.$post.' for racist content',
+            11 => $link.' reported a '.$post.' for making threats or inciting violence',
+            12 => $link.' reported a '.$post.' as spam',
+            13 => 'An administrator has hidden your '.$post
         ];
         return $templates[$type_idx];
+    }
+
+    public function setPostId(String $post_id) {
+        $this->post_id = $post_id;
     }
 }

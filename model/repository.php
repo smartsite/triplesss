@@ -361,6 +361,12 @@ class Repository {
         $db = $this->db;
 
         $filter = $aggregator->filter;
+        $limit = '';
+        $offset = '';
+        if($filter->type == 'range') {
+
+        }
+
         $userid = $aggregator->userid;
         // query to fetch all post ids for connected users 
         $s = 'SELECT owner, post.post_id FROM feed_post
@@ -369,10 +375,15 @@ class Repository {
             (SELECT DISTINCT * FROM 
             (SELECT from_id con FROM connection WHERE connection_type IN (1,2)  AND to_id = '.$userid.' AND from_id <> '.$userid.' UNION 
             SELECT to_id con FROM connection WHERE connection_type IN (1,2) AND from_id = '.$userid.' AND to_id <> '.$userid.') connected) connection 
-            ON connection.con = post.owner ORDER BY post.id DESC';
+            ON connection.con = post.owner 
+            ORDER BY post.id DESC';
           
         $p = $db->query($s);
         $r = $db->fetchAll($p);
+
+        // get Admin / system posts
+        //$s = 'SELECT owner, post.post_id FROM feed_post  JOIN post ON feed_post.post_id = post.post_id WHERE  feed_id = 1;
+
         $posts = [];
         if($r) {
             $posts = array_filter(array_map(function($post) {
@@ -753,11 +764,13 @@ class Repository {
     public function setNotification(Notification $notification) {
         $db = $this->db;
         $u = $notification->to_user;
+        $from = $notification->from_user;
         $user_id = $u->userid;
-        $message = $notification->getMessage();
+        $from_user_id = $from->userid;
+        $message = addslashes($notification->getMessage());
         $type =  $notification->typeid;
 
-        $s = 'INSERT INTO notification (`type`, `user_id`, `notification_id`, `message`) VALUES ('.$type.', '.$user_id.', "", "'.$message.'" )'; 
+        $s = 'INSERT INTO notification (`type`, `to_user_id`, `from_user_id`, `notification_id`, `message`) VALUES ('.$type.', '.$user_id.', '.$from_user_id.', "", "'.$message.'" )'; 
         $p = $db->query($s);
         return $p;
     }
@@ -765,7 +778,8 @@ class Repository {
     public function getNotifications(User $user) {
         $db = $this->db;
         $user_id = $user->userid;
-        $s = 'SELECT * FROM  notification WHERE user_id= '.$user_id.' ORDER BY timestamp DESC';
+        $s = 'SELECT * FROM  notification WHERE to_user_id= '.$user_id.' OR to_user_id IN 
+              (SELECT to_id FROM connection WHERE from_id='.$user_id.') ORDER BY timestamp DESC';
         $p = $db->query($s);
         $r = $db->fetchAll($p);
         return $r;

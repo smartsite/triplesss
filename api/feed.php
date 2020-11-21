@@ -1,16 +1,19 @@
 <?php
 
 require '../model/auth.php';
+require '../model/user.php';
 require '../model/feed.php';
 require '../model/filter.php';
 //require '../model/repository.php';
 
+use Triplesss\user\User as User;
 use Triplesss\feed\Feed as Feed;
 use Triplesss\filter\Filter as Filter;
 
 
 /**
  *   A Feed is a collection of posts, which may be filtered and  /or sorted
+ *   A user owns  a feed, feeds from multiple users are combined using an aggregator
  *     
  */
 
@@ -34,5 +37,13 @@ $feed->setFilter($filter);
 $feed->setPostRange([$offset, $count]);
 $feed->sortBy($sort_by);
 
-$posts = $feed->getPosts();
+$ag = $feed->getPosts();
+
+$posts = array_filter(array_map(function($u) {
+    $fu = new User();
+    $fu->setUserId($u[0]['owner']);
+    $u[0]['avatar'] = $fu->getAvatar();   
+    return $u;
+}, $ag));
+
 echo json_encode($posts);

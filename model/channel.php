@@ -1,4 +1,11 @@
 <?php
+
+/**
+ * 
+ *  A channel is similar to a feed, except it doesn't belong to a specic user ( closer to a Group in function ) 
+ * 
+ */
+
 namespace  Triplesss\channel;
 
 class Channel {

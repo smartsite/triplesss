@@ -32,8 +32,6 @@ use Triplesss\notification\Notification;
  */
 
 
-
-
 header('Content-Type: application/json');
 
 if(isset($_GET)) {
@@ -64,6 +62,7 @@ $connection->connect($from_user, $to_user, $type);
 
 $notification = new Notification($to_user);
 $notification->setFromUser($from_user);
+$notification->setPostId(0); // This is unrelated to any post!
 
 if($action == 'accept' || $action == 'request' ) {
     $notification = new Notification($from_user);
