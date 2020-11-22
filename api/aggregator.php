@@ -33,8 +33,9 @@ if(isset($_GET)) {
     extract( $postObj);   
 }
 
-$filter_options = '';
-$filter = new Filter($filter_options);
+$filter = new Filter();
+$filter->setType('range');
+$filter->setRange($offset, $length);
 
 $posts = [];
 

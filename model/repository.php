@@ -364,7 +364,9 @@ class Repository {
         $limit = '';
         $offset = '';
         if($filter->type == 'range') {
-
+            $range = $filter->getRange();
+            $offset = $range[0];
+            $limit  = $range[1];
         }
 
         $userid = $aggregator->userid;
@@ -377,7 +379,11 @@ class Repository {
             SELECT to_id con FROM connection WHERE connection_type IN (1,2) AND from_id = '.$userid.' AND to_id <> '.$userid.') connected) connection 
             ON connection.con = post.owner 
             ORDER BY post.id DESC';
-          
+        if($limit !== '' && $offset !== '') {
+            $s.= ' LIMIT '.$limit. ' OFFSET '.$offset;
+        } 
+        
+                
         $p = $db->query($s);
         $r = $db->fetchAll($p);
 
@@ -778,9 +784,17 @@ class Repository {
     public function getNotifications(User $user) {
         $db = $this->db;
         $user_id = $user->userid;
-        $s = 'SELECT * FROM  notification WHERE to_user_id= '.$user_id.' OR to_user_id IN 
-              (SELECT to_id FROM connection WHERE from_id='.$user_id.') ORDER BY timestamp DESC';
-        $p = $db->query($s);
+        /*
+        $s = 'SELECT * FROM  notification WHERE to_user_id= '.$user_id.' OR from_user_id IN 
+              (SELECT to_id FROM connection WHERE from_id='.$user_id.') OR (from_user_id = 0 AND to_user_id = 2 )
+              OR (from_user_id = 0 AND to_user_id IN (SELECT to_id FROM connection WHERE from_id='.$user_id.')) ORDER BY timestamp DESC';
+        */
+
+        $s = 'SELECT DISTINCT from_user_id, to_user_id, type, message, timestamp  FROM notification 
+                JOIN connection ON connection.from_id = notification.from_user_id  AND connection.to_id = '.$user_id.' 
+                OR notification.to_user_id = '.$user_id. ' OR (from_user_id = 0 AND type = 2)';
+        
+              $p = $db->query($s);
         $r = $db->fetchAll($p);
         return $r;
     }
@@ -951,7 +965,7 @@ class Repository {
             $email = $r[0]['email'];
         }
         $subject = "Confirm your registration";
-        $msg = 'Dear '.$firstname.', thanks for registering. Please click or tap on this link to confirm your registration. https://'.$link;
+        $msg = 'Dear '.$firstname.', thanks for registering. Please click or tap on this link to confirm your registration. '.$link;
         $headers = 'From: '.$from. "\r\n" .
                     'Reply-To:' .$reply. "\r\n" .
                     'X-Mailer: PHP/' . phpversion();

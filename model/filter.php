@@ -33,15 +33,15 @@ class Filter {
         return $this->tags;
     }
 
-    public function setType($type) {
+    public function setType(String $type) {
         $this->type = $type;
     }
 
-    public function getType() {
+    public function getType() :String {
         return $this->type;
     }
 
-    public function setRange($begin, $end) {
+    public function setRange(Int $begin, Int $end) {
         $this->range = [$begin, $end];
     }
 

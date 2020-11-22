@@ -27,11 +27,8 @@ $postObj['postcode'] = $citysplit[1];
 isset($postObj['follow_id']) ? $to = $postObj['follow_id'] : $to = 2;
 
 $user = new User();
-//$u = $user->update($postObj);
-
 $username = $postObj['user_name'];
 $user->add($username);
-
 
 // yes, these need to be paramaters, of course!
 $from = $postObj['from_email'];
