@@ -1,0 +1,440 @@
+<html>
+    <head>
+        <title>Surfsouthoz</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https//fonts.googleapis.com/css2?family=Raleway&display=swap rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="/css/vivify.min.css" rel="stylesheet" type="text/css">
+        <link href="/css/main.css" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>       
+    </head>
+    <body>  
+        <div class="bodywrap">     
+            <div class="toprow">
+                <div id="head-wave"><img src="/img/head_wave.svg" /></div>
+                <h3>               
+                    <span id="avatar">
+                        <img src="/img/profile.png" />
+                    </span>
+                    <span id="uname"></span>
+                </h3>
+                <button id="menubutton">&#9776;</button>
+                <div class="clear"></div>
+            </div>    
+            <div id="menu">
+                <div class="menuwrap">
+                    <button id="menu-profile"><i class="material-icons">face</i></button>
+                    <button id="menu-feed"><i class="material-icons">insert_photo</i></button>
+                    <button id="menu-user"><i class="material-icons">account_box</i></button>
+                    <button id="menu-message"><i class="material-icons">speaker_notes</i></button>
+                    <button id="menu-follow"><i class="material-icons">person_search</i></button>
+                    <button id="menu-notification"><i class="material-icons">notifications_active</i></button>
+                    <button id="menu-logout"><i class="material-icons">exit_to_app</i></button>
+                </div>
+            </div>
+            <div id="loading">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: none; display: block;" width="100px" height="100px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                    <circle cx="50" cy="50" r="40" stroke="#3f95ff" stroke-width="5" fill="none"></circle>
+                    <path d="M15 50 Q32.5 17 50 50 Q67.5 83 85 50 A35 35 0 0 1 15 50" fill="#46dff0">
+                    <animate attributeName="d" repeatCount="indefinite" dur="4.545454545454545s" calcMode="spline" keyTimes="0;0.5;1" values="M15 50 Q32.5 17 50 50 Q67.5 83 85 50 A35 35 0 0 1 15 50;M15 50 Q32.5 83 50 50 Q67.5 17 85 50 A35 35 0 0 1 15 50;M15 50 Q32.5 17 50 50 Q67.5 83 85 50 A35 35 0 0 1 15 50" keySplines="0.5 0 0.5 1;0.5 0 0.5 1"></animate>
+                    </path>
+                </svg>
+            </div>
+            <div id="intro" class="intro">                
+                <div class="mainlogo">
+                    <img src="img/ssoz_3colour2.svg" width="100%" height="100%" />
+                </div>
+                <div id="head-wave">
+                    <img src="img/head_wave.svg" />
+                </div>
+                <div class="enter">
+                    <!-- <p>South Australia's<br /> premier online surfing community.</p> -->
+                    <span class="join-button">
+                        <a href="/new_user.html">join</a>
+                    </span>
+                </div>           
+            </div>      
+            <div class="wrap">
+                <div id="profile" class="add">
+                    <div class="avatar">
+                        <img src="../img/profile.png" />
+                    </div>
+                    <h3></h3>
+                    <div class="bio"></div>
+                </div>  
+                <div class="profilebox lowlight">
+                    <h3>Edit bio and upload profile image</h3>
+                    <button class="cancel">&#10005;</button>
+                    <form id="add-bio" method="POST">
+                        <textarea id="bio-comment" rows="3" cols="40"></textarea><br /><br />
+                        <!-- <input type="hidden" id="feedid" name="feedid" value="0" /> -->
+                        <label class="file-upload"> &#129333;
+                            <input id="bio-image" name="image" type="file" accept="image/x-png,image/gif,image/jpeg" />   
+                        </label>                    
+                        <button id="post-bio">Save</button>
+                    </form>
+                </div>
+                <div id="user-profile" class="add">
+                    <h3>User profile</h3>
+                    <div id="lg_profile">
+                        <button class="profile-edit">Edit</button>
+                        <img src="img/profile.png" />
+                    </div>
+                    <div id="bio">
+                        <h4>Bio</h4>
+                        <p><span class="bio-text">What I am is what I am!</span></p>                    
+                    </div>
+                    <div id="bio-tags">
+                        <h4>Tags</h4>
+                        <button id="tags-edit">Edit</button>
+                    </div>
+                </div>  
+                <div id="nouser" class="add">
+                    <h4>Oh no!</h4>
+                    <p>No user with that name could be found. This might be because the link is incorrect.</p>
+                    <p>User names are cAsE Sensitive, so maybe you could check that?</p>
+                    <p>It's also possible this user no longer exists. How very sad that would be. :(</p>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                </div>   
+                <div id="addpost" class="add">
+                    <label>Select a channel</label>
+                    <select id="feed_id"></select>
+                    <p>Post something</p>
+                    <form id="add-post" method="POST">
+                    <textarea id="add-comment" rows="3" cols="36"></textarea><br /><br />
+                    <input type="hidden" id="userid" name="userid" value="2">
+                    <input type="hidden" id="feedid" name="feedid" value="<?php //echo $feed->getId();  ?>">
+                    <input id="image" name="image" type="file" accept="image/x-png,image/gif,image/jpeg" />
+                    <button id="post-comment">Post</button>
+                    </form>
+                </div> 
+                <div id="search" class="add">
+                    <label>enter user name</label><br />
+                    <input type="text" id="user-name" name="user-name" value="">
+                    <button id="search-user">Search</button>
+                </div>        
+
+                <div id="keycheck" class="add">
+                    <h3 id="login-heading">Message</h3>
+                    <form id="add-user" method="POST">                  
+                        <span id="login-prompt"><p>You can now log in: </p></span>
+                        <label>user name</label>
+                        <input type="text" id="username" name="username" value="">
+                        <label>password</label>
+                        <input type="password" id="password" name="password" value="">
+                        <br />
+                        <br />
+                        <button id="log-in">Log in</button>                         
+                        <p>If you don't have an account, just <a href="/new_user.html">sign up</a>!</p>                             
+                    </form>               
+                </div> 
+                <div id="fail" class="add">
+                    <h3>Login failed</h3>  
+                    <p>Please check you have the correct details! </p>    
+                    <!--
+                        <h3>Verification failed</h3>  
+                    <p>We could not verify your registration. Please check you email and make sure the 
+                        link is correct. </p>
+                    <p>If that fails, you can try <a href="resendLink()">sending the verification link again</a>.</p>   
+                    -->           
+                </div>          
+                <div id="success" class="add">
+                    <h3>Welcome, <span id="new_uname"></span>.</h3>
+                    <p>You now have full access to the app!</p>
+                    <p>Now's a great time to upload an image for your avatar, add some bio information, heck... maybe even a few tags!</p>
+                    <p><a href="/profile">Click here</a> to go to your profile.</p>
+                </div>  
+                <div id="reportbox" class="vivify postbox lowlight">
+                    <p>Report this post for </p>
+                    <input type="radio" name="report" value="nudity"><label>nudity</label><br />
+                    <input type="radio" name="report" value="graphic"><label>graphic / violent</label><br />
+                    <input type="radio" name="report" value="racism"><label>racism</label><br />
+                    <input type="radio" name="report" value="threat"><label>threats / inciting violence</label><br />
+                    <input type="radio" name="report" value="spam"><label>spam / marketing</label><br />
+                    <button id="send-report">Send report</button>
+                    <button class="cancel">&#10005;</button>
+                </div>   
+                <div id="editbox" class="vivify postbox lowlight">
+                    <p>Edit post</p>
+                    <textarea id="edit-comment" rows="3" cols="36"></textarea><br /><br />               
+                    <button id="savepost">Save</button>
+                    <button class="cancel">&#10005;</button>
+                </div>  
+                <div id="tagbox" class="vivify postbox lowlight">
+                    <p>Add or edit tags</p>
+                    <input type="text" /><br /><br />      
+                    <button id="tagpost">Save</button>
+                    <button class="cancel">&#10005;</button>
+                </div>
+                <div id="notifybox" class="vivify postbox lowlight">
+                    <p>Send user a notification</p>
+                    <button class="cancel">&#10005;</button>
+                    <button id="send-notification">Send</button>  
+                </div>  
+                <div id="deletebox" class="vivify postbox lowlight">
+                    <p>Delete this post?</p>
+                    <button id="delete-yes">Yes, delete it</button>&nbsp;  <button class="cancel">No! keep it</button> 
+                </div>  
+                <div id="privacybox" class="vivify postbox lowlight">
+                    <p>Adjust who can see this post</p>
+                    <select id="visibility">
+                        <option value=0>Me</options>
+                        <option value=1>Group</options>
+                        <option value=2>Friends</options>
+                        <option value=3>Friends of friends</options>
+                        <option value=4>Anyone</options>
+                    </select>
+                    <button id="privacypost">Save</button>
+                    <button class="cancel">&#10005;</button>
+                </div>  
+                <div id="commentbox" class="vivify postbox lowlight">
+                    <p>Add a comment</p>
+                    <textarea id="post-comment-text" rows="5" cols="36"></textarea><br />  
+                    <button id="comment-post">Post</button>
+                    <button class="cancel">&#10005;</button>
+                    <div id="comments"></div>
+                </div> 
+                <div id="hidebox" class="vivify postbox lowlight">
+                    <p>Hide this post from your feed ( it will come back when you reload the page )?</p>
+                    <button id="hide-post">Yep!</button>
+                    <button class="cancel">&#10005;</button>
+                </div>   
+                <div id="feed" class="feed">
+                </div>  
+                <div id="userpage" class="feed">
+                </div>           
+                <div id="follow" class="add">
+                </div>
+                <div id="connections" class="add">                
+                    <h4>Connections</h4>
+                </div>
+                <div id="followbox" class="vivify postbox lowlight">
+                    <p></p>
+                    <button id="connect-request">Send</button>
+                    <button id="connect-accept">Accept</button>
+                    <button id="connect-remove">Disconnect</button>
+                    <button class="cancel">&#10005;</button>
+                </div>
+                <div id="notifications" class="add">               
+                </div>
+                <div id="messages" class="add">               
+                    <h3>Messages</h3>
+                    <p>Easy tiger, we're still working on this one! :D </p>
+                    <h3>&nbsp;</h3>
+                    <h3>&nbsp;</h3>
+                    <h3>&nbsp;</h3>
+                    <h3>&nbsp;</h3>
+                    <h3>&nbsp;</h3>
+                </div>
+                <div id="lbox" class="lightbox"></div>           
+            </div>
+        </div>
+
+        <script src="/js/main.js"></script>
+
+        <script language="Javascript">
+
+            let lightbox;
+            let toppos = 0;  
+            let user_id = -1;   
+            let currentView = "feed";    
+            let count = 10;
+            let offset = 0;  
+            let triggered = false;         
+            
+            window.onload = () => {                      
+                       
+                 // UX elements                    
+                 
+                const intro = document.getElementById("intro");  
+                const username = document.getElementById("username");
+                const password = document.getElementById("password");  
+                const loginButton = document.getElementById("log-in");    
+                const logoutButton = document.getElementById("log-out");  
+                const registerButton = document.getElementById("register-user");
+                const cancelButton = document.querySelectorAll('.cancel');      
+                const postButton = document.getElementById("post-comment");
+                const post = document.querySelectorAll('.post');
+                const profile = document.getElementById("profile");  
+                const bioButton = document.getElementById('post-bio'); 
+                const nouser = document.getElementById("nouser"); 
+                const addpost = document.getElementById("addpost");
+                const feedId = document.getElementById('feed_id');   
+                const searchButton = document.getElementById("search-user");       
+                const savePostButton = document.getElementById('savepost');
+                const deletePostButton = document.getElementById('delete-yes');
+                const tagPostButton = document.getElementById('tagpost');
+                const reactButtons = document.querySelectorAll('.post-button');
+                const commentPostButton = document.getElementById('comment-post');    
+                const menu = document.getElementById('menu');  
+                const menuButton = document.getElementById('menubutton');   
+                const menuButtons = document.querySelectorAll('#menu button');   
+                const userPostOptions =  document.querySelectorAll('.post .optionmenu span');  
+                const reportButton = document.querySelectorAll('.report');
+                const postoptions =  document.querySelectorAll('.post .options span'); 
+                const profileButton = document.querySelectorAll('.profile-edit')
+                const connectButton = document.getElementById("connect-request"); 
+                const acceptButton = document.getElementById("connect-accept");
+                const removeButton = document.getElementById("connect-remove"); 
+                const sendReportButton = document.getElementById("send-report");
+                const hidePostButton = document.getElementById("hide-post");
+                             
+                lightbox = document.getElementById("lbox");
+                user_id = getCookie('userID'); 
+
+                showBox(false, 'intro');
+                showBox(false, 'keycheck');
+                showBox(false, 'fail');  
+                showBox(false, 'addpost');   
+                showBox(false, 'nouser');   
+                showBox(false, 'profile');   
+                showBox(false, 'feed'); 
+                showBox(false, 'follow'); 
+                showBox(false, 'success');   
+                showBox(false, 'connections');              
+               
+                isloggedin(function(d) {
+                    if(d == 'true') {
+                        showBox(false, 'keycheck');                       
+                    } else {
+                        showBox(true, 'keycheck');                      
+                    }
+                });
+
+
+                // Event handlers                
+
+                addHandler(loginButton, 'click', function(e, el){dologin()});
+                
+                //addHandler(logoutButton, 'click', function(e, el){dologout()});
+                
+                addHandler(postButton, 'click', function(e, el){addPost()});      
+
+                addHandler(hidePostButton, 'click', function(e, el){hidePost(el)});   
+                
+                addHandler(bioButton, 'click', function(e, el){postBio(user_id)});
+                                         
+                addHandler(menuButton, 'click', function(e, el) {                   
+                    if(menu.classList.contains('show')) {
+                        menu.classList.remove('show'); 
+                    } else {
+                        menu.classList.add('show'); 
+                    }
+                });                         
+
+                menuButtons.forEach((button) => {
+                    addHandler(button, 'click', function(e, el) {
+                        menu.classList.remove('show'); 
+                        //doMenu(this);   
+                        const viewName = el.id.replace("menu-", '');
+                        setView(viewName);                       
+                    })                    
+                });                
+
+                cancelButton.forEach((button) => {
+                    addHandler(button, 'click', function(e, el) {
+                        lightboxshow(false);
+                        setScrollPos();
+                        hideAllMenus();
+                        el.parentElement.classList.add('lowlight');
+                    });
+                });
+               
+
+                addHandler(savePostButton, 'click', function(e, el){
+                    setScrollPos(); 
+                    savePost(el);     
+                });   
+                
+                addHandler(deletePostButton, 'click', function(e, el){
+                    setScrollPos(); 
+                    deletePost(el);        
+                });
+
+                addHandler(commentPostButton, 'click', function(e, el) {
+                    postComment(e);
+                });
+
+                addHandler(tagPostButton, 'click', function(e, el){
+                    setScrollPos(); 
+                    editTags(el);       
+                });                 
+                
+                addHandler(searchButton, 'click', function(e, el){doSearch()});
+
+                addHandler(sendReportButton, 'click', function(e, el){sendReport(el)});
+                   
+                feed_id.addEventListener('change', function(e) {
+                    let fid = this.value;                  
+                    setCookie('feed_id', fid, 1); 
+                   feed(fid);
+                });
+
+               
+                addHandler( profileButton[0], 'click', function(e, el) { profileedit();});
+
+                reactButtons.forEach(function(el) {
+                    el.addEventListener('click', function(e) {
+                      
+                        console.log(el);
+                        var icon = el.querySelector('i');
+
+                        if(el.classList.contains('like')) {
+                            icon.classList.add('like-button-click');
+                            window.setTimeout(function(){
+                                icon.classList.remove('like-button-click');
+                                var likecount = el.parentElement.querySelector('.post-likes');
+                                var likes = likecount.innerHTML;
+                                likes++;
+                                likecount.innerHTML = likes;
+                            }, 1000)
+                        }
+
+                        if(el.classList.contains('comment')) { 
+
+                        }                            
+                    });
+                });                 
+                
+          
+                addHandler(connectButton, 'click', function(e, el){ doConnect('request'); });
+                addHandler(acceptButton, 'click', function(e, el){  doConnect('accept'); });
+                addHandler(removeButton, 'click', function(e, el){  doConnect('remove'); });
+    
+                //feedView(); // set feed as the default view    
+                const urlParams = new URLSearchParams( window.location.search);
+                let userView = urlParams.getAll('view');
+
+                if(userView == 'profile') {
+                    currentView = "profile";
+                } 
+
+                setView(currentView);
+                                          
+                window.addEventListener('scroll', function(e) {
+                    const doc = document.body;  
+                    const html = document.documentElement;                  
+                    let toppos = (window.pageYOffset || doc.scrollTop); 
+                                                          
+                    if((html.scrollHeight -  toppos) < 950 && !triggered) {
+                        triggered = true;
+                        
+                        window.setTimeout(function(e) {
+                            lazyLoad(currentView);
+                        }, 500);                      
+                    }        
+                })
+
+            }
+
+        </script>
+    </body>
+</html>
+
+
+
+

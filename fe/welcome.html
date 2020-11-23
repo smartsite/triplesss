@@ -1,0 +1,207 @@
+<html>
+    <head>
+        <title>Create user test</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https//fonts.googleapis.com/css2?family=Raleway&display=swap rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="css/vivify.min.css" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>       
+
+        <link href="/css/user.css" rel="stylesheet" type="text/css">
+        <style>
+            
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body{
+                font-family: 'Raleway', sans-serif;  
+                height:100%;     
+                width:100%;
+                margin:0;
+                padding:0;
+
+            }
+
+            .wrap {
+                height:100%;
+                padding:0px;
+                overflow:hidden;
+
+                /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#2d96ff+0,bce0ee+36,2d96ff+100 */
+                background: #2d96ff; /* Old browsers */
+                background: -moz-linear-gradient(top,  #2d96ff 0%, #bce0ee 36%, #2d96ff 100%); /* FF3.6-15 */
+                background: -webkit-linear-gradient(top,  #2d96ff 0%,#bce0ee 36%,#2d96ff 100%); /* Chrome10-25,Safari5.1-6 */
+                background: linear-gradient(to bottom,  #2d96ff 0%,#bce0ee 36%,#2d96ff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2d96ff', endColorstr='#2d96ff',GradientType=0 ); /* IE6-9 */
+
+            }
+          
+
+            .details {
+                padding:10px;
+            }
+            
+            .lightbox {
+                position:fixed;
+                width:100%;
+                height:100%;
+                left:0;
+                right:0;
+                top:0;
+                bottom:0;
+                background-color: #000;
+                opacity: 0.7;
+                z-index:1;
+                display:none;
+            }
+
+            .lightbox.active{
+                z-index: 1;
+                display:block;
+            }            
+
+
+            .red {
+                color:rgb(200,30,30);
+            }
+
+            .lime {
+                color:rgb(20,180,20);
+            }
+
+            #add-user input, #add-user select,
+            #add-detail input, #add-detail select
+            {
+                padding:3px;
+            }
+
+            #add-user label, #add-detail label {
+                width:120px;
+                display:block;
+                margin-top:5px;
+            }
+
+            #add-detail label {
+                width:180px;
+            }
+
+            #head-wave {
+                top:23%;
+            }
+
+            .hidden {
+                display:none;
+            }
+
+            .unhidden {
+                display:block;
+            }
+
+            .field_error {
+                background:lightpink;
+                border:1px solid red;
+            }
+
+            .mainlogo {
+                z-index: 1;
+                position: relative;
+                width: 150px;
+                height: 180px;
+                left: 50%;
+                margin-left: -75px;
+                top: 15px;
+                opacity: 1;
+            }
+
+            .enter {
+                text-align:center;
+                width: 100%;
+                position: relative;           
+              
+                margin-top: 5%;
+            }
+
+            .enter p {
+                text-align: center;
+                font-size: 18px;
+                text-shadow: 0px 0px 1px #69f;
+            } 
+
+            .join-button {                              
+                display:inline-block;
+                position:relative;
+            }
+
+            .join-button a {
+                text-decoration: none;
+                color: #5e96c5;
+                font-size: 20px;
+                display: block;
+                border: 2px solid #5e96c5;
+                border-radius: 7px;
+                padding: 10px;
+                background: rgba(255,255,255,1);
+                text-align: center;
+                width: 70px;
+               
+            }
+
+
+            @keyframes redFadeOut {from { color:red; opacity: 1 }to  { color: white; opacity: 0}}
+            @keyframes fadeIn {from { opacity: 0 }to  { opacity: 1}}
+            @keyframes fadeOut {from { opacity: 1 }to  { opacity: 0}}
+
+            .like-button-click { animation: redFadeOut 0.75s; }
+
+            .fadeIn {animation: fadeIn 0.5s; }
+            .fadeOut {animation: fadeOut 0.5s; }     
+  
+        </style>
+        
+    </head>
+    <body>        
+       
+        <div class="wrap">
+            <div id="" class="intro">
+                
+                <div class="mainlogo">
+                    <img src="img/ssoz_3colour2.svg" width="100%" height="100%" />
+                </div>
+                <div id="head-wave">
+                    <img src="img/head_wave.svg" />
+                </div>
+                <div class="enter">
+                    <!-- <p>South Australia's<br /> premier online surfing community.</p> -->
+                    <span class="join-button">
+                        <a href="/new_user.html">join</a>                      
+                    </span>
+                    <p>Already registered?</p>
+                    <span class="join-button">                  
+                        <a href="/index.html">sign in</a></p>
+                    </span>
+                </div>
+               
+            </div>            
+           
+            <div id="lbox" class="lightbox"></div>           
+        </div>
+
+        <script language="Javascript">
+
+            let lightbox;                      
+            
+            
+            window.onload = () => {               
+                   
+               
+                
+            }
+
+        </script>
+    </body>
+</html>
+
+
+
+

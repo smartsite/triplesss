@@ -1,0 +1,960 @@
+html {
+    scroll-behavior: smooth;
+    height:100%;
+    
+    &.lb {
+        scroll-behavior: auto;
+    }
+    
+    body{
+        font-family: 'Raleway', sans-serif;
+        height:100%;
+        border:0;
+        margin:0;
+
+        .toprow {
+            position:fixed;
+            width:100%;           
+            background-color: rgb(232,220,200);
+            background: linear-gradient(180deg, rgba(232,220,200,1) 46%, rgba(115,166,208,1) 100%);
+            z-index:100;
+           
+            box-shadow: 0px 3px 6px #aaa;
+            height:55px;
+            overflow:hidden;
+
+            #head-wave {
+                position:absolute;
+                width:100%;
+
+                img {
+                    width:100%;
+                    margin-top:-20px;
+                }
+            }
+
+            h3 {
+                position:absolute;                  
+                line-height: 58px;
+                float:left;               
+                color:#fff;
+                text-shadow: 1px 1px 3px #333;
+                padding:0;
+                margin:0;    
+            }
+
+            button {
+                position:absolute;
+                right:15px;
+                padding:5px;
+                margin:7px;
+                margin-top:15px;               
+            }
+
+            #menubutton {
+    
+                font-size: 22px;
+                line-height:22px;  
+                background-color: rgba(255,255,2655, 0.7);
+                border: none;
+                border-radius: 3px;
+                border: 1px solid #aaa;
+                margin-top: 10px;
+                margin-right: 0;
+                width: 35px;
+                height: 35px;               
+                cursor:pointer;               
+                 
+            }
+
+            #avatar {               
+               
+                text-align:center;
+                display:block;
+                float:left;
+                margin-right:7px;
+                margin-left:5px;
+                margin-top:9px;
+                width:40px;
+                height:40px;
+                border-radius:25px;
+                box-shadow: 2px 2px 4px #858585;
+                overflow:hidden;               
+
+                img {
+                    width:40px;
+                    height:40px;
+                }                
+            }
+        }
+
+        #intro {
+            .mainlogo {
+                z-index: 1;
+                position: absolute;
+                width: 36%;
+                height: 180px;
+                left: 50%;
+                margin-left: -18%;
+                top: 15px;
+                opacity: 1;
+                top: 6%;
+            }
+
+            .enter {
+                width: 60%;
+                position: absolute;
+                left: 50%;
+                margin-left: -30%;
+                top: 33%;
+                text-align:center;
+
+                p {
+                    text-align: center;
+                    font-size: 18px;
+                    text-shadow: 0px 0px 1px #69f;
+                } 
+            }   
+           
+
+            .join-button {
+                left: 50%;
+                margin-top: 30px; 
+
+                a {
+                    text-decoration: none;
+                    /* text-shadow: 0px 0px 1px #000; */
+                    color: #5e96c5;
+                    font-size: 20px;
+                    display: block;
+                    border: 2px solid #5e96c5;
+                    border-radius: 7px;
+                    padding: 10px;
+                    background: rgba(255,255,255,1);
+                    text-align: center;
+                    width: 70px;
+                    margin-left: -50px;
+                }
+            }           
+        }
+
+        #loading {
+            position: absolute;
+            width: 100%;
+            top: 240px;
+            z-index:-1;
+        }
+
+
+        #menu {        
+            position:fixed;
+            width:330px;
+            top:60px;  
+            right:-350px;  
+            transition: right 0.3s ease-in-out; 
+            z-index:99999;  
+
+            &.show {
+                z-index:1001;
+                right:0px;
+            }
+
+            .menuwrap {
+    
+                background: rgba(0,0,0,0.5);
+                padding: 4px;
+                border-radius: 5px 0px 0px 5px;    
+
+                button {
+                    width:40px;
+                    height:40px;
+                    margin-right:0px;
+                }                
+            }            
+        }
+
+        .wrap{
+            width:100%;
+            overflow:hidden;
+            padding-top:40px;
+            background-image: url('/img/sand1.jpg');
+            background-attachment: fixed;
+            
+            &.loggedout {
+                height:100%;
+            }
+
+            select {
+                padding:5px;
+            }
+
+            div {
+                button {
+                    padding:7px;
+                    border-radius:5px;
+                    border:1px solid #aaa;
+                    font-size: 14px;
+                    vertical-align: middle;
+                }
+            }
+
+            input[type="file"] {
+                display: none;
+            }
+
+            .file-upload {
+                border: 1px solid #aaa;
+                display: inline-block;
+                width: 36px;
+                height: 36px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                background-color: #eee;
+                text-align: center;
+                line-height: 35px;
+            }
+
+            .feed {
+                padding-bottom:10px;
+                z-index:0;                     
+            }  
+            
+            .lowlight {
+                z-index:-1;
+                display:none;
+            }   
+
+            .postbox {
+                position: absolute;
+                z-index: 1000;
+                border:1px solid #ccc;
+                background-color:#fff;
+                margin:15px 10px;
+                border-radius:5px;
+                box-shadow: 2px 2px 4px #666;
+                width:82%;
+                padding:15px;
+                margin-top:20px;
+
+                input {
+                    padding:5px;
+                    width:250px;
+                    margin:15px;
+                }
+             
+                button {
+                    margin-top: 15px;
+                    padding:10px;
+                }
+
+                &.tagbox {
+                    input {
+                        margin:0;
+                    }
+                }
+
+                &.lowlight {
+                    z-index:-1;
+                    display:none;
+                }               
+                
+            }
+
+            #keycheck {
+                a {
+                    color:#666;
+                }
+            }
+
+            #namecheck {
+                input {
+                    font-size: 18px;
+                    border-radius: 7px;
+                    border:1px solid #999;
+                    padding:5px;
+                }
+
+                button {
+                    padding:10px;
+                    border-radius:5px;
+                    border:1px solid #999;
+                }
+
+                #add-user {
+                    span {
+                        color: transparent;                   
+                        font-size: 20px;
+                        /*
+                        border: solid 1px #999;
+                        border-radius: 30px;
+                        width: 30px;
+                        height: 30px;
+                        display: inline-block;
+                        text-align: center;
+                        background: rgba(255,255,255,0.3);
+                        */
+                    }
+                   
+                }
+            }
+
+            #editbox, #reportbox, #tagbox, #deletebox, #privacybox {
+                button {
+                    &.cancel {
+                        top:0px;
+                    }
+                }
+            }
+
+            #deletebox {
+                button {
+                    &.cancel {
+                       top: auto;
+                       left:0;
+                       margin-left:130px;
+                    }
+                }
+            }
+
+            #add-user {
+                select {
+                    padding:3px;
+                }
+
+                label {
+                    width:120px;
+                    display:block;
+                    margin-top:5px;
+                }
+               
+                input {
+                    font-size: 18px;
+                    border-radius: 7px;
+                    border:1px solid #999;
+                    padding:5px;
+                }
+
+                button {
+                    padding:10px;
+                    border-radius:5px;
+                    border:1px solid #999;
+                }  
+                
+                span {
+                    /*
+                    color: transparent;                   
+                    font-size: 22px;
+                    border: solid 1px #999;
+                    border-radius: 30px;
+                    width: 25px;
+                    height: 25px;
+                    display: inline-block;
+                    text-align: center;
+                    background: rgba(255,255,255,0.3);
+                    */
+                }
+             
+            }
+
+            #add-detail {
+                input {
+                    padding:5px;
+                    font-size: 18px;
+                    border-radius: 7px;
+                    border: 1px solid #999;
+                    margin-bottom:3px;
+                }
+
+                button {
+                    padding:10px;
+                    border-radius: 5px;
+                    border: 1px solid #999;
+                }
+            }
+
+            #addpost {
+                background-color: rgba(210,210,210,.75)
+            }  
+
+            #hidebox {
+                .cancel{
+                    margin-top:0;
+                }
+
+                p {
+                    padding-top:40px;
+                }
+            }
+            
+            #commentbox {
+                position:fixed;
+                top:60px;
+                .cancel {
+                    top:0px;
+                }
+            }
+            
+            
+            #comments {
+                overflow-y: scroll;
+                width:95%;
+                margin-left:2.5%;
+                height: 220px;
+                margin-top:30px;
+                border-radius:5px;
+
+                .comment_wrap {
+                    overflow: hidden;
+                    margin: 5px 0px;
+
+                    .comment_user {                
+                        font-weight: bold;
+                        background-color: #f0c88075;
+                        padding: 7px;                       
+                        display: inline-block;                      
+                        line-height: 22px;
+                        border-top-left-radius: 10px;
+                        font-size:0.9em;
+
+                        a {
+                            color: #000;
+                            text-decoration: none;
+                        }                        
+                    }
+
+                    .comment_text {                
+   
+                        background-color: #eee;
+                        padding: 7px;
+                        display: inline-block;                          
+                        line-height: 22px;
+                        border-bottom-right-radius: 10px;
+                        font-size:0.9em;
+                    }
+                }
+            }
+
+            #reportbox {
+                input {
+                    width:30px;
+                }
+              
+            }
+
+            #notifications {
+                background-color: rgba(210,210,210,.75);
+                
+                .notify {
+                    background-color: #fff;
+                    padding: 5px;
+                    border-radius: 5px;
+                    margin-bottom: 10px;
+
+                    a {
+                        text-decoration: none;
+                        font-weight: bold;
+                        color: #2396bd;
+                    }
+
+                    p {
+                        font-size:0.9em;
+                        margin-left: 70px;
+                        margin-top: -30px;
+                        position:absolute;
+                        width:65%;
+                    }
+
+                    h3 {
+                        a {
+                            text-decoration: none;
+                            color:#333;
+                        }
+                    }
+
+                    .avatar {
+                        overflow: hidden;
+                        border-radius: 30px;
+                        width:40px;
+                        height:40px;
+                        border: 2px solid #999;
+
+                        img {
+                            width:40px;
+                            height:40px;
+                        }
+                    }
+
+                    .noteicon {
+                        width: 25px; 
+                        position: absolute;
+                        text-align: center;
+                        font-size: 14px;
+                        margin-left: 45px;
+                        margin-top: -30px; 
+                    }                   
+                }
+            }
+
+            #search {
+                input {
+                    padding:5px;
+                }               
+            }
+
+            #connections {
+                h4 {
+                    line-height:22px;
+                    margin:0;
+                } 
+                
+                .follow {
+                    background-color: #fff;
+                    padding: 5px;
+                    border-radius: 5px;
+                    margin-bottom: 10px;
+                }
+            }
+
+            #follow {
+                .follow {
+                    
+                    background-color: #fff;
+                    padding: 5px;
+                    border-radius: 5px;
+                    margin-bottom: 10px;
+                    
+                    h3 {
+                        margin: 0;
+                        padding: 0;
+                        margin-left: 55px;
+                        margin-top: -31px;
+                        float: left;
+                        font-size: 16px;
+
+                        a {
+                            text-decoration: none;
+                            color:#333;
+                        }
+                       
+                    }
+                }    
+            }
+
+
+            
+
+            #connections, #follow {
+                h3 {
+                    margin:10px 0;   
+                }
+                
+                .follow {
+                    h3 {
+                        margin: 0;
+                        padding: 0;
+                        margin-left: 55px;
+                        margin-top: -31px;
+                        float: left;
+                        font-size: 16px;
+
+                        a {
+                            text-decoration: none;
+                            color:#333;
+                        }
+                       
+                    }
+
+                    .buttons {
+                        width: 160px;               
+                        position: absolute;
+                        right: 15px;              
+                        margin-top: -42px;
+
+                        button {
+                            margin-left:2px;
+                            margin-right:3px;
+                        }
+                    }
+
+                    .avatar {
+                        overflow: hidden;
+                        border-radius: 30px;
+                        width:40px;
+                        height:40px;
+                        border: 2px solid #999;
+
+                        img {
+                            width:40px;
+                            height:40px;
+                        }
+                    }
+                } 
+
+                
+            }
+
+            #followbox {
+                padding-top:55px;
+                top:100px;
+                position:fixed;
+            }
+
+            #profile {
+                background-color: #fff;   
+                overflow:hidden;
+
+                .avatar {
+                    border-radius:50px;
+                    width:80px;
+                    height:80px;
+                    box-shadow: 0 0 5px #2396bd;
+
+                    overflow:hidden; 
+                    img {
+                        width:80px;
+                        height:80px;
+                    }  
+                }
+
+                .bio {
+                    position: absolute;
+                    margin-left: 92px;
+                    margin-top: -45px;
+                    font-size:14px;
+                    width:70%;
+                }
+                
+                h3 {
+                    margin: 0;
+                    padding: 0;
+                    margin-left: 90px;
+                    margin-top: -75px;
+                    float: left;
+                    font-size: 22px;
+                }             
+               
+            }
+
+            #user-profile {               
+                
+                #lg_profile {
+                    img{ 
+                        width:100%;
+                    }
+                }
+
+                h3 {
+                    margin: 0;
+                    padding: 0;
+                    margin-left: 90px;
+                    margin-top: -75px;
+                    float: left;
+                    font-size: 22px;
+                }     
+
+                .bio {
+                    float: left;
+                    margin-left: 90px;
+                    margin-top: -50px;
+                    font-size: 14px;
+                }
+
+                .profile-edit {
+                    position:absolute;
+                    margin:5px;
+                }
+            }
+
+            .post, .add, .details {
+                border:1px solid #c19e71;                
+                margin:15px 5px;
+                border-radius:5px;             
+                background-color: rgba(210,210,210,.75)
+            }
+
+            .post {
+                overflow:hidden;
+                border-radius: 7px;  
+
+                &.lowlight {
+                    z-index:-1;
+                    display:none;
+                } 
+
+                .avatar {
+                    width: 30px;
+                    height: 30px;
+                    overflow: hidden;
+                    position: absolute;
+                    border-radius: 20px;
+                    margin-top: 10px;
+                    margin-left: 12px;
+                    z-index: 1;
+                    box-shadow: 0px 0px 5px #73b0ef;
+
+                    img {
+                        width:100%;
+                        height:100%;
+                    }
+                } 
+                
+                button {
+                    
+                    background-color: transparent;
+                    border:none;
+                    padding-bottom:3px;
+                    padding-top:0px;
+                    padding-right: 2px;
+
+                    i {
+                        color:#000;
+                    }                    
+                }
+
+                .content-wrap {
+                   
+                    margin-top:50px;
+                    background-color:#fff;
+
+                    .postcontent {
+                        padding:5px;
+                        position:relative;
+                        font-size:0.9em;
+
+                        &.image {
+                            padding:5px;
+                        }                      
+
+                        img {
+                            width:100%;
+                        }
+
+                        &.text {
+                           
+                        }
+                    }
+                }
+
+                .options {
+                    background-color: #fff;
+                    position:absolute;
+                    width:120px;
+                    padding:5px;
+                    left:auto;
+                    right:21px;
+                    margin-top:7px;
+                    box-shadow:4px 4px 7px #333;
+                    border-radius:5px;
+                    z-index:999;
+
+                    &.hide {
+                        display:none;
+                    }
+
+                    &.show {
+                        display: block;
+                        opacity:0.8;
+                    }
+
+                    span {
+                        display:block;
+                        height:35px;
+                        line-height:35px;
+                        margin-bottom:5px;
+                        border-bottom: 1px solid #999;
+                    }
+                }
+
+                .optionmenu {
+                    padding:4px 2px;
+                    text-align:left;
+                    width:200px;
+                    background:none;
+                    height:40px;
+                    float:left;
+
+                    span {
+                        padding:2px;
+                        width:35px;
+                        height:35px;
+                        border:1px solid #ddd;
+                        color: #444;
+                        display: inline-block;
+                        margin:0px 4px;
+                        border-radius:5px;
+                        text-align:center;
+                        font-size:22px;
+                        vertical-align :middle;
+                        line-height:35px;
+                        background-color: rgb(255,255,255);
+                        background: linear-gradient(180deg, rgba(255,255,255,0.7) 12%, rgba(214,214,214,1) 100%);
+
+                        &.red {
+                            color:red;
+                        }
+                    }
+                }
+
+                .reactions {
+                    display:block;
+                    float:right;
+                    margin-top:12px;
+                    margin-right:10px;
+
+                    button {
+                       &.like {
+                        border:none;
+                        background: none;
+                        color:red;
+                       }
+
+                       &:focus {
+                            outline: none;
+                        }
+                    }
+
+                    
+
+                    .post-comments, .post-likes {
+                        line-height: 25px;
+                        font-size: 15px;
+                        vertical-align: top;
+                    }
+
+                    .post-button {
+                        &.liked {
+                            i {
+                                color: red;
+                            }
+                        }
+
+                        &.comment {
+                            i {
+                                font-weight: bold;
+                            }
+                        }
+                    }
+                   
+                    
+                   
+                }
+            }
+            
+            .add {
+                padding:10px;  
+                textarea {
+                    font-family: inherit;
+                    font-size:14px;                   
+                }            
+            }
+
+            .details {
+                padding:10px;
+
+                .field_error {
+                    background:lightpink;
+                    border:1px solid red;
+                }
+            }
+
+            .post-button {
+                padding-right: 2px;
+            }
+            
+            button {
+                &.cancel {
+                    position: absolute;
+                    top: 15px;
+                    right: 15px;
+                }
+            } 
+            
+            .biobox, .profilebox {
+                position: absolute;
+                z-index: 1000;
+                border:1px solid #ccc;
+                background-color:#fff;
+                margin:15px 10px;
+                border-radius:5px;
+                box-shadow: 2px 2px 4px #666;
+                width:82%;
+                padding:15px;
+                margin-top:20px;
+
+                &.lowlight {
+                    z-index:-1;
+                    display:none;
+                }            
+            }
+
+            .profilebox {
+                #image {
+                    margin: 10px;
+                }
+
+                h3 {
+                    margin-top:45px;
+                }
+
+                #add-bio {
+                    textarea {
+                        width:100%;
+                    }
+
+                    input {
+                        padding:7px;
+                        border-radius:5px;
+                    }
+
+                    button {
+                        border-radius: 5px;
+                        border: 1px solid #aaa;
+                        padding: 10px;
+                    }
+                }
+            }
+            
+           
+        }
+
+        .hidden {
+            display:none;
+        }
+        
+        .unhidden {
+            display:block;
+        }
+
+        .lightbox {
+            position:fixed;
+            width:100%;
+            height:100%;
+            left:0;
+            right:0;
+            top:0;
+            bottom:0;
+            background-color: #000;
+            opacity: 0.7;
+            z-index:1;
+            display:none;
+            overflow:auto;
+        
+            &.active{
+                z-index: 1;
+                display:block;
+            }
+        }
+
+        @keyframes redFadeOut {from { color:red; opacity: 1 }to  { color: white; opacity: 0}}
+        @keyframes fadeIn {from { opacity: 0 }to  { opacity: 1}}
+        @keyframes fadeOut {from { opacity: 1 }to  { opacity: 0}}
+
+        .like-button-click { animation: redFadeOut 0.75s; }
+        .fadeIn {animation: fadeIn 0.5s; }
+        .fadeOut {animation: fadeOut 0.5s; }    
+        
+        
+    }
+}
+
+

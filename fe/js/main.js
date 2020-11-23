@@ -8,17 +8,19 @@ const addHandler = (element, handler, callback) => {
 }
 
 const showBox = (show, id) => {     
-    //console.log(id);
-    if(typeof document.getElementById(id) != 'undefined') {
+    console.log(id);
+    const container = document.getElementById(id);
+    
+    if(typeof container != 'undefined') {
         if(show == true) {
-            document.getElementById(id).classList.remove('hidden');
-            document.getElementById(id).classList.add('fadeIn');
+            container.classList.remove('hidden');
+            container.classList.add('fadeIn');
             window.setTimeout(function() {
-                document.getElementById(id).classList.remove('fadeIn');
+                container.classList.remove('fadeIn');
             }, 1000)
         } else {
-            document.getElementById(id).classList.add('hidden');
-            document.getElementById(id).classList.remove('fadeIn');
+            container.classList.add('hidden');
+            container.classList.remove('fadeIn');
         }
     } else {
         console.log("container" + id + " does not exist");
@@ -69,6 +71,9 @@ const newDiv = (cls = '', id = '') => {
     }
     return div;
 }
+
+// Not implemented yet, but this pattern will replace the individual AJAX calls
+// with tider, more flexible apiCall('endpoint/something', 'GET', function(), [key:value]).done(callback()) 
 
 const apiCall = (url, method, callback, params = null) => {
     let data = '';
@@ -220,6 +225,9 @@ const notifications = () => {
             d.map(function(n) {
                 let notify = notification(n);
                 notifications.append(notify);
+                notify.addEventListener('click', function() {
+                    document.getElementById('menu').classList.remove('show');
+                })
             })          
         });
     });
@@ -292,8 +300,6 @@ const connectClick = (e) => {
 
 
 
-
-
 const doConnect = (action) => {
                 
     const user_id = getCookie('userID'); 
@@ -321,12 +327,13 @@ let getUserProfile = () => {
     var user_id = getCookie('userID'); 
     let url = '/Triplesss/api/profile.php?userid=' + user_id;
 
-    fetch(url, {
-           method: "GET",                                           
-       }) 
-       .then(function(response) {
-           response.json().then(function(d){                                                   
-              
+    if(user_id) {
+        fetch(url, {
+            method: "GET",                                           
+        }) 
+        .then(function(response) {
+            response.json().then(function(d){                                                   
+                
                 console.log(d);
                 d.map(function(el) {
                     const profileImage = document.querySelectorAll('#lg_profile img')[0];
@@ -342,13 +349,11 @@ let getUserProfile = () => {
                         if(el.content_type == 'text') {
                             profileText.innerText = el.content;
                         }
-                    }                    
-                    
-               })                          
-              
-           })
-       }
-   )
+                    }                  
+                })                          
+            })
+        })
+    }    
 }
 
 
@@ -876,6 +881,10 @@ let feedPostMarkup = (post, container) => {
             
         postWrap.appendChild(contentWrap);                          
         container.appendChild(postWrap); 
+
+        postWrap.addEventListener('click', function() {
+            document.getElementById('menu').classList.remove('show');
+        })
     
     }              
                         
@@ -912,13 +921,11 @@ const postMarkup = (post, container) => {
             //postWrap.setAttribute('data-post_id', postId);
             
             let contentWrapImage = newDiv('postcontent image');
-            let contentWrapText = newDiv('postcontent text');
-            
+            let contentWrapText = newDiv('postcontent text');            
                               
-            //postWrap.appendChild(postMenu3()); 
-            
+            //postWrap.appendChild(postMenu3());             
             postWrap.appendChild(postMenu2()); 
-            postWrap.appendChild(reactions(p)); 
+            postWrap.appendChild(reactions(p));         
             
             const pw = postWrap.querySelectorAll('.optionmenu span');
 
@@ -952,6 +959,10 @@ const postMarkup = (post, container) => {
 
             postWrap.appendChild(contentWrap);                          
             container.appendChild(postWrap);
+
+            contentWrap.addEventListener('click', function() {
+                document.getElementById('menu').classList.remove('show');
+            })
         }                   
     }); 
     getReactions();               
@@ -970,19 +981,31 @@ const setSelect = (selectObj, index) => {
     });               
 }  
 
-let aggregator = (user_id, offset = 0, length = 5) => {
+let aggregator = (user_id, offset = 0, length = 10) => {
 
     let container = document.querySelectorAll('.feed')[0];
-    container.innerHTML = '';
+    //container.innerHTML = '';
     return fetch('Triplesss/api/aggregator.php?userid=' + user_id + '&offset=' + offset + '&length=' + length, {
                 method: "GET"                                                    
     }) 
     .then(function(response) {
         response.json().then(function(d){
-            feedPostMarkup(d, container);  
-            //menuHandler();                     
+            feedPostMarkup(d, container); 
+            triggered = false; 
+            return function(triggered) {
+                return triggered;
+            }                     
         });
     });       
+}
+
+const lazyLoad = (view) => {
+    const userid = getCookie('userID');
+    if(view == 'feed') {
+        offset = count + offset;
+        aggregator(userid, offset, count); 
+        
+    }
 }
 
 const userfeed = (feed_id) => {
@@ -1508,7 +1531,6 @@ let doSearch = () => {
 
 let listProfile = (p) => {
                          
-    console.log(p);
     const follow = newDiv('follow');
     const avatar = newDiv('avatar');
     const buttons = newDiv('buttons');
@@ -1572,8 +1594,7 @@ let listProfile = (p) => {
         avatar_src = p.avatar;
     }
     const avatar_image = newImage(avatar_src);
-    avatar.append(avatar_image);
-    //username.innerText = p.user_name;
+    avatar.append(avatar_image);    
     follow.append(avatar);
     follow.append(username);
     follow.append(buttons);
@@ -1605,19 +1626,14 @@ let connections = () => {
 }
 
 
-
-
-
-
-
-
-
 const isloggedin = () => { 
                
     const uname = document.getElementById('uname');
     const userid = document.getElementById('userid');
-    //const logoutButton = document.getElementById('log-out');
     const wrap = document.querySelectorAll('.wrap')[0];
+    const keycheck = document.getElementById('keycheck');
+    const menuButton = document.getElementById('menubutton');
+   
    
     return fetch('/Triplesss/api/logged_in.php', {
             method: "GET"                                                   
@@ -1631,15 +1647,14 @@ const isloggedin = () => {
                 showBox(false, 'fail');               
                 uname.innerText = getCookie('userName'); 
                 userid.value = getCookie('userID'); 
-                //logoutButton.classList.remove('hidden');
-
-                showBox(false, 'user-profile');
+               
+                //showBox(false, 'user-profile');
                 showBox(false, 'follow');
                 showBox(false, 'notifications');
                 showBox(false, 'connections');
                 wrap.classList.remove('loggedout');
+                menuButton.classList.remove('hidden');
                 getProfile();
-                //feedProfile(user_id);
                 feedlist();                            
 
             }  else {
@@ -1651,12 +1666,35 @@ const isloggedin = () => {
                 showBox(false, 'addpost');  
                 showBox(false, 'follow');
                 //logoutButton.classList.add('hidden');
-                wrap.classList.add('loggedout')
+                menuButton.classList.add('hidden');
+                wrap.classList.add('loggedout');
+               
+                document.getElementById('login-heading').innerText = "User login";
+                document.querySelectorAll('#login-prompt p')[0].innerText = "";
+
             }
             //if(callback) { return callback(d); }
         });                   
     })
 };
+
+
+const hideBoxes = () => {
+    showBox(false, 'user-profile');  
+    showBox(false, 'nouser');   
+    showBox(false, 'addpost');       
+    showBox(false, 'search');
+    showBox(false, 'keycheck');
+    showBox(false, 'fail');
+    showBox(false, 'success');
+    showBox(false, 'feed');  
+    showBox(false, 'userpage');  
+    showBox(false, 'profile');   
+    showBox(false, 'follow');
+    showBox(false, 'notifications');  
+    showBox(false, 'messages');     
+    showBox(false, 'connections');  
+}
 
 
 const dologin = () => {
@@ -1681,8 +1719,7 @@ const dologin = () => {
                 
                 location.reload();
                 password.className = '';
-                showBox(false, 'keycheck');
-                showBox(false, 'fail');
+                hideBoxes();
                 showBox(true, 'feed');
                 document.getElementById('uname').innerText = d.username;
                 getProfile(); 
@@ -1692,16 +1729,11 @@ const dologin = () => {
     });   
 };
 
+
 const userPageView = (userid) => {
-    showBox(false, 'keycheck');
-    showBox(false, 'fail');
-    showBox(false, 'addpost'); 
-    showBox(false, 'search');
+    hideBoxes();
     showBox(true, 'feed');  
-    showBox(true, 'profile');   
-    showBox(false, 'notifications');   
-    showBox(false, 'user-profile');  
-    showBox(false, 'connections');  
+    showBox(true, 'profile');     
 
     if(userid > 0) {
         feedProfile(userid);
@@ -1720,99 +1752,48 @@ const userPageView = (userid) => {
 }
 
 
-
 const notificationView = () => {
-    showBox(false, 'keycheck');
-    showBox(false, 'nouser');
-    showBox(false, 'fail');
-    showBox(false, 'profile');    
-    showBox(false, 'addpost'); 
-    showBox(false, 'feed');  
-    showBox(true, 'notifications');   
-    showBox(false, 'user-profile');  
-    showBox(false, 'connections');  
+    hideBoxes();
+    showBox(true, 'notifications');  
     notifications();
 }
 
-
 const feedView = () => {
-    showBox(false, 'keycheck');
-    showBox(false, 'nouser');
-    showBox(false, 'fail');
-    showBox(false, 'profile');    
-    showBox(false, 'addpost');   
-    showBox(false, 'notifications');  
-    showBox(false, 'search');   
-    showBox(false, 'follow');   
+    hideBoxes();
     showBox(true, 'feed');   
-    showBox(false, 'user-profile');  
-    showBox(false, 'connections');  
-    aggregator(user_id); 
+    aggregator(user_id, offset, count); 
 }
 
 const userView = () => {
-    showBox(false, 'keycheck');
-    showBox(false, 'nouser');
-    showBox(false, 'fail');
-    showBox(false, 'profile');    
+    hideBoxes();
     showBox(true, 'addpost');   
-    showBox(true, 'feed');   
-    showBox(false, 'notifications');  
-    showBox(false, 'connections');  
-    showBox(false, 'user-profile');  
+    showBox(true, 'feed');     
     const feed_select = document.getElementById('feed_id');
     let feed_id = feed_select.value;
     feed(feed_id);     
 }
 
 const profileView = () => {
-    showBox(false, 'keycheck');
-    showBox(false, 'nouser');
-    showBox(false, 'fail');
-    showBox(false, 'profile');   
-    showBox(false, 'feed');   
-    showBox(false, 'addpost');  
-    showBox(false, 'notifications');  
-    showBox(false, 'connections');   
-    showBox(false, 'search');  
-    showBox(false, 'follow');
-    showBox(true, 'user-profile');  
+    hideBoxes();
     getUserProfile();             
-   
-    /*
-    const feed_id = 0;
-    const offset = 0;
-    const count = 1;
-    const sort_by = 'date_desc';
-    const filter_options = 'userid=35';
-    */
+    showBox(true, 'user-profile');    
 }
 
 const welcomeView = () => {
-    showBox(false, 'keycheck');
-    showBox(false, 'nouser');
-    showBox(false, 'fail');
-    showBox(false, 'profile');    
-    showBox(false, 'addpost');   
-    showBox(false, 'feed');   
-    showBox(false, 'user-profile');  
-    showBox(false, 'connections');  
-    showBox(true, 'intro');
-  
+    hideBoxes();
+    showBox(true, 'intro');  
 }
 
 const followView = () => {
-    showBox(false, 'keycheck');
-    showBox(false, 'nouser');
-    showBox(false, 'fail');
-    showBox(false, 'profile');    
-    showBox(false, 'addpost');   
-    showBox(false, 'feed');   
-    showBox(false, 'user-profile');  
-    showBox(false, 'notifications');   
+    hideBoxes();
     showBox(true, 'search');  
     showBox(true, 'connections');  
     connections();
+}
+
+const messageView = () => {
+    hideBoxes();
+    showBox(true, 'messages');  
 }
 
 
@@ -1820,6 +1801,13 @@ const setView = (view) => {
     
     // Menu button calls
     console.log(view);
+    currentView = view;
+    let feedContainer = document.querySelectorAll('.feed')[0];
+    feedContainer.innerHTML = '';
+    count = 10;
+    offset = 0;
+    triggered = false;
+
    
     switch(view) {
         case "user": 
@@ -1840,15 +1828,14 @@ const setView = (view) => {
         
         case "notification": 
             notificationView();
-            break;   
-            
+            break;               
         
         case "userpage": 
             userPageView(userid);
             break;  
 
-        case "messages": 
-            messages();
+        case "message": 
+            messageView();
             break;     
         
         case "login": 
@@ -1864,6 +1851,3 @@ const setView = (view) => {
            feedView();
     }
 }
-
-
-

@@ -1,0 +1,940 @@
+html {
+  scroll-behavior: smooth;
+  height: 100%;
+}
+
+html.lb {
+  scroll-behavior: auto;
+}
+
+html body {
+  font-family: 'Raleway', sans-serif;
+  height: 100%;
+  border: 0;
+  margin: 0;
+}
+
+html body .toprow {
+  position: fixed;
+  width: 100%;
+  background-color: #e8dcc8;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(46%, #e8dcc8), to(#73a6d0));
+  background: linear-gradient(180deg, #e8dcc8 46%, #73a6d0 100%);
+  z-index: 100;
+  -webkit-box-shadow: 0px 3px 6px #aaa;
+          box-shadow: 0px 3px 6px #aaa;
+  height: 55px;
+  overflow: hidden;
+}
+
+html body .toprow #head-wave {
+  position: absolute;
+  width: 100%;
+}
+
+html body .toprow #head-wave img {
+  width: 100%;
+  margin-top: -20px;
+}
+
+html body .toprow h3 {
+  position: absolute;
+  line-height: 58px;
+  float: left;
+  color: #fff;
+  text-shadow: 1px 1px 3px #333;
+  padding: 0;
+  margin: 0;
+}
+
+html body .toprow button {
+  position: absolute;
+  right: 15px;
+  padding: 5px;
+  margin: 7px;
+  margin-top: 15px;
+}
+
+html body .toprow #menubutton {
+  font-size: 22px;
+  line-height: 22px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 3px;
+  border: 1px solid #aaa;
+  margin-top: 10px;
+  margin-right: 0;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+}
+
+html body .toprow #avatar {
+  text-align: center;
+  display: block;
+  float: left;
+  margin-right: 7px;
+  margin-left: 5px;
+  margin-top: 9px;
+  width: 40px;
+  height: 40px;
+  border-radius: 25px;
+  -webkit-box-shadow: 2px 2px 4px #858585;
+          box-shadow: 2px 2px 4px #858585;
+  overflow: hidden;
+}
+
+html body .toprow #avatar img {
+  width: 40px;
+  height: 40px;
+}
+
+html body #intro .mainlogo {
+  z-index: 1;
+  position: absolute;
+  width: 36%;
+  height: 180px;
+  left: 50%;
+  margin-left: -18%;
+  top: 15px;
+  opacity: 1;
+  top: 6%;
+}
+
+html body #intro .enter {
+  width: 60%;
+  position: absolute;
+  left: 50%;
+  margin-left: -30%;
+  top: 33%;
+  text-align: center;
+}
+
+html body #intro .enter p {
+  text-align: center;
+  font-size: 18px;
+  text-shadow: 0px 0px 1px #69f;
+}
+
+html body #intro .join-button {
+  left: 50%;
+  margin-top: 30px;
+}
+
+html body #intro .join-button a {
+  text-decoration: none;
+  /* text-shadow: 0px 0px 1px #000; */
+  color: #5e96c5;
+  font-size: 20px;
+  display: block;
+  border: 2px solid #5e96c5;
+  border-radius: 7px;
+  padding: 10px;
+  background: white;
+  text-align: center;
+  width: 70px;
+  margin-left: -50px;
+}
+
+html body #loading {
+  position: absolute;
+  width: 100%;
+  top: 240px;
+  z-index: -1;
+}
+
+html body #menu {
+  position: fixed;
+  width: 330px;
+  top: 60px;
+  right: -350px;
+  -webkit-transition: right 0.3s ease-in-out;
+  transition: right 0.3s ease-in-out;
+  z-index: 99999;
+}
+
+html body #menu.show {
+  z-index: 1001;
+  right: 0px;
+}
+
+html body #menu .menuwrap {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 4px;
+  border-radius: 5px 0px 0px 5px;
+}
+
+html body #menu .menuwrap button {
+  width: 40px;
+  height: 40px;
+  margin-right: 0px;
+}
+
+html body .wrap {
+  width: 100%;
+  overflow: hidden;
+  padding-top: 40px;
+  background-image: url("/img/sand1.jpg");
+  background-attachment: fixed;
+}
+
+html body .wrap.loggedout {
+  height: 100%;
+}
+
+html body .wrap select {
+  padding: 5px;
+}
+
+html body .wrap div button {
+  padding: 7px;
+  border-radius: 5px;
+  border: 1px solid #aaa;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+html body .wrap input[type="file"] {
+  display: none;
+}
+
+html body .wrap .file-upload {
+  border: 1px solid #aaa;
+  display: inline-block;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  background-color: #eee;
+  text-align: center;
+  line-height: 35px;
+}
+
+html body .wrap .feed {
+  padding-bottom: 10px;
+  z-index: 0;
+}
+
+html body .wrap .lowlight {
+  z-index: -1;
+  display: none;
+}
+
+html body .wrap .postbox {
+  position: absolute;
+  z-index: 1000;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  margin: 15px 10px;
+  border-radius: 5px;
+  -webkit-box-shadow: 2px 2px 4px #666;
+          box-shadow: 2px 2px 4px #666;
+  width: 82%;
+  padding: 15px;
+  margin-top: 20px;
+}
+
+html body .wrap .postbox input {
+  padding: 5px;
+  width: 250px;
+  margin: 15px;
+}
+
+html body .wrap .postbox button {
+  margin-top: 15px;
+  padding: 10px;
+}
+
+html body .wrap .postbox.tagbox input {
+  margin: 0;
+}
+
+html body .wrap .postbox.lowlight {
+  z-index: -1;
+  display: none;
+}
+
+html body .wrap #keycheck a {
+  color: #666;
+}
+
+html body .wrap #namecheck input {
+  font-size: 18px;
+  border-radius: 7px;
+  border: 1px solid #999;
+  padding: 5px;
+}
+
+html body .wrap #namecheck button {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #999;
+}
+
+html body .wrap #namecheck #add-user span {
+  color: transparent;
+  font-size: 20px;
+  /*
+                        border: solid 1px #999;
+                        border-radius: 30px;
+                        width: 30px;
+                        height: 30px;
+                        display: inline-block;
+                        text-align: center;
+                        background: rgba(255,255,255,0.3);
+                        */
+}
+
+html body .wrap #editbox button.cancel, html body .wrap #reportbox button.cancel, html body .wrap #tagbox button.cancel, html body .wrap #deletebox button.cancel, html body .wrap #privacybox button.cancel {
+  top: 0px;
+}
+
+html body .wrap #deletebox button.cancel {
+  top: auto;
+  left: 0;
+  margin-left: 130px;
+}
+
+html body .wrap #add-user select {
+  padding: 3px;
+}
+
+html body .wrap #add-user label {
+  width: 120px;
+  display: block;
+  margin-top: 5px;
+}
+
+html body .wrap #add-user input {
+  font-size: 18px;
+  border-radius: 7px;
+  border: 1px solid #999;
+  padding: 5px;
+}
+
+html body .wrap #add-user button {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #999;
+}
+
+html body .wrap #add-user span {
+  /*
+                    color: transparent;                   
+                    font-size: 22px;
+                    border: solid 1px #999;
+                    border-radius: 30px;
+                    width: 25px;
+                    height: 25px;
+                    display: inline-block;
+                    text-align: center;
+                    background: rgba(255,255,255,0.3);
+                    */
+}
+
+html body .wrap #add-detail input {
+  padding: 5px;
+  font-size: 18px;
+  border-radius: 7px;
+  border: 1px solid #999;
+  margin-bottom: 3px;
+}
+
+html body .wrap #add-detail button {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #999;
+}
+
+html body .wrap #addpost {
+  background-color: rgba(210, 210, 210, 0.75);
+}
+
+html body .wrap #hidebox .cancel {
+  margin-top: 0;
+}
+
+html body .wrap #hidebox p {
+  padding-top: 40px;
+}
+
+html body .wrap #commentbox {
+  position: fixed;
+  top: 60px;
+}
+
+html body .wrap #commentbox .cancel {
+  top: 0px;
+}
+
+html body .wrap #comments {
+  overflow-y: scroll;
+  width: 95%;
+  margin-left: 2.5%;
+  height: 220px;
+  margin-top: 30px;
+  border-radius: 5px;
+}
+
+html body .wrap #comments .comment_wrap {
+  overflow: hidden;
+  margin: 5px 0px;
+}
+
+html body .wrap #comments .comment_wrap .comment_user {
+  font-weight: bold;
+  background-color: #f0c88075;
+  padding: 7px;
+  display: inline-block;
+  line-height: 22px;
+  border-top-left-radius: 10px;
+  font-size: 0.9em;
+}
+
+html body .wrap #comments .comment_wrap .comment_user a {
+  color: #000;
+  text-decoration: none;
+}
+
+html body .wrap #comments .comment_wrap .comment_text {
+  background-color: #eee;
+  padding: 7px;
+  display: inline-block;
+  line-height: 22px;
+  border-bottom-right-radius: 10px;
+  font-size: 0.9em;
+}
+
+html body .wrap #reportbox input {
+  width: 30px;
+}
+
+html body .wrap #notifications {
+  background-color: rgba(210, 210, 210, 0.75);
+}
+
+html body .wrap #notifications .notify {
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+html body .wrap #notifications .notify a {
+  text-decoration: none;
+  font-weight: bold;
+  color: #2396bd;
+}
+
+html body .wrap #notifications .notify p {
+  font-size: 0.9em;
+  margin-left: 70px;
+  margin-top: -30px;
+  position: absolute;
+  width: 65%;
+}
+
+html body .wrap #notifications .notify h3 a {
+  text-decoration: none;
+  color: #333;
+}
+
+html body .wrap #notifications .notify .avatar {
+  overflow: hidden;
+  border-radius: 30px;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #999;
+}
+
+html body .wrap #notifications .notify .avatar img {
+  width: 40px;
+  height: 40px;
+}
+
+html body .wrap #notifications .notify .noteicon {
+  width: 25px;
+  position: absolute;
+  text-align: center;
+  font-size: 14px;
+  margin-left: 45px;
+  margin-top: -30px;
+}
+
+html body .wrap #search input {
+  padding: 5px;
+}
+
+html body .wrap #connections h4 {
+  line-height: 22px;
+  margin: 0;
+}
+
+html body .wrap #connections .follow {
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+html body .wrap #follow .follow {
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+html body .wrap #follow .follow h3 {
+  margin: 0;
+  padding: 0;
+  margin-left: 55px;
+  margin-top: -31px;
+  float: left;
+  font-size: 16px;
+}
+
+html body .wrap #follow .follow h3 a {
+  text-decoration: none;
+  color: #333;
+}
+
+html body .wrap #connections h3, html body .wrap #follow h3 {
+  margin: 10px 0;
+}
+
+html body .wrap #connections .follow h3, html body .wrap #follow .follow h3 {
+  margin: 0;
+  padding: 0;
+  margin-left: 55px;
+  margin-top: -31px;
+  float: left;
+  font-size: 16px;
+}
+
+html body .wrap #connections .follow h3 a, html body .wrap #follow .follow h3 a {
+  text-decoration: none;
+  color: #333;
+}
+
+html body .wrap #connections .follow .buttons, html body .wrap #follow .follow .buttons {
+  width: 160px;
+  position: absolute;
+  right: 15px;
+  margin-top: -42px;
+}
+
+html body .wrap #connections .follow .buttons button, html body .wrap #follow .follow .buttons button {
+  margin-left: 2px;
+  margin-right: 3px;
+}
+
+html body .wrap #connections .follow .avatar, html body .wrap #follow .follow .avatar {
+  overflow: hidden;
+  border-radius: 30px;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #999;
+}
+
+html body .wrap #connections .follow .avatar img, html body .wrap #follow .follow .avatar img {
+  width: 40px;
+  height: 40px;
+}
+
+html body .wrap #followbox {
+  padding-top: 55px;
+  top: 100px;
+  position: fixed;
+}
+
+html body .wrap #profile {
+  background-color: #fff;
+  overflow: hidden;
+}
+
+html body .wrap #profile .avatar {
+  border-radius: 50px;
+  width: 80px;
+  height: 80px;
+  -webkit-box-shadow: 0 0 5px #2396bd;
+          box-shadow: 0 0 5px #2396bd;
+  overflow: hidden;
+}
+
+html body .wrap #profile .avatar img {
+  width: 80px;
+  height: 80px;
+}
+
+html body .wrap #profile .bio {
+  position: absolute;
+  margin-left: 92px;
+  margin-top: -45px;
+  font-size: 14px;
+  width: 70%;
+}
+
+html body .wrap #profile h3 {
+  margin: 0;
+  padding: 0;
+  margin-left: 90px;
+  margin-top: -75px;
+  float: left;
+  font-size: 22px;
+}
+
+html body .wrap #user-profile #lg_profile img {
+  width: 100%;
+}
+
+html body .wrap #user-profile h3 {
+  margin: 0;
+  padding: 0;
+  margin-left: 90px;
+  margin-top: -75px;
+  float: left;
+  font-size: 22px;
+}
+
+html body .wrap #user-profile .bio {
+  float: left;
+  margin-left: 90px;
+  margin-top: -50px;
+  font-size: 14px;
+}
+
+html body .wrap #user-profile .profile-edit {
+  position: absolute;
+  margin: 5px;
+}
+
+html body .wrap .post, html body .wrap .add, html body .wrap .details {
+  border: 1px solid #c19e71;
+  margin: 15px 5px;
+  border-radius: 5px;
+  background-color: rgba(210, 210, 210, 0.75);
+}
+
+html body .wrap .post {
+  overflow: hidden;
+  border-radius: 7px;
+}
+
+html body .wrap .post.lowlight {
+  z-index: -1;
+  display: none;
+}
+
+html body .wrap .post .avatar {
+  width: 30px;
+  height: 30px;
+  overflow: hidden;
+  position: absolute;
+  border-radius: 20px;
+  margin-top: 10px;
+  margin-left: 12px;
+  z-index: 1;
+  -webkit-box-shadow: 0px 0px 5px #73b0ef;
+          box-shadow: 0px 0px 5px #73b0ef;
+}
+
+html body .wrap .post .avatar img {
+  width: 100%;
+  height: 100%;
+}
+
+html body .wrap .post button {
+  background-color: transparent;
+  border: none;
+  padding-bottom: 3px;
+  padding-top: 0px;
+  padding-right: 2px;
+}
+
+html body .wrap .post button i {
+  color: #000;
+}
+
+html body .wrap .post .content-wrap {
+  margin-top: 50px;
+  background-color: #fff;
+}
+
+html body .wrap .post .content-wrap .postcontent {
+  padding: 5px;
+  position: relative;
+  font-size: 0.9em;
+}
+
+html body .wrap .post .content-wrap .postcontent.image {
+  padding: 5px;
+}
+
+html body .wrap .post .content-wrap .postcontent img {
+  width: 100%;
+}
+
+html body .wrap .post .options {
+  background-color: #fff;
+  position: absolute;
+  width: 120px;
+  padding: 5px;
+  left: auto;
+  right: 21px;
+  margin-top: 7px;
+  -webkit-box-shadow: 4px 4px 7px #333;
+          box-shadow: 4px 4px 7px #333;
+  border-radius: 5px;
+  z-index: 999;
+}
+
+html body .wrap .post .options.hide {
+  display: none;
+}
+
+html body .wrap .post .options.show {
+  display: block;
+  opacity: 0.8;
+}
+
+html body .wrap .post .options span {
+  display: block;
+  height: 35px;
+  line-height: 35px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #999;
+}
+
+html body .wrap .post .optionmenu {
+  padding: 4px 2px;
+  text-align: left;
+  width: 200px;
+  background: none;
+  height: 40px;
+  float: left;
+}
+
+html body .wrap .post .optionmenu span {
+  padding: 2px;
+  width: 35px;
+  height: 35px;
+  border: 1px solid #ddd;
+  color: #444;
+  display: inline-block;
+  margin: 0px 4px;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 22px;
+  vertical-align: middle;
+  line-height: 35px;
+  background-color: white;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(12%, rgba(255, 255, 255, 0.7)), to(#d6d6d6));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.7) 12%, #d6d6d6 100%);
+}
+
+html body .wrap .post .optionmenu span.red {
+  color: red;
+}
+
+html body .wrap .post .reactions {
+  display: block;
+  float: right;
+  margin-top: 12px;
+  margin-right: 10px;
+}
+
+html body .wrap .post .reactions button.like {
+  border: none;
+  background: none;
+  color: red;
+}
+
+html body .wrap .post .reactions button:focus {
+  outline: none;
+}
+
+html body .wrap .post .reactions .post-comments, html body .wrap .post .reactions .post-likes {
+  line-height: 25px;
+  font-size: 15px;
+  vertical-align: top;
+}
+
+html body .wrap .post .reactions .post-button.liked i {
+  color: red;
+}
+
+html body .wrap .post .reactions .post-button.comment i {
+  font-weight: bold;
+}
+
+html body .wrap .add {
+  padding: 10px;
+}
+
+html body .wrap .add textarea {
+  font-family: inherit;
+  font-size: 14px;
+}
+
+html body .wrap .details {
+  padding: 10px;
+}
+
+html body .wrap .details .field_error {
+  background: lightpink;
+  border: 1px solid red;
+}
+
+html body .wrap .post-button {
+  padding-right: 2px;
+}
+
+html body .wrap button.cancel {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+html body .wrap .biobox, html body .wrap .profilebox {
+  position: absolute;
+  z-index: 1000;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  margin: 15px 10px;
+  border-radius: 5px;
+  -webkit-box-shadow: 2px 2px 4px #666;
+          box-shadow: 2px 2px 4px #666;
+  width: 82%;
+  padding: 15px;
+  margin-top: 20px;
+}
+
+html body .wrap .biobox.lowlight, html body .wrap .profilebox.lowlight {
+  z-index: -1;
+  display: none;
+}
+
+html body .wrap .profilebox #image {
+  margin: 10px;
+}
+
+html body .wrap .profilebox h3 {
+  margin-top: 45px;
+}
+
+html body .wrap .profilebox #add-bio textarea {
+  width: 100%;
+}
+
+html body .wrap .profilebox #add-bio input {
+  padding: 7px;
+  border-radius: 5px;
+}
+
+html body .wrap .profilebox #add-bio button {
+  border-radius: 5px;
+  border: 1px solid #aaa;
+  padding: 10px;
+}
+
+html body .hidden {
+  display: none;
+}
+
+html body .unhidden {
+  display: block;
+}
+
+html body .lightbox {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #000;
+  opacity: 0.7;
+  z-index: 1;
+  display: none;
+  overflow: auto;
+}
+
+html body .lightbox.active {
+  z-index: 1;
+  display: block;
+}
+
+@-webkit-keyframes redFadeOut {
+  from {
+    color: red;
+    opacity: 1;
+  }
+  to {
+    color: white;
+    opacity: 0;
+  }
+}
+
+@keyframes redFadeOut {
+  from {
+    color: red;
+    opacity: 1;
+  }
+  to {
+    color: white;
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+html body .like-button-click {
+  -webkit-animation: redFadeOut 0.75s;
+          animation: redFadeOut 0.75s;
+}
+
+html body .fadeIn {
+  -webkit-animation: fadeIn 0.5s;
+          animation: fadeIn 0.5s;
+}
+
+html body .fadeOut {
+  -webkit-animation: fadeOut 0.5s;
+          animation: fadeOut 0.5s;
+}
+/*# sourceMappingURL=main.css.map */

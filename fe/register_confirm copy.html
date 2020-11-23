@@ -1,0 +1,287 @@
+<html>
+    <head>
+        <title>Confirm registration test</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https//fonts.googleapis.com/css2?family=Raleway&display=swap rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="css/vivify.min.css" rel="stylesheet" type="text/css">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>       
+
+        <style>
+            
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body{
+                font-family: 'Raleway', sans-serif;             
+            }
+
+            
+            .add, .details {
+                padding:5px;
+                background-color:#e7e7e7;
+            }
+             
+            
+            .lightbox {
+                position:fixed;
+                width:100%;
+                height:100%;
+                left:0;
+                right:0;
+                top:0;
+                bottom:0;
+                background-color: #000;
+                opacity: 0.7;
+                z-index:1;
+                display:none;
+            }
+
+            .lightbox.active{
+                z-index: 1;
+                display:block;
+            }
+
+            
+            .material-icons {
+                font-family: 'Material Icons';
+                font-weight: normal;
+                font-style: normal;
+                font-size: 24px;  /* Preferred icon size */
+                display: inline-block;
+                line-height: 1;
+                text-transform: none;
+                letter-spacing: normal;
+                word-wrap: normal;
+                white-space: nowrap;
+                direction: ltr;
+
+                /* Support for all WebKit browsers. */
+                -webkit-font-smoothing: antialiased;
+                /* Support for Safari and Chrome. */
+                text-rendering: optimizeLegibility;
+
+                /* Support for Firefox. */
+                -moz-osx-font-smoothing: grayscale;
+
+                /* Support for IE. */
+                font-feature-settings: 'liga';
+            }
+
+            .red {
+                color:rgb(200,30,30);
+            }
+
+            .lime {
+                color:rgb(20,180,20);
+            }
+
+            #add-user input, #add-user select {
+                padding:3px;
+            }
+
+            #add-user label {
+                width:120px;
+                display:block;
+                margin-top:5px;
+            }
+
+            .hidden {
+                display:none;
+            }
+
+            .unhidden {
+                display:block;
+            }
+
+            .field_error {
+                background:lightpink;
+                border:1px solid red;
+            }
+
+            .wrap {
+                height:100%;
+            }
+
+            .wrap a {
+                color:#666;
+                text-decoration: none;
+            }
+
+
+            @keyframes redFadeOut {from { color:red; opacity: 1 }to  { color: white; opacity: 0}}
+            @keyframes fadeIn {from { opacity: 0 }to  { opacity: 1}}
+            @keyframes fadeOut {from { opacity: 1 }to  { opacity: 0}}
+
+            .like-button-click { animation: redFadeOut 0.75s; }
+
+            .fadeIn {animation: fadeIn 0.5s; }
+            .fadeOut {animation: fadeOut 0.5s; }
+ 
+        </style>
+        <link href="/css/user.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <div class="toprow">
+            <div id="head-wave"><img src="img/head_wave.svg" /></div>
+            <h3>               
+                <span id="avatar">
+                    <img src="img/profile.png" />
+                </span>
+                <span id="uname"></span></h3>           
+            <div class="clear"></div>            
+        </div>     
+        <div class="wrap">
+            <div id="keycheck" class="add">
+                <h3>Registration confirmed</h3>
+                <form id="add-user" method="POST">                  
+                    <p>You can now log in: </p>
+                    <label>user name</label>
+                    <input type="text" id="username" name="username" value="">
+                    <input type="hidden" id="userid" name="userid" value="1">
+                    <label>password</label>
+                    <input type="password" id="password" name="password" value="">
+                    <br />
+                    <br />
+                   <button id="log-in">Log in</button>                  
+                </form>
+            </div> 
+            <div id="fail" class="add">
+                <h3>Verification failed</h3>  
+                <p>We could not verify your registration. Please check you email and make sure the 
+                    link is correct. </p>
+                <p>If that fails, you can try <a href="resendLink()">sending the verification link again</a>.</p>     
+            </div>  
+            <div id="success" class="add">
+                <h3>Welcome, <span id="new_uname"></span>.</h3>
+                <p>You now have full access to the app!</p>
+                <p>Now's a great time to upload an image for your avatar, add some bio information, heck... maybe even a few tags!</p>
+                <p><a href="/index.html?view=profile">Click here</a> to go to your profile.</p>
+            </div>   
+            <div id="lbox" class="lightbox"></div>           
+        </div>
+
+        <script language="Javascript">
+
+            let lightbox;
+
+            let showBox = (show, id) => {
+                if(show == true) {
+                    document.getElementById(id).classList.remove('hidden');
+                    document.getElementById(id).classList.add('fadeIn');
+                    window.setTimeout(function() {
+                        document.getElementById(id).classList.remove('fadeIn');
+                    }, 1000)
+                } else {
+                    document.getElementById(id).classList.add('hidden');
+                    document.getElementById(id).classList.remove('fadeIn');
+                }
+            }
+                        
+
+
+            let verify = () => {              
+                const urlParams = new URLSearchParams( window.location.search);
+                let key = urlParams.getAll('key');
+                let username = document.getElementById('username');
+                if(key != '') {
+                    fetch('Triplesss/api/verify.php?key=' + key, {
+                        method: "GET"                                              
+                        }
+                    ).then(function(response) {                  
+                        response.json().then(function(d){
+                            console.log(d);
+                            if(d.hasOwnProperty('username')) {
+                                username.value = d.username;
+                                showBox(true, 'keycheck');
+                                showBox(false, 'fail');
+                            } else if(d.hasOwnProperty('error')) {
+                                showBox(false, 'keycheck');
+                                showBox(true, 'fail');
+                            }                                  
+                        })
+                    });  
+                }
+              
+                           
+            }            
+
+          
+            
+            
+            let lowlightelements = (s, el) => {                      
+                el.forEach(function(el) { 
+                    if(s === true) {
+                        el.classList.add('lowlight');
+                    } else {
+                        el.classList.remove('lowlight');
+                    }    
+                });   
+            }
+
+            
+            let lightboxshow = (s) => {
+                if(s === true) {
+                    lightbox.classList.add('active');                   
+                } else {
+                    lightbox.classList.remove('active');
+                }
+                lowlightelements(s, document.querySelectorAll('.post'));
+            } 
+            
+            let dologin = () => {
+                let data = {};
+
+                const username = document.getElementById('username');
+                const password = document.getElementById('password');
+                data.username = username.value;
+                data.password = password.value;
+
+                fetch('Triplesss/api/login.php', {
+                            method: "POST",
+                            body: JSON.stringify(data)                           
+                    }
+                ).then(function(response) {                  
+                    response.json().then(function(d){
+                        console.log(d);  
+                        if(d.success == 'false') {
+                            password.className = 'field_error';
+                        } else if(d.success == 'true') {
+                            password.className = '';
+                            showBox(false, 'keycheck');
+                            showBox(false, 'fail');
+                            showBox(true, 'success');
+                            document.getElementById('uname').innerText = d.username;
+                            document.getElementById('new_uname').innerText = d.username;
+                        }                                 
+                    })
+                });   
+            }
+                
+            
+            window.onload = () => {                
+           
+                const loginButton = document.getElementById("log-in");               
+                const username = document.getElementById("username");
+                const password = document.getElementById("password");                  
+          
+                showBox(false, 'keycheck');
+                showBox(false, 'fail');
+                showBox(false, 'success');
+                
+                verify();
+
+                loginButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    dologin();                    
+                })                
+            }
+
+        </script>
+    </body>
+</html>
+
+
+
+
