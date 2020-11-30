@@ -2,11 +2,18 @@
     <head>
         <title>Surfsouthoz</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0" />
+        <meta http-equiv="cache-control" content="max-age=0" />
+        <meta http-equiv="expires" content="0" />
+        <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+        <meta http-equiv="pragma" content="no-cache" />
         <link href="https//fonts.googleapis.com/css2?family=Raleway&display=swap rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="/css/vivify.min.css" rel="stylesheet" type="text/css">
         <link href="/css/main.css" rel="stylesheet" type="text/css">
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>       
+       
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script> 
+        <script type="text/javascript" src="/js/pinchzoom.js"></script>           
     </head>
     <body>  
         <div class="bodywrap">     
@@ -23,13 +30,13 @@
             </div>    
             <div id="menu">
                 <div class="menuwrap">
-                    <button id="menu-profile"><i class="material-icons">face</i></button>
-                    <button id="menu-feed"><i class="material-icons">insert_photo</i></button>
-                    <button id="menu-user"><i class="material-icons">account_box</i></button>
-                    <button id="menu-message"><i class="material-icons">speaker_notes</i></button>
-                    <button id="menu-follow"><i class="material-icons">person_search</i></button>
-                    <button id="menu-notification"><i class="material-icons">notifications_active</i></button>
-                    <button id="menu-logout"><i class="material-icons">exit_to_app</i></button>
+                    <button id="menu-profile"><i class="material-icons">face</i>Profile</button>
+                    <button id="menu-feed"><i class="material-icons">insert_photo</i>Feed</button>
+                    <button id="menu-user"><i class="material-icons">account_box</i>My posts</button>
+                    <button id="menu-message"><i class="material-icons">speaker_notes</i>Messages</button>
+                    <button id="menu-follow"><i class="material-icons">person_search</i>Connections</button>
+                    <button id="menu-notification"><i class="material-icons">notifications_active</i>Notifications</button>
+                    <button id="menu-logout"><i class="material-icons">exit_to_app</i>Log out</button>
                 </div>
             </div>
             <div id="loading">
@@ -70,8 +77,12 @@
                         <!-- <input type="hidden" id="feedid" name="feedid" value="0" /> -->
                         <label class="file-upload"> &#129333;
                             <input id="bio-image" name="image" type="file" accept="image/x-png,image/gif,image/jpeg" />   
-                        </label>                    
+                        </label>                        
+                        <div id="profile-upload-filename"></div>               
                         <button id="post-bio">Save</button>
+                        <div id="profile-upload-pic">
+                            <img id="temp-profile" class="hidden loading" src="/img/loading1.gif" />
+                        </div>    
                     </form>
                 </div>
                 <div id="user-profile" class="add">
@@ -86,7 +97,7 @@
                     </div>
                     <div id="bio-tags">
                         <h4>Tags</h4>
-                        <button id="tags-edit">Edit</button>
+                        <!-- <button id="tags-edit">Edit</button> -->
                     </div>
                 </div>  
                 <div id="nouser" class="add">
@@ -103,12 +114,14 @@
                 <div id="addpost" class="add">
                     <label>Select a channel</label>
                     <select id="feed_id"></select>
-                    <p>Post something</p>
+                    <p>Type something</p>
                     <form id="add-post" method="POST">
                     <textarea id="add-comment" rows="3" cols="36"></textarea><br /><br />
                     <input type="hidden" id="userid" name="userid" value="2">
                     <input type="hidden" id="feedid" name="feedid" value="<?php //echo $feed->getId();  ?>">
-                    <input id="image" name="image" type="file" accept="image/x-png,image/gif,image/jpeg" />
+                    <label class="file-upload">&#128247;
+                        <input id="image" name="image" type="file" accept="image/x-png,image/gif,image/jpeg" />
+                    </label>    
                     <button id="post-comment">Post</button>
                     </form>
                 </div> 
@@ -282,7 +295,12 @@
                 const removeButton = document.getElementById("connect-remove"); 
                 const sendReportButton = document.getElementById("send-report");
                 const hidePostButton = document.getElementById("hide-post");
-                             
+                const profileUpload = document.getElementById("bio-image");
+                const tempProfileUpload = document.getElementById("temp-profile");
+
+                const profileUploadFilename = document.getElementById("profile-upload-filename");
+                const profileUploadPic = document.getElementById("profile-upload-pic");
+                                           
                 lightbox = document.getElementById("lbox");
                 user_id = getCookie('userID'); 
 
@@ -297,14 +315,15 @@
                 showBox(false, 'success');   
                 showBox(false, 'connections');              
                
+                
+                
+           
+                
+                /*    
                 isloggedin(function(d) {
-                    if(d == 'true') {
-                        showBox(false, 'keycheck');                       
-                    } else {
-                        showBox(true, 'keycheck');                      
-                    }
-                });
-
+                        
+                    });
+                */    
 
                 // Event handlers                
 
@@ -324,7 +343,37 @@
                     } else {
                         menu.classList.add('show'); 
                     }
-                });                         
+                });  
+                
+                profileUpload.addEventListener('change', function(e) {
+                    //console.log(this.files[0]);
+                    const img = this.files[0];
+                    const fileName = img.name;
+                    console.log(img);
+                  
+                    profileUploadFilename.innerText = fileName;
+
+                    tempProfileUpload.classList.remove('hidden');    
+
+                    var reader = new FileReader();
+
+                    reader.onload = (function(t) {
+                        return function(e) {
+                            const im = e.target.result;  
+                            //console.log(im);  
+                            tempProfileUpload.src = im; 
+                            tempProfileUpload.classList.remove('loading');                       
+                        }
+                    })(img); 
+                
+                    if(typeof img === 'object') {
+                        let p = reader.readAsDataURL(img);                       
+                    } else {
+                       
+                    } 
+
+
+                })
 
                 menuButtons.forEach((button) => {
                     addHandler(button, 'click', function(e, el) {
@@ -412,7 +461,8 @@
                 if(userView == 'profile') {
                     currentView = "profile";
                 } 
-
+               
+                isloggedin();
                 setView(currentView);
                                           
                 window.addEventListener('scroll', function(e) {

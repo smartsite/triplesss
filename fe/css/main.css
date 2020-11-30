@@ -145,7 +145,7 @@ html body #loading {
 
 html body #menu {
   position: fixed;
-  width: 330px;
+  width: 180px;
   top: 60px;
   right: -350px;
   -webkit-transition: right 0.3s ease-in-out;
@@ -165,15 +165,25 @@ html body #menu .menuwrap {
 }
 
 html body #menu .menuwrap button {
-  width: 40px;
+  width: 100%;
   height: 40px;
-  margin-right: 0px;
+  text-align: left;
+  font-size: 16px;
+  background-color: rgba(230, 230, 230, 0.9);
+  border: 1px solid #999;
+}
+
+html body #menu .menuwrap button i.material-icons {
+  vertical-align: middle;
+  padding-right: 5px;
+  font-size: 28px;
+  color: #49606b;
 }
 
 html body .wrap {
   width: 100%;
   overflow: hidden;
-  padding-top: 40px;
+  padding-top: 50px;
   background-image: url("/img/sand1.jpg");
   background-attachment: fixed;
 }
@@ -187,11 +197,15 @@ html body .wrap select {
 }
 
 html body .wrap div button {
-  padding: 7px;
+  padding: 10px;
   border-radius: 5px;
   border: 1px solid #aaa;
   font-size: 14px;
   vertical-align: middle;
+}
+
+html body .wrap div#addpost button {
+  height: 36px;
 }
 
 html body .wrap input[type="file"] {
@@ -201,13 +215,42 @@ html body .wrap input[type="file"] {
 html body .wrap .file-upload {
   border: 1px solid #aaa;
   display: inline-block;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   margin-bottom: 10px;
   border-radius: 5px;
   background-color: #eee;
   text-align: center;
-  line-height: 35px;
+  line-height: 44px;
+}
+
+html body .wrap #profile-upload-filename {
+  position: absolute;
+  margin-left: 130px;
+  font-size: 14px;
+  margin-top: -56px;
+}
+
+html body .wrap #profile-upload-pic {
+  position: relative;
+  overflow: hidden;
+  width: 300px;
+  height: 300px;
+  background-color: #efefef;
+  text-align: center;
+  /*
+                background-image: url('/img/profile.png');
+                background-size:cover;
+                */
+}
+
+html body .wrap #profile-upload-pic #temp-profile {
+  width: 100%;
+  position: relative;
+}
+
+html body .wrap #profile-upload-pic #temp-profile.loading {
+  margin-top: 140px;
 }
 
 html body .wrap .feed {
@@ -258,6 +301,11 @@ html body .wrap #keycheck a {
   color: #666;
 }
 
+html body .wrap #keycheck .field_error {
+  background: lightpink;
+  border: 1px solid red;
+}
+
 html body .wrap #namecheck input {
   font-size: 18px;
   border-radius: 7px;
@@ -283,6 +331,13 @@ html body .wrap #namecheck #add-user span {
                         text-align: center;
                         background: rgba(255,255,255,0.3);
                         */
+}
+
+html body .wrap #fail input[type="text"] {
+  font-size: 18px;
+  border-radius: 7px;
+  border: 1px solid #999;
+  padding: 5px;
 }
 
 html body .wrap #editbox button.cancel, html body .wrap #reportbox button.cancel, html body .wrap #tagbox button.cancel, html body .wrap #deletebox button.cancel, html body .wrap #privacybox button.cancel {
@@ -465,6 +520,50 @@ html body .wrap #search input {
   padding: 5px;
 }
 
+html body .wrap #connections h3, html body .wrap #follow h3 {
+  margin: 10px 0;
+}
+
+html body .wrap #connections .follow h3, html body .wrap #follow .follow h3 {
+  margin: 0;
+  padding: 0;
+  margin-left: 55px;
+  margin-top: -31px;
+  float: left;
+  font-size: 16px;
+}
+
+html body .wrap #connections .follow h3 a, html body .wrap #follow .follow h3 a {
+  text-decoration: none;
+  color: #333;
+}
+
+html body .wrap #connections .follow .buttons, html body .wrap #follow .follow .buttons {
+  width: 160px;
+  position: absolute;
+  right: 15px;
+  margin-top: -42px;
+}
+
+html body .wrap #connections .follow .buttons button, html body .wrap #follow .follow .buttons button {
+  margin-left: 2px;
+  margin-right: 3px;
+  padding: 10px 2px;
+}
+
+html body .wrap #connections .follow .avatar, html body .wrap #follow .follow .avatar {
+  overflow: hidden;
+  border-radius: 30px;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #999;
+}
+
+html body .wrap #connections .follow .avatar img, html body .wrap #follow .follow .avatar img {
+  width: 40px;
+  height: 40px;
+}
+
 html body .wrap #connections h4 {
   line-height: 22px;
   margin: 0;
@@ -498,49 +597,6 @@ html body .wrap #follow .follow h3 a {
   color: #333;
 }
 
-html body .wrap #connections h3, html body .wrap #follow h3 {
-  margin: 10px 0;
-}
-
-html body .wrap #connections .follow h3, html body .wrap #follow .follow h3 {
-  margin: 0;
-  padding: 0;
-  margin-left: 55px;
-  margin-top: -31px;
-  float: left;
-  font-size: 16px;
-}
-
-html body .wrap #connections .follow h3 a, html body .wrap #follow .follow h3 a {
-  text-decoration: none;
-  color: #333;
-}
-
-html body .wrap #connections .follow .buttons, html body .wrap #follow .follow .buttons {
-  width: 160px;
-  position: absolute;
-  right: 15px;
-  margin-top: -42px;
-}
-
-html body .wrap #connections .follow .buttons button, html body .wrap #follow .follow .buttons button {
-  margin-left: 2px;
-  margin-right: 3px;
-}
-
-html body .wrap #connections .follow .avatar, html body .wrap #follow .follow .avatar {
-  overflow: hidden;
-  border-radius: 30px;
-  width: 40px;
-  height: 40px;
-  border: 2px solid #999;
-}
-
-html body .wrap #connections .follow .avatar img, html body .wrap #follow .follow .avatar img {
-  width: 40px;
-  height: 40px;
-}
-
 html body .wrap #followbox {
   padding-top: 55px;
   top: 100px;
@@ -548,7 +604,9 @@ html body .wrap #followbox {
 }
 
 html body .wrap #profile {
-  background-color: #fff;
+  background: white;
+  background: -webkit-gradient(linear, left top, left bottom, from(white), to(#a7b6cf));
+  background: linear-gradient(180deg, white 0%, #a7b6cf 100%);
   overflow: hidden;
 }
 
@@ -571,7 +629,7 @@ html body .wrap #profile .bio {
   margin-left: 92px;
   margin-top: -45px;
   font-size: 14px;
-  width: 70%;
+  width: 67%;
 }
 
 html body .wrap #profile h3 {
@@ -663,7 +721,7 @@ html body .wrap .post .content-wrap {
 html body .wrap .post .content-wrap .postcontent {
   padding: 5px;
   position: relative;
-  font-size: 0.9em;
+  font-size: 1em;
 }
 
 html body .wrap .post .content-wrap .postcontent.image {
@@ -672,6 +730,16 @@ html body .wrap .post .content-wrap .postcontent.image {
 
 html body .wrap .post .content-wrap .postcontent img {
   width: 100%;
+}
+
+html body .wrap .post .content-wrap .date-time {
+  padding-left: 5px;
+  padding-top: 3px;
+  padding-bottom: 2px;
+  font-size: 0.9em;
+  font-style: italic;
+  line-height: 1em;
+  color: #666;
 }
 
 html body .wrap .post .options {
@@ -804,7 +872,7 @@ html body .wrap .biobox, html body .wrap .profilebox {
   border-radius: 5px;
   -webkit-box-shadow: 2px 2px 4px #666;
           box-shadow: 2px 2px 4px #666;
-  width: 82%;
+  width: 86%;
   padding: 15px;
   margin-top: 20px;
 }
@@ -834,7 +902,17 @@ html body .wrap .profilebox #add-bio input {
 html body .wrap .profilebox #add-bio button {
   border-radius: 5px;
   border: 1px solid #aaa;
-  padding: 10px;
+  padding: 15px;
+  height: 46px;
+  font-size: 14px;
+  width: 70px;
+}
+
+html body .wrap .profilebox #add-bio #post-bio.loading {
+  font-size: 0.01px;
+  background-image: url("/img/button-loader.gif");
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
 }
 
 html body .hidden {

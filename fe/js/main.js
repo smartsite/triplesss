@@ -8,7 +8,7 @@ const addHandler = (element, handler, callback) => {
 }
 
 const showBox = (show, id) => {     
-    console.log(id);
+    //console.log(id);
     const container = document.getElementById(id);
     
     if(typeof container != 'undefined') {
@@ -47,6 +47,49 @@ const getScrollPos = () => {
 const setScrollPos = () => {
     let doc = document.body;
     doc.scrollTop = toppos;                               
+}
+
+const timeSince = (date) => {
+
+    const seconds = Math.floor((new Date() - date) / 1000);
+    const yearsSince = seconds / 31536000;
+    const monthsSince = seconds / 2592000;
+    const daysSince = seconds / 86400;
+    const hoursSince = seconds / 3600;
+    const minutesSince = seconds / 60;
+
+    if(Math.floor(yearsSince) == 1) {
+        return Math.floor(yearsSince) + " year";
+    }
+    if(yearsSince > 1) {
+        return Math.floor(yearsSince) + " years";
+    }
+    if(Math.floor(monthsSince) == 1) {
+        return Math.floor(monthsSince) + " month";
+    }
+    if(monthsSince > 1) {
+        return Math.floor(monthsSince) + " months";
+    }
+    if(Math.floor(daysSince) == 1) {
+        return Math.floor(daysSince) + " day";
+    }
+    if(daysSince > 1) {
+        return Math.floor(daysSince) + " days";
+    }
+    if(Math.floor(hoursSince) == 1) {
+        return Math.floor(hoursSince) + " hour";
+    }
+    if(hoursSince > 1) {
+        return Math.floor(hoursSince) + " hours";
+    }
+    if(Math.floor(minutesSince) == 1) {
+        return Math.floor(minutesSince) + " minute";
+    }
+    if(minutesSince > 1) {
+        return Math.floor(minutesSince) + " minutes";
+    } 
+   
+    return Math.floor(seconds) + " seconds";
 }
 
 const newImage = (src) => {
@@ -803,7 +846,8 @@ let feedPostMarkup = (post, container) => {
 
         const postWrap = newDiv('post');
         const contentWrap = newDiv('content-wrap');
-        const avatarBubble = newDiv('avatar');                    
+        const avatarBubble = newDiv('avatar');      
+        const dateTime = newDiv('date-time');              
         const avatarImage =  document.createElement('img');
         const profileLink = document.createElement('a');
         //profileLink.href = '/userpage/' + user_name;
@@ -863,21 +907,37 @@ let feedPostMarkup = (post, container) => {
                 }                      
             });
         })
-               
+        //console.log(thePost);
+            
+        contentWrap.appendChild(dateTime);              
                                                 
         thePost.map(function(pc) {
+
+            const dt = Date.parse(thePost[0].date);
+            const pd = new Date(dt);
+            const since = timeSince(pd);
+            //dateTime.innerText = pd.toDateString() + ' ' + since;
+            dateTime.innerText = since + ' ago';
+
             if(pc.content_type == "text") {
                 contentWrapText.innerText = pc.content;
+                contentWrap.appendChild(dateTime);
                 contentWrap.appendChild(contentWrapText);
+                
             }
 
             if(pc.content_type == "image") {
                 const img =  document.createElement('img');
                 img.src = pc.path + "/" + pc.link;
-                contentWrapImage.appendChild(img);
+                contentWrapImage.appendChild(img);              
                 contentWrap.appendChild(contentWrapImage);
+                contentWrap.appendChild(dateTime);
+                let pz = new PinchZoom(img);
+               
             }       
-        })                                            
+        }) 
+
+       
             
         postWrap.appendChild(contentWrap);                          
         container.appendChild(postWrap); 
@@ -1111,6 +1171,13 @@ const sendReport = (e) => {
     .then(function(response) {
         response.json().then(function(d){ 
             console.log(d);
+            window.setTimeout(function(){
+                e.parentElement.classList.add('lowlight');
+                lightboxshow(false);
+                var wrapper = document.getElementsByClassName('post ' + groupId)[0];                    
+                postButton.classList.add('red');
+                e.parentElement.classList.remove('fadeOut');
+            }, 300);
         })
     });
      
@@ -1442,8 +1509,10 @@ let postBio = (user_id) => {
   
     //const feed_id = document.getElementById('feedid').value;
     const feed_id = 0; // Feed id 0 is bio!
+    //const postBioButton = document.getElementById('post-bio');
     let comment = document.getElementById('bio-comment').value;
-    const profileImage = document.querySelectorAll('#lg_profile img')[0];
+    const profileImage = document.querySelectorAll('#lg_profile img')[0]; 
+    bioButton.classList.add('loading');
 
     // Check if there's an image
     var reader = new FileReader();
@@ -1453,15 +1522,15 @@ let postBio = (user_id) => {
             var im = e.target.result;
             const data = {'comment': comment, 'image' : im, 'userid': user_id, 'feedid': feed_id, 'basefolder' : '../../storage', 'maxImageWidth': 400 };
             const profilebox = document.querySelectorAll('.profilebox');
-
+            
             fetch('Triplesss/api/post.php', {
                 method: "POST",
                 body: JSON.stringify(data)                           
             }) 
             .then(function(response) {
                 response.json().then(function(d){
-                    //var j = JSON.parse(d)
-                    console.log('Updating profile');
+                    //var j = JSON.parse(d)                    
+                    bioButton.classList.remove('loading');
                     var postId = d.postId;  
                     if(postId) {
                         lightboxshow(false);
@@ -1633,8 +1702,8 @@ const isloggedin = () => {
     const wrap = document.querySelectorAll('.wrap')[0];
     const keycheck = document.getElementById('keycheck');
     const menuButton = document.getElementById('menubutton');
-   
-   
+
+      
     return fetch('/Triplesss/api/logged_in.php', {
             method: "GET"                                                   
         }
@@ -1642,6 +1711,7 @@ const isloggedin = () => {
         
         response.json().then((d) => {
                    
+            console.log(d);
             if(d === true) {               
                 showBox(false, 'keycheck');
                 showBox(false, 'fail');               

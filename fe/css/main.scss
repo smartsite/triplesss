@@ -148,7 +148,7 @@ html {
 
         #menu {        
             position:fixed;
-            width:330px;
+            width:180px;
             top:60px;  
             right:-350px;  
             transition: right 0.3s ease-in-out; 
@@ -164,19 +164,31 @@ html {
                 background: rgba(0,0,0,0.5);
                 padding: 4px;
                 border-radius: 5px 0px 0px 5px;    
-
                 button {
-                    width:40px;
+                    width:100%;
                     height:40px;
-                    margin-right:0px;
-                }                
+                    text-align:left;
+                    font-size:16px;
+                    background-color: rgba(230,230,230,0.9);
+                    border: 1px solid #999;
+                    i {
+                        &.material-icons {
+                            vertical-align: middle;
+                            padding-right:5px;
+                            font-size:28px;
+                            color: #49606b;
+                        }  
+                    }
+                }
+
+                       
             }            
         }
 
         .wrap{
             width:100%;
             overflow:hidden;
-            padding-top:40px;
+            padding-top:50px;
             background-image: url('/img/sand1.jpg');
             background-attachment: fixed;
             
@@ -190,11 +202,17 @@ html {
 
             div {
                 button {
-                    padding:7px;
+                    padding:10px;
                     border-radius:5px;
                     border:1px solid #aaa;
                     font-size: 14px;
                     vertical-align: middle;
+                }
+
+                &#addpost {
+                    button {
+                        height:36px;
+                    }
                 }
             }
 
@@ -205,13 +223,41 @@ html {
             .file-upload {
                 border: 1px solid #aaa;
                 display: inline-block;
-                width: 36px;
-                height: 36px;
+                width: 44px;
+                height: 44px;
                 margin-bottom: 10px;
                 border-radius: 5px;
                 background-color: #eee;
                 text-align: center;
-                line-height: 35px;
+                line-height: 44px;
+            }
+
+            #profile-upload-filename {
+                position: absolute;
+                margin-left: 130px;
+                font-size: 14px;
+                margin-top:-56px;
+            }
+
+            #profile-upload-pic {
+                position: relative;
+                overflow:hidden;
+                width:300px;
+                height:300px;
+                background-color:#efefef;
+                text-align:center;
+                /*
+                background-image: url('/img/profile.png');
+                background-size:cover;
+                */
+                #temp-profile {
+                    width:100%;
+                    position:relative;
+                   
+                    &.loading {
+                        margin-top: 140px;
+                    }
+                }
             }
 
             .feed {
@@ -264,6 +310,11 @@ html {
                 a {
                     color:#666;
                 }
+
+                .field_error {
+                    background:lightpink;
+                    border:1px solid red;
+                }
             }
 
             #namecheck {
@@ -296,6 +347,15 @@ html {
                     }
                    
                 }
+            }
+
+            #fail {
+                input[type="text"]{
+                    font-size: 18px;
+                    border-radius: 7px;
+                    border:1px solid #999;
+                    padding:5px; 
+                }                    
             }
 
             #editbox, #reportbox, #tagbox, #deletebox, #privacybox {
@@ -499,49 +559,8 @@ html {
                 input {
                     padding:5px;
                 }               
-            }
-
-            #connections {
-                h4 {
-                    line-height:22px;
-                    margin:0;
-                } 
-                
-                .follow {
-                    background-color: #fff;
-                    padding: 5px;
-                    border-radius: 5px;
-                    margin-bottom: 10px;
-                }
-            }
-
-            #follow {
-                .follow {
+            }            
                     
-                    background-color: #fff;
-                    padding: 5px;
-                    border-radius: 5px;
-                    margin-bottom: 10px;
-                    
-                    h3 {
-                        margin: 0;
-                        padding: 0;
-                        margin-left: 55px;
-                        margin-top: -31px;
-                        float: left;
-                        font-size: 16px;
-
-                        a {
-                            text-decoration: none;
-                            color:#333;
-                        }
-                       
-                    }
-                }    
-            }
-
-
-            
 
             #connections, #follow {
                 h3 {
@@ -573,6 +592,7 @@ html {
                         button {
                             margin-left:2px;
                             margin-right:3px;
+                            padding:10px 2px;
                         }
                     }
 
@@ -589,8 +609,50 @@ html {
                         }
                     }
                 } 
-
                 
+            }
+
+            #connections {
+                h4 {
+                    line-height:22px;
+                    margin:0;
+                } 
+                
+                .follow {
+                    background-color: #fff;
+                    padding: 5px;
+                    border-radius: 5px;
+                    margin-bottom: 10px;
+                    
+                       
+                }
+            }
+
+
+            #follow {
+                .follow {
+                    
+                    background-color: #fff;
+                    padding: 5px;
+                    border-radius: 5px;
+                    margin-bottom: 10px;
+                    
+                    h3 {
+                        margin: 0;
+                        padding: 0;
+                        margin-left: 55px;
+                        margin-top: -31px;
+                        float: left;
+                        font-size: 16px;
+
+                        a {
+                            text-decoration: none;
+                            color:#333;
+                        }
+                       
+                    }
+                   
+                }    
             }
 
             #followbox {
@@ -600,10 +662,11 @@ html {
             }
 
             #profile {
-                background-color: #fff;   
+                background: rgb(255,255,255);
+                background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(167,182,207,1) 100%);  
                 overflow:hidden;
-
-                .avatar {
+       
+               .avatar {
                     border-radius:50px;
                     width:80px;
                     height:80px;
@@ -621,7 +684,7 @@ html {
                     margin-left: 92px;
                     margin-top: -45px;
                     font-size:14px;
-                    width:70%;
+                    width:67%;
                 }
                 
                 h3 {
@@ -719,7 +782,7 @@ html {
                     .postcontent {
                         padding:5px;
                         position:relative;
-                        font-size:0.9em;
+                        font-size:1em;
 
                         &.image {
                             padding:5px;
@@ -732,6 +795,16 @@ html {
                         &.text {
                            
                         }
+                    }
+
+                    .date-time {
+                        padding-left:5px;
+                        padding-top:3px;
+                        padding-bottom:2px;
+                        font-size:0.9em;
+                        font-style:italic;
+                        line-height:1em;
+                        color: #666;
                     }
                 }
 
@@ -877,7 +950,7 @@ html {
                 margin:15px 10px;
                 border-radius:5px;
                 box-shadow: 2px 2px 4px #666;
-                width:82%;
+                width:86%;
                 padding:15px;
                 margin-top:20px;
 
@@ -909,7 +982,19 @@ html {
                     button {
                         border-radius: 5px;
                         border: 1px solid #aaa;
-                        padding: 10px;
+                        padding: 15px;
+                        height:46px;
+                        font-size:14px;
+                        width:70px;                        
+                    }
+
+                    #post-bio {
+                        &.loading {
+                            font-size: 0.01px;
+                            background-image: url('/img/button-loader.gif');
+                            background-repeat: no-repeat;
+                            background-position: 50% 50%;
+                        }
                     }
                 }
             }
