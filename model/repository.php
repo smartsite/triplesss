@@ -157,7 +157,8 @@ class Repository {
                     'comment_count' => count($comments), 
                     'likes' =>  $likes, 
                     'creator_id' => $post_item['creator_id'],
-                    'visibility' =>   $post_item['visibility']                   
+                    'visibility' =>   $post_item['visibility'],
+                    'date' =>  $post_item['created']             
                 ];               
             }
             
@@ -176,7 +177,8 @@ class Repository {
                     'likes' =>  $likes, 
                     'mime_type' =>    $post_item['mime_type'], 
                     'creator_id' => $post_item['creator_id'],
-                    'visibility' =>   $post_item['visibility']                       
+                    'visibility' =>   $post_item['visibility'],
+                    'date' =>  $post_item['created']                                    
                 ];
             }          
             
@@ -614,25 +616,22 @@ class Repository {
     }
 
     public function isUserLoggedIn() {
-        // first check cookie
+        // We don't ever want to return a session ID... that'd be bad
+        // If a user has a valid session cookie though, we can assume they are logged in
+        // first check the userID cookie
+
         $loggedIn = false;
         $db = $this->db;     
         if(!isset( $_COOKIE['userID'])){
             // if no cookie, then check DB for non-expired session
-            if(isset($_COOKIE['PHPSESSID'])){
-                $sid = $_COOKIE['PHPSESSID'];
-                $result = $db->query("SELECT * FROM session WHERE session_id = '".$sid."'");
-                $db_session = $db->fetchAssoc( $result );
-                if($db_session) {
-                    if( $db_session['expires'] > time()) {
-                        //echo "Is good!";
-                        $loggedIn = true;
-                    }
-                }
-                
+            if(isset($_COOKIE['PHPSESSID'])){                
+                $session = $this->hasSession($_COOKIE['PHPSESSID']);   
+                $loggedIn = $session['logged_in'];             
             }    
         }else{
-            $loggedIn = true;
+            // ... or if we have a session cookie AND a user id cookie 
+            $session = $this->hasSession($_COOKIE['PHPSESSID']); 
+            $loggedIn = $session['logged_in'];
         }
         return $loggedIn;
     } 
@@ -655,16 +654,22 @@ class Repository {
         }        
     }
 
-    public function generateRegisterLink($username, $from, $reply) {
+    public function reSendRegisterLink(String $email, String $from, String $reply) {
+
+    }
+
+    public function generateRegisterLink(String $username, String $from, String $reply) {
         $db = $this->db;
         $key = $this->randomString(12);
         $link = $this->getSetting('hostname').'/register_confirm?key='.$key;
         $s = 'UPDATE user SET reg_link="/register_confirm?key='.$key.'" WHERE user_name="'.$username.'"';
         $p = $db->query($s);
+        $regemail = false;
         if($p) {
             // send email;
-            $this->sendRegEmail($username, $link, $from, $reply);
+            $regemail = $this->sendRegEmail($username, $link, $from, $reply);
         }
+        return $regemail;
     }
 
     public function getConnectedUsers(User $user, Connection $connection = null) { 
@@ -899,6 +904,21 @@ class Repository {
         return $w;
     }
 
+    private function hasSession($sid) {
+        $db = $this->db;
+        $session = ['logged_in' =>false, 'user_id' => -1];
+        //$sid = $_COOKIE['PHPSESSID'];
+        $result = $db->query("SELECT * FROM session WHERE session_id = '".$sid."'");
+        $db_session = $db->fetchAssoc( $result );
+        if($db_session) {
+            if( $db_session['expires'] > time()) {
+                //echo "Is good!";
+                $session = ['logged_in' =>true, 'user_id' => $db_session['user_id']];
+            }
+        }
+        return $session;
+    }
+
     public function getTags(Content $content) {
         $db = $this->db;
         $tags = '';
@@ -969,8 +989,10 @@ class Repository {
         $headers = 'From: '.$from. "\r\n" .
                     'Reply-To:' .$reply. "\r\n" .
                     'X-Mailer: PHP/' . phpversion();
-        return mail($email, $subject, $msg, $headers);
+        $m = mail($email, $subject, $msg, $headers);
+        return ['sent' => $m, 'email' =>  $email, 'username' => $username];
     }
+    
 
 
     private function getSession(){

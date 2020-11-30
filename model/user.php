@@ -85,7 +85,7 @@ class User {
 
     public function sendRegisterLink(String $username, String $from, String $reply) {
         $repository = $this->repository;
-        $repository->generateRegisterLink($username, $from, $reply);
+        return $repository->generateRegisterLink($username, $from, $reply);
     }
 
     public function addConnection(User $user, $type) {
