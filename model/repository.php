@@ -11,6 +11,7 @@ use Triplesss\error\Error as Error;
 use Triplesss\feed\Feed as Feed;
 use Triplesss\post\Post as Post;
 use Triplesss\user\User as User;
+use Triplesss\user\Member as Member;
 use Triplesss\users\Users as Users;
 use Triplesss\filter\Filter as Filter;
 use Triplesss\db\DB as Db;
@@ -843,7 +844,56 @@ class Repository {
         }        
     }
 
-    public function getUserFeeds($userid) {
+    public function createMember(Member $member) {
+        $db = $this->db;
+        $user_id = $member->userid;
+        $active = 1;
+        $status = 1;
+        $renewal_date = $member->getRenewalDate();
+        $renewal_interval = $member->getRenewalInterval();
+        $payment_method = $member->getPaymentMethod();
+        $joined_date = $member->getCreatedDate();
+        $s = 'INSERT INTO member (`user_id`, `joined_date`, `status`, `active`, `renewal_interval`, `renewal_date`, `payment_method`) 
+                VALUES ('.$user_id.', "'.$joined_date.'", '.$status.','.$active.', "'.$renewal_interval.'", "'.$renewal_date.'", "'.$payment_method.'" )';
+        $p = $db->query($s);
+        return $db->lastInsertedID();
+    }
+
+    public function getMember(Int $member_id = -1, Int $user_id = -1, Bool $safe) {
+        $db = $this->db;
+        // first try member_id
+       $s = 'SELECT user.user_name, user.first_name, user.last_name, user.email, user.user_level, 
+             member_id, member.joined_date, member.status, member.active, member.renewal_date, member.customer_id 
+             FROM member JOIN user ON member.user_id = user.id WHERE member_id ='.$member_id.' OR user.id = '.$user_id.' LIMIT 1';
+       
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        if($r) {
+            return $r[0];
+        } else {
+            return [];
+        }       
+    }
+
+    public function updateMember(Array $details) {
+        if(array_key_exists('member_id', $details)) {
+            $db = $this->db;
+            $member_id = $details['member_id'];
+            $s = 'UPDATE member SET ';
+
+            $colvals = array_map(function($d, $k) {
+                return '`'.$k.'`="'.$d.'"';
+            }, $details, array_keys($details));
+            $s.= implode(',', $colvals);
+
+            $s.= ' WHERE member_id = '.$member_id;
+            $p = $db->query($s);
+            return $p;
+        }
+        return false;
+    }
+
+    public function getUserFeeds(Int $userid) {
         $db = $this->db;
         $s = 'SELECT id, feed_name, feed_description FROM feed WHERE owner_id='.$userid.' AND active=1 AND status="current"';
         $p = $db->query($s);
