@@ -16,6 +16,7 @@ use Triplesss\users\Users as Users;
 use Triplesss\filter\Filter as Filter;
 use Triplesss\db\DB as Db;
 use Triplesss\content\content as Content;
+use Triplesss\image\Image as Image;
 use Triplesss\post\comment as Comment;
 use Triplesss\reaction\Reaction as Reaction;
 use Triplesss\connection\Connection as Connection;
@@ -862,10 +863,24 @@ class Repository {
     public function getMember(Int $member_id = -1, Int $user_id = -1, Bool $safe) {
         $db = $this->db;
         // first try member_id
-       $s = 'SELECT user.user_name, user.first_name, user.last_name, user.email, user.user_level, 
+        $s = 'SELECT user.user_name, user.first_name, user.last_name, user.email, user.user_level, 
              member_id, member.joined_date, member.status, member.active, member.renewal_date, member.customer_id 
              FROM member JOIN user ON member.user_id = user.id WHERE member_id ='.$member_id.' OR user.id = '.$user_id.' LIMIT 1';
        
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        if($r) {
+            return $r[0];
+        } else {
+            return [];
+        }       
+    }
+
+    public function getMemberByCustomerId(String $customer_id) {
+        $db = $this->db; // Used to find payed up members
+        $s = 'SELECT member.user_id, user.user_name, user.first_name, user.last_name, user.email, user.user_level, 
+        member_id, member.joined_date, member.status, member.active, member.renewal_date, member.customer_id 
+        FROM member JOIN user ON member.user_id = user.id WHERE customer_id ="'.$customer_id.'" LIMIT 1';
         $p = $db->query($s);
         $r = $db->fetchAll($p);
         if($r) {

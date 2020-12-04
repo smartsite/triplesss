@@ -52,6 +52,17 @@ class Member extends User {
         return $this->active && 1;
     }
 
+    Public function setActive(Bool $active) { 
+        $details = [
+            'member_id' => $this->memberID,
+            'active' => $active
+        ];
+        
+        $this->repository->updateMember($details);  
+        $this->active = 1; 
+    }
+
+
     Public function getRenewalDate() :String {
         return $this->renewal_date;
     }
@@ -71,6 +82,18 @@ class Member extends User {
         ];
         $this->customerID = $this->repository->updateMember($details);        
     }
+
+    public function getMemberByUserId(Int $user_id) {
+        // only returns a member if exists
+        return $this->repository->getMember(-1, $user_id, true);
+    }
+
+    public function getMemberByCustomerId(String $customer_id) {
+        // only returns a member if exists
+        return $this->repository->getMemberByCustomerId($customer_id);
+    }
+
+    
 
     Public function getPaymentMethod() :String {
         return $this->payment_method;

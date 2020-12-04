@@ -4,6 +4,7 @@ namespace Triplesss\post;
 
 use Triplesss\repository\Repository;
 use Triplesss\content\Content;
+use Triplesss\image\Image;
 use Triplesss\visibility\Visibility;
 use Triplesss\reaction\Reaction;
 use Triplesss\user\User;

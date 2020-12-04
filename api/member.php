@@ -8,7 +8,6 @@ require '../model/user.php';
 require '../model/member.php';
 require '../model/repository.php';
 
-use Triplesss\user\User;
 use Triplesss\user\Member;
 
 /**
@@ -24,19 +23,17 @@ $postObj = json_decode($content);
 isset($_GET['member_id']) ? $member_id = $_GET['member_id'] : $member_id = false;
 isset($_GET['user_id']) ? $user_id = $_GET['user_id'] : $user_id = false;
 
-//isset($_POST['description']) ? $description = $_POST['description'] : $description = 'VIP member';
-//isset($_POST['name']) ? $name = $_POST['name'] : $name = '';
-//isset($_POST['email']) ? $email = $_POST['email'] : $email = '';
-//isset($_POST['user_name']) ? $user_name = $_POST['user_name'] : $user_name = '';
+$member = new Member();
 
 if($member_id) {
-    // GET and existing user
-    $member = new Member();
+    // GET and existing user   
     $member->setId($member_id);
-    $details = $member->getDetails(true);   
+    $details = $member->getDetails(true); 
+} else if($user_id) {
+    $details = $member->getMemberByUserId($user_id);
+
 } else if($postObj->user_id) {
-    // create a new user
-    $member = new Member();
+    // create a new user   
     $member->setUserId($postObj->user_id);
     $member_id = $member->create();
     $member->setId($member_id);
