@@ -791,17 +791,41 @@ class Repository {
     public function getNotifications(User $user) {
         $db = $this->db;
         $user_id = $user->userid;
+        $user_level = $user->getLevel();
+      
+        // work out the user type to determine what sort of notifications they should get
+        if($user_level == 99){
+            // system user - system notifications
+            $s = 'SELECT DISTINCT from_user_id, to_user_id, type, message, timestamp  FROM notification 
+            JOIN connection ON connection.from_id = notification.from_user_id  AND to_user_id='.$user_id;
+        }
+
+        if($user_level == 1){
+            // admin user - reports
+            $s = 'SELECT DISTINCT from_user_id, to_user_id, type, message, timestamp  FROM notification 
+            JOIN connection ON connection.from_id = notification.from_user_id  AND to_user_id='.$user_id;
+        }
+
+        if($user_level == 5){
+            // show all  notifications from user_id = 1 and 2
+            $s = 'SELECT * FROM (SELECT DISTINCT from_user_id, to_user_id, type, message, timestamp  FROM notification 
+            JOIN connection ON connection.from_id = notification.from_user_id  AND connection.to_id = '.$user_id.' UNION 
+            SELECT DISTINCT from_user_id, to_user_id, type, message, timestamp  FROM notification             
+            WHERE to_user_id IN(1,2) AND from_user_id < 2) t1 
+            WHERE t1.type NOT IN (8,9,10,11,12)                  
+            ORDER BY t1.timestamp DESC';        
+            
+            //echo $s;
+           
+        }
+
         /*
         $s = 'SELECT * FROM  notification WHERE to_user_id= '.$user_id.' OR from_user_id IN 
               (SELECT to_id FROM connection WHERE from_id='.$user_id.') OR (from_user_id = 0 AND to_user_id = 2 )
               OR (from_user_id = 0 AND to_user_id IN (SELECT to_id FROM connection WHERE from_id='.$user_id.')) ORDER BY timestamp DESC';
-        */
-
-        $s = 'SELECT DISTINCT from_user_id, to_user_id, type, message, timestamp  FROM notification 
-                JOIN connection ON connection.from_id = notification.from_user_id  AND connection.to_id = '.$user_id.' 
-                OR notification.to_user_id = '.$user_id. ' OR (from_user_id = 0 AND type = 2)';
+        */       
         
-              $p = $db->query($s);
+        $p = $db->query($s);
         $r = $db->fetchAll($p);
         return $r;
     }
@@ -848,7 +872,7 @@ class Repository {
     public function createMember(Member $member) {
         $db = $this->db;
         $user_id = $member->userid;
-        $active = 1;
+        $active = 0;
         $status = 1;
         $renewal_date = $member->getRenewalDate();
         $renewal_interval = $member->getRenewalInterval();
@@ -857,7 +881,18 @@ class Repository {
         $s = 'INSERT INTO member (`user_id`, `joined_date`, `status`, `active`, `renewal_interval`, `renewal_date`, `payment_method`) 
                 VALUES ('.$user_id.', "'.$joined_date.'", '.$status.','.$active.', "'.$renewal_interval.'", "'.$renewal_date.'", "'.$payment_method.'" )';
         $p = $db->query($s);
-        return $db->lastInsertedID();
+        if(!$p) {
+            // Looks like we already have created this member!
+            $s = 'SELECT member_id FROM member WHERE user_id='.$user_id;
+            $q = $db->query($s);
+            if($q) {
+                $m = $db->fetchAll($q);
+                $member_id = $m[0]['member_id'];
+                return $member_id;
+            } else {
+                return $db->lastInsertedID();
+            }
+        }        
     }
 
     public function getMember(Int $member_id = -1, Int $user_id = -1, Bool $safe) {
@@ -929,7 +964,18 @@ class Repository {
         return $r;
     }
 
-    private function allUserDetails($username = '', $userid = -1) {
+    public function userFlags($userid = -1, $username = '') {
+        $details = $this->allUserDetails($username, $userid);
+        $flags = [
+                    'is_logged_in' => $details['is_logged_in'],
+                    'user_level' => $details['user_level'],
+                    'active' => $details['active'],
+                    'last_login' => $details['last_login']
+                ];
+        return $flags;        
+    }
+
+    public function allUserDetails($username = '', $userid = -1) {
         $db = $this->db;
         $s = 'SELECT * FROM user WHERE ';
         if($username != '') {

@@ -54,8 +54,11 @@ $cu = array_filter(array_map(function($u) use ($user) {
     $fu->setUserId($u['id']);
     $u['avatar'] = $fu->getAvatar();
     if(is_array($conn)) {
-        if(array_key_exists(0, $conn)) {
-            $u['connection_type'] = $conn[0]['relation'];
+        
+        $cn = array_values($conn);
+        if(array_key_exists(0, $cn)) {
+            
+            $u['connection_type'] = $cn[0]['relation'];
         } else {
             $u['connection_type'] = '';
         }

@@ -15,6 +15,7 @@ class User {
     public $filter;
     public $repository;
     public $userid;
+    public $level;
     public $session;
     public $connections = [];
     
@@ -144,6 +145,12 @@ class User {
         } else {
             return false;
         }        
+    }
+
+    public function getLevel() {
+        $details = $this->repository->userFlags($this->userid);
+        $this->level = $details['user_level'];
+        return $this->level;
     }
 
     public function getAvatar() {
