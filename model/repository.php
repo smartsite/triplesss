@@ -797,13 +797,13 @@ class Repository {
         if($user_level == 99){
             // system user - system notifications
             $s = 'SELECT DISTINCT from_user_id, to_user_id, type, message, timestamp  FROM notification 
-            JOIN connection ON connection.from_id = notification.from_user_id  AND to_user_id='.$user_id;
+            JOIN connection ON connection.from_id = notification.from_user_id  AND to_user_id='.$user_id. ' ORDER BY timestamp DESC';
         }
 
         if($user_level == 1){
             // admin user - reports
             $s = 'SELECT DISTINCT from_user_id, to_user_id, type, message, timestamp  FROM notification 
-            JOIN connection ON connection.from_id = notification.from_user_id  AND to_user_id='.$user_id;
+            JOIN connection ON connection.from_id = notification.from_user_id  AND to_user_id='.$user_id. ' ORDER BY timestamp DESC';
         }
 
         if($user_level == 5){
@@ -888,11 +888,11 @@ class Repository {
             if($q) {
                 $m = $db->fetchAll($q);
                 $member_id = $m[0]['member_id'];
-                return $member_id;
-            } else {
-                return $db->lastInsertedID();
-            }
-        }        
+                return intval($member_id);
+            } 
+        } else {
+            return $db->lastInsertedID();
+        }       
     }
 
     public function getMember(Int $member_id = -1, Int $user_id = -1, Bool $safe) {
