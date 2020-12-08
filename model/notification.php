@@ -68,7 +68,9 @@ class Notification {
             10 => 'report_racism',
             11 => 'report_threat',
             12 => 'report_spam',
-            13 => 'admin_deleted'             
+            13 => 'admin_deleted',
+            14 => 'onefour',
+            15 => 'bug'              
         ];
     }
 
@@ -92,8 +94,8 @@ class Notification {
             $link = '<a href="javascript:userPageView('.$user_id.')">'.$username.'</a>';           
         }
 
-        if($type_idx > 7 && $type_idx < 13 ) {
-            // Post reports
+        if($type_idx > 7 && $type_idx < 16 ) {
+            // Post reports & bugs
             $username = $this->from_user->getName();
             $link = '<a href="javascript:userPageView('.$user_id.')">'.$username.'</a>';           
         }
@@ -113,9 +115,11 @@ class Notification {
             8 => $link.' reported a '.$post.' for nudity',
             9 => $link.' reported a '.$post.' for graphic content',
             10 => $link.' reported a '.$post.' for racist content',
-            11 => $link.' reported a '.$post.' for making threats or inciting violence',
+            11 => $link.' reported a '.$post.' for threats, violence or inciting',
             12 => $link.' reported a '.$post.' as spam',
-            13 => 'An administrator has hidden your '.$post
+            13 => 'An administrator has hidden your '.$post,
+            14 => '',
+            15 => $link.' reported an issue - '.$message
         ];
         return $templates[$type_idx];
     }

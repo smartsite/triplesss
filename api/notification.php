@@ -17,6 +17,8 @@ use Triplesss\notification\Notification;
 
 header('Content-Type: application/json');
 
+$message = false;
+
 if(isset($_GET)) {
     extract($_GET);     
 } else {
@@ -34,8 +36,10 @@ $to_user->setUserId($from_user_id);
 $notification = new Notification($from_user);
 $notification->setFromUser($to_user);
 $notification->setPostId($post_id);
-
 $notification->setType($action);
+if($message) {
+    $notification->setMessage($message);
+}
 $notification->notify();
 
 echo json_encode($notification);

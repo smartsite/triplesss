@@ -809,10 +809,16 @@ class Repository {
         if($user_level == 5){
             // show all  notifications from user_id = 1 and 2
             $s = 'SELECT * FROM (SELECT DISTINCT from_user_id, to_user_id, type, message, timestamp  FROM notification 
-            JOIN connection ON connection.from_id = notification.from_user_id  AND connection.to_id = '.$user_id.' UNION 
+            JOIN connection ON connection.from_id = notification.from_user_id  AND connection.to_id = '.$user_id.' 
+            UNION 
             SELECT DISTINCT from_user_id, to_user_id, type, message, timestamp  FROM notification             
-            WHERE to_user_id IN(1,2) AND from_user_id < 2) t1 
-            WHERE t1.type NOT IN (8,9,10,11,12)                  
+            WHERE to_user_id IN(1,2) AND from_user_id < 2 
+            UNION 
+            SELECT DISTINCT from_user_id, to_user_id, type, message, timestamp  FROM notification 
+            WHERE to_user_id = '.$user_id.' AND type IN (6,7,8,9)
+            ) t1 
+            JOIN user u ON u.id = to_user_id AND timestamp > u.created_on 
+            WHERE t1.type NOT IN (8,9,10,11,12,15)                   
             ORDER BY t1.timestamp DESC';        
             
             //echo $s;
