@@ -89,6 +89,11 @@ class User {
         return $repository->generateRegisterLink($username, $from, $reply);
     }
 
+    public function sendResetLink(String $username, String $from) {
+        $repository = $this->repository;
+        return $repository->generateResetLink($username, $from);
+    }
+
     public function addConnection(User $user, $type) {
          /**
          *   Add any type of connection to this user    
@@ -117,6 +122,22 @@ class User {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public function passwordToken($token) {
+        $repository = $this->repository;
+        $username = $this->getName();
+        $tokenObj = $repository->userToken($username, 'password_reset');
+        if(!$tokenObj) {
+            return ['error' => 'Username not found'];
+        } else {
+            $check = $tokenObj['value'];
+            if($check == $token) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 

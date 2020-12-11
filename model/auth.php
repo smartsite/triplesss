@@ -24,7 +24,7 @@ class Auth {
                 
     function login(String $username, String $password){
         $repository = $this->repository;
-        return $repository->userLogin($username, $password);
+        return $repository->userLogin($username, $password, true); // last arg is hashed / not hashed
     }
 
     function logout(){

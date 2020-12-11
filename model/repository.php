@@ -582,7 +582,8 @@ class Repository {
         $error = [];
         $userObj = $this->allUserDetails($username);
         if($hashed) {
-            $password = hash ("sha256", $password);
+            //$password = hash ("sha256", $password);
+            $password = md5($password);
         }
         
         if($userObj){
@@ -672,6 +673,50 @@ class Repository {
             $regemail = $this->sendRegEmail($username, $link, $from, $reply);
         }
         return $regemail;
+    }
+
+    public function generateResetLink(String $username, String $from) { 
+        $db = $this->db;
+        $key = $this->randomString(12);
+        $reply = "nobody@nowhere.com";
+        $subject = "surfsouthoz password reset requested";        
+
+        $s = 'SELECT id, first_name, email FROM user WHERE user_name="'.$username.'" LIMIT 1';
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        if($p) {
+            $firstname = $r[0]['first_name'];
+            $email = $r[0]['email'];
+            $user_id = $r[0]['id'];
+            $k = 'INSERT INTO tokens (`user_id`, `value`, `token_type`) VALUES('.$user_id.', "'.$key.'", "password_reset")';
+            $q = $db->query($k);
+            $link = $this->getSetting('hostname').'/password_reset?user_id='.$user_id.'&key='.$key;
+
+            $msg = 'We received a password reset request for your surfsouthoz account. Click or tap on this link '.$link.' to create a new password.';
+            $headers = 'From: '.$from. "\r\n" .
+                    'Reply-To:' .$reply. "\r\n" .
+                    'X-Mailer: PHP/' . phpversion();
+           
+            $m = mail($email, $subject, $msg, $headers);
+            return ['sent' => $m, 'email' =>  $email, 'username' => $username];
+        } else {
+            return ['error' => 'Could not find user.'];
+        }
+       
+    }
+
+    public function userToken(String $username, String $type) {
+        $db = $this->db;
+        $s = 'SELECT user_id, value, sent_at FROM tokens t1 JOIN user u1 ON u1.id = t1.user_id 
+              WHERE u1.user_name="'.$username.'" AND t1.token_type="'.$type.'" AND sent_at = 
+              (SELECT MAX(sent_at) FROM tokens t2 WHERE user_id = u1.id) LIMIT 1';
+        $p = $db->query($s);
+        $rv = $db->fetchAll($p);
+        if($rv) {
+            return $rv[0];    
+        } else {
+            return ['error' => 'Could not find token.'];
+        }          
     }
 
     public function getConnectedUsers(User $user, Connection $connection = null) { 
