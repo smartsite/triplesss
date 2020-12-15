@@ -344,7 +344,8 @@ class Repository {
                 WHERE feed_id='.$feed->id.' AND post.owner='.$filter->userid.' AND feed_post.visibility >= '.$visibility ;
             }           
         }
-        
+
+             
         $p = $db->query($s);
         $r = $db->fetchAll($p);
 

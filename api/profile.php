@@ -1,9 +1,11 @@
 <?php
 
 require '../model/auth.php';
+require '../model/user.php';
 require '../model/feed.php';
 require '../model/filter.php';
 
+use Triplesss\user\User as User;
 use Triplesss\feed\Feed as Feed;
 use Triplesss\filter\Filter as Filter;
 
@@ -33,8 +35,11 @@ $feed->setFilter($filter);
 
 $posts = $feed->getFilteredPosts();
 if(!$posts) {
-    $posts[0] = null;
-    $posts[1] = null;
+    $user = new User();
+    $user->setUserId($userid);
+    $username = $user->getName();
+    $posts[0] = ['owner' => $userid, 'user_name' => $username];
+    $posts[1] = ['owner' => $userid, 'user_name' => $username];
 }
 
 echo json_encode($posts);
