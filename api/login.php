@@ -17,5 +17,5 @@ $auth = new Auth();
 $password = $postObj['password'];
 $username = $postObj['username'];
 
-$login = $auth->login($username, $password);
+$login = $auth->login($username, $password, true);
 echo json_encode($login);

@@ -506,8 +506,12 @@ class Repository {
         $s = 'SELECT user_name FROM user WHERE user_name="'.$username.'"';
         $p = $db->query($s);
         $rows = $db->fetchAll($p);
-        $r = $rows[0];
-        return !is_null($r);        
+        if($rows) {
+            $r = $rows[0];
+            return !is_null($r);
+        }
+        return false;      
+                
     }
 
     public function temporaryPassword(Int $length = 10) :String {
@@ -581,12 +585,13 @@ class Repository {
         $session_timeout = $this->getSetting('session_timeout');
         $error = [];
         $userObj = $this->allUserDetails($username);
-        if($hashed) {
-            //$password = hash ("sha256", $password);
-            $password = md5($password);
-        }
-        
+               
         if($userObj){
+            if($hashed) {
+                //$password = hash ("sha256", $password);
+                $password = md5($password);                
+            }
+            
             if(strtoupper($userObj['password']) == strtoupper($password)) {
                 // winner, winner chicken dinner!
 
@@ -647,7 +652,8 @@ class Repository {
             if($p) { 
                 setcookie('userID', null, -1, '/'); 
                 setcookie('userName', null, -1, '/'); 
-                session_destroy();
+                setcookie('PHPSESSID', null, -1, '/'); 
+                //session_destroy();
                 return true;
             } else {
                 return false;

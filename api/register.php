@@ -19,9 +19,23 @@ header('Content-Type: application/json');
 $content = trim(file_get_contents("php://input"));
 $postObj = json_decode($content, true);
 
-$citysplit = explode("|", $postObj['city']);
-$postObj['city'] = $citysplit[0]; 
-$postObj['postcode'] = $citysplit[1]; 
+if(array_key_exists('city', $postObj)) {
+    $citysplit = explode("|", $postObj['city']);
+    $postObj['city'] = $citysplit[0]; 
+    $postObj['postcode'] = $citysplit[1]; 
+}
+
+$hash = false;
+if(array_key_exists('hash', $postObj)) {
+    $hash = $postObj['hash'];
+    if($hash) {
+        $pwd = md5($postObj['password']);
+        $postObj['password'] = $pwd;
+    }
+}
+
+
+
 
 // the id of the main news account owner. This will show as the only source in the new user's feed
 isset($postObj['follow_id']) ? $to = $postObj['follow_id'] : $to = 2;
@@ -36,6 +50,7 @@ $reply = $postObj['reply_email'];
 
 unset($postObj['from_email']);
 unset($postObj['reply_email']);
+unset($postObj['hash']);
 
 $u = $user->update($postObj);
 

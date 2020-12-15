@@ -23,7 +23,10 @@ $postObj = json_decode($content);
 isset($_GET['member_id']) ? $member_id = $_GET['member_id'] : $member_id = false;
 isset($_GET['user_id']) ? $user_id = $_GET['user_id'] : $user_id = false;
 
+if($user_id == 'undefined') {$user_id = false;} 
+
 $member = new Member();
+$details = false;
 
 if($member_id) {
     // GET and existing user   
@@ -32,12 +35,14 @@ if($member_id) {
 } else if($user_id) {
     $details = $member->getMemberByUserId($user_id);
 
-} else if($postObj->user_id) {
-    // create a new user   
-    $member->setUserId($postObj->user_id);
-    $member_id = $member->create();
-    $member->setId($member_id);
-    $details = $member->getDetails(true);   
+} else if($postObj) {
+    if($postObj->user_id) {
+        // create a new user   
+        $member->setUserId($postObj->user_id);
+        $member_id = $member->create();
+        $member->setId($member_id);
+        $details = $member->getDetails(true);   
+    }
 }
 
 echo json_encode($details);
