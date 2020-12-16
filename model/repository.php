@@ -10,6 +10,7 @@ use Triplesss\settings\Settings as Settings;
 use Triplesss\error\Error as Error;
 use Triplesss\feed\Feed as Feed;
 use Triplesss\post\Post as Post;
+//use Triplesss\text\Emoji as Emoji;
 use Triplesss\user\User as User;
 use Triplesss\user\Member as Member;
 use Triplesss\users\Users as Users;
@@ -124,6 +125,12 @@ class Repository {
         
     }
 
+    Public function getEmojis(String $text) {
+        //$em = new Emoji();
+        //return $em->Decode($text);
+        return $text;
+    }
+
     //Public function getPostById(Int $id) {
     Public function getPostById(String $id) {
        
@@ -154,7 +161,7 @@ class Repository {
                     'content_type' => $post_item['content_type'], 
                     'content_id' => $post_item['content_id'],
                     'text_id' => $post_item['text_id'], 
-                    'content' => $post_item['content'], 
+                    'content' => $this->getEmojis($post_item['content']), 
                     'tags' =>    $post_item['tags'], 
                     'comment_count' => count($comments), 
                     'likes' =>  $likes, 

@@ -66,8 +66,12 @@ class Feed {
         $posts = [];   
         $st = explode(',', $sort_term);    
        
-        if($st[1]) {
-            $sort_order = trim($st[1]);
+        try{
+            if( $st[1]) {
+                $sort_order = trim($st[1]);
+            }
+        } catch(String $e) {
+            
         }
         
         //TODO: properly implement sort terms, e.g. popularity, relevance

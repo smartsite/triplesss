@@ -4,6 +4,7 @@ require '../model/auth.php';
 require '../model/user.php';
 require '../model/image.php';
 require '../model/text.php';
+require '../model/emoji.php';
 require '../model/post.php';
 require '../model/feed.php';
 require '../model/content.php';
@@ -14,6 +15,7 @@ require '../model/notification.php';
 
 use Triplesss\feed\Feed as Feed;
 use Triplesss\post\Post as Post;
+use Triplesss\text\Emoji as Emoji;
 use Triplesss\user\User;
 use Triplesss\content\Content as Content;
 use Triplesss\visibility\Visibility;
@@ -52,11 +54,20 @@ $user->setUserId($user_id);
 
 $p1 = $post;
 
+$allowed = array_map(function($t) {
+    return '&#'.$t.';';
+}, range(128512,128567));
+
 if($txt != '') {
+    //$em = new Emoji();
+    //$cleanText = $em->Encode($cleanText);
+    $cleanText = strip_tags($txt, $allowed);
+    $cleanText = addslashes($cleanText);
+    
     $postContent = new Content();
     $postContent->setUserId($user_id);
-    $postContent->setContentType('text');
-    $postContent->setContent($txt);
+    $postContent->setContentType('text');   
+    $postContent->setContent($cleanText);
     $postContent->write();
     $post->addContent($postContent);
 }

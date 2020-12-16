@@ -4,11 +4,13 @@ require '../model/auth.php';
 require '../model/user.php';
 require '../model/feed.php';
 require '../model/filter.php';
+//require '../model/emoji.php';
 //require '../model/repository.php';
 
 use Triplesss\user\User as User;
 use Triplesss\feed\Feed as Feed;
 use Triplesss\filter\Filter as Filter;
+//use Triplesss\text\Emoji as Emoji;
 
 
 /**
@@ -19,6 +21,8 @@ use Triplesss\filter\Filter as Filter;
 
 
 header('Content-Type: application/json');
+
+$sort_by = 'date_desc';
 
 if(isset($_GET)) {
     extract($_GET);     
@@ -31,10 +35,10 @@ if(isset($_GET)) {
 $feed = new Feed();
 $feed->setId($feed_id);
 
-$filter = new Filter($filter_options);
+$filter = new Filter($filter_options = []);
 $feed->setFilter($filter);
 
-$feed->setPostRange([$offset, $count]);
+$feed->setPostRange([$offset = 0, $count = 10]);
 $feed->sortBy($sort_by);
 
 $ag = $feed->getPosts();
