@@ -383,14 +383,14 @@ class Repository {
 
         $userid = $aggregator->userid;
         // query to fetch all post ids for connected users 
-        $s = 'SELECT owner, post.post_id FROM feed_post
-            JOIN post ON  feed_post.post_id = post.post_id 
+        $s = 'SELECT owner, p1.post_id FROM feed_post
+            JOIN post AS p1 ON  feed_post.post_id = p1.post_id 
             JOIN
             (SELECT DISTINCT * FROM 
             (SELECT from_id con FROM connection WHERE connection_type IN (1,2)  AND to_id = '.$userid.' AND from_id <> '.$userid.' UNION 
             SELECT to_id con FROM connection WHERE connection_type IN (1,2) AND from_id = '.$userid.' AND to_id <> '.$userid.') connected) connection 
-            ON connection.con = post.owner 
-            ORDER BY post.id DESC';
+            ON connection.con = p1.owner 
+            ORDER BY p1.id DESC';
         if($limit !== '' && $offset !== '') {
             $s.= ' LIMIT '.$limit. ' OFFSET '.$offset;
         } 
@@ -856,13 +856,13 @@ class Repository {
         if($user_level == 99){
             // system user - system notifications
             $s = 'SELECT DISTINCT from_user_id, to_user_id, type, message, timestamp  FROM notification 
-            JOIN connection ON connection.from_id = notification.from_user_id  AND to_user_id='.$user_id. ' ORDER BY timestamp DESC';
+            JOIN connection ON connection.from_id = notification.from_user_id  AND to_user_id='.$user_id. ' ORDER BY timestamp DESC LIMIT 300';
         }
 
         if($user_level == 1){
             // admin user - reports
             $s = 'SELECT DISTINCT from_user_id, to_user_id, type, message, timestamp  FROM notification 
-            JOIN connection ON connection.from_id = notification.from_user_id  AND to_user_id='.$user_id. ' ORDER BY timestamp DESC';
+            JOIN connection ON connection.from_id = notification.from_user_id  AND to_user_id='.$user_id. ' ORDER BY timestamp DESC LIMIT 300';
         }
 
         if($user_level == 5){
@@ -878,7 +878,7 @@ class Repository {
             ) t1 
             JOIN user u ON u.id = to_user_id AND timestamp > u.created_on 
             WHERE t1.type NOT IN (8,9,10,11,12,15)                   
-            ORDER BY t1.timestamp DESC';        
+            ORDER BY t1.timestamp DESC LIMIT 200';        
             
             //echo $s;
            
