@@ -87,20 +87,6 @@
                 margin-top:5px;
             }
 
-            input[type="text"]{
-                font-size: 18px;
-                border-radius: 7px;
-                border:1px solid #999;
-                padding:5px; 
-            }   
-            
-            div#fail button {
-                padding:10px;
-                border-radius:5px;
-                border:1px solid #ccc;
-                margin-top:5px;
-            }
-
             .hidden {
                 display:none;
             }
@@ -165,24 +151,7 @@
                 <h3>Verification failed</h3>  
                 <p>We could not verify your registration. Please check you email and make sure the 
                     link is correct. </p>
-                <p>If that fails, you can try sending the verification link again.</p> 
-                <input type="text" id="regusername" name="regusername" value="" placeholder="user name"><br />     
-                <button id="send-link">send link</button>    
-
-            </div>  
-            <div id="confirm" class="add">
-                <h3>Verification link sent</h3>  
-                <p>An email has been sent to <span id="confirm-email"></span>, 
-                    and it should arrive within the next 5 minutes. Just tap or click on the link in the email 
-                    to confirm your registration.</p>
-                <p>Didn't get the email? Try the following:</p>
-                <ul>
-                    <li>Check your spam / junk mail folder</li>
-                    <li>Make sure you have waited 5 minutes!</li>
-                    <li>Make sure you are checking the email address shown above</li>
-                    <li>Try and <a id="resend" href="">re-send</a> the registration email</li>                     
-                </ul>     
-                <p>If you still have no luck, <a href="mailto:registerhelp@surfsouthoz.com">contact us</a> and we'll help!</p>
+                <p>If that fails, you can try <a href="resendLink()">sending the verification link again</a>.</p>     
             </div>  
             <div id="success" class="add">
                 <h3>Welcome, <span id="new_uname"></span>.</h3>
@@ -196,11 +165,6 @@
         <script language="Javascript">
 
             let lightbox;
-
-            const getCookie = (name) => {
-                var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-                if (match) return match[2];
-            }
 
             let showBox = (show, id) => {
                 if(show == true) {
@@ -226,23 +190,18 @@
                         method: "GET"                                              
                         }
                     ).then(function(response) {                  
-                        response.json().then(function(d) {
-                           
+                        response.json().then(function(d){
+                            console.log(d);
                             if(d.hasOwnProperty('username')) {
                                 username.value = d.username;
                                 showBox(true, 'keycheck');
                                 showBox(false, 'fail');
                             } else if(d.hasOwnProperty('error')) {
                                 showBox(false, 'keycheck');
-                                showBox(false, 'confirm');
                                 showBox(true, 'fail');
                             }                                  
                         })
                     });  
-                } else {
-                    showBox(false, 'keycheck');
-                    showBox(false, 'confirm');
-                    showBox(true, 'fail');
                 }
               
                            
@@ -285,7 +244,6 @@
                     }
                 ).then(function(response) {                  
                     response.json().then(function(d){
-                       
                         console.log(d);  
                         if(d.success == 'false') {
                             password.className = 'field_error';
@@ -293,7 +251,6 @@
                             password.className = '';
                             showBox(false, 'keycheck');
                             showBox(false, 'fail');
-                            showBox(false, 'confirm');
                             showBox(true, 'success');
                             document.getElementById('uname').innerText = d.username;
                             document.getElementById('new_uname').innerText = d.username;
@@ -301,37 +258,6 @@
                     })
                 });   
             }
-
-
-
-            const resendLink = () => {              
-                
-                const user_id = getCookie('userID');
-                
-                fetch('Triplesss/api/register_link&userid=' + userid, {
-                            method: "GET"
-                                                
-                    }
-                ).then(function(response) {
-                  
-                    response.json().then(function(d){
-                        console.log(d);
-                        if(d.hasOwnProperty('user_id')) {
-                            var userid = d.user_id * 1;
-                            if(userid > 0) {
-                                user_id.value = userid;
-                                showBox(true, 'confirm');
-                                showBox(false, 'fail');
-                            } else {
-                                // something went wrong :(    
-                            }
-                        } else {
-                            // something went wrong :(    
-                        }                                                       
-                    })                  
-                });
-            } 
-
                 
             
             window.onload = () => {                
@@ -342,8 +268,8 @@
           
                 showBox(false, 'keycheck');
                 showBox(false, 'fail');
-                showBox(false, 'confirm');
-                showBox(false, 'success');                
+                showBox(false, 'success');
+                
                 verify();
 
                 loginButton.addEventListener('click', function(e) {

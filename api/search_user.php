@@ -24,7 +24,7 @@ if(isset($_GET)) {
     $postObj = json_decode($content, true);
     extract( $postObj);   
 }
-if(!$userid) {
+if(@!$userid) {
     $userid = -1;
 }
 

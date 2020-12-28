@@ -158,8 +158,8 @@ class Post {
         $repository = $this->repository;
         $tags = implode(",",  $tagArray);  
         $items = $this->getItems();
-        array_map(function($content) use($tags, $repository){
-            $repository->setTags($content, $tags); 
+        return array_map(function($content) use($tags, $repository){
+            return $repository->setTags($content, $tags); 
         }, $items);      
        
     }

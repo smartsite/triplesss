@@ -42,7 +42,12 @@ if($content != '') {
 
     $post->setTags($tagObj);
     $t = $post->saveTags();
-    echo json_encode($t);
+    if(is_array($t)) {
+        echo json_encode($t[0]);
+    } else {
+        echo json_encode($t);
+    }
+    
     
     //$post->addTag($tagObj);
 } else {

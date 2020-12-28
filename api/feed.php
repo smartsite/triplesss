@@ -32,13 +32,21 @@ if(isset($_GET)) {
     extract( $postObj);   
 }
 
+if(!$offset) {
+    $offset = 0;
+}
+
+if(!$count) {
+    $count = 10;
+}
+
 $feed = new Feed();
 $feed->setId($feed_id);
 
 $filter = new Filter($filter_options = []);
 $feed->setFilter($filter);
 
-$feed->setPostRange([$offset = 0, $count = 10]);
+$feed->setPostRange([$offset, $count]);
 $feed->sortBy($sort_by);
 
 $ag = $feed->getPosts();

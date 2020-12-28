@@ -12,26 +12,57 @@ class Settings
 	{
         /**
          *    Database settings
-         */     
+         */  
+			
         
 		// Host name
 		$settings['dbhost'] = 'localhost';
 		// Database name
-		$settings['dbname'] = 'members9';
+		$settings['dbname'] = 'smartsit_members9';
 		// Username
-		$settings['dbusername'] = 'members9';
+		$settings['dbusername'] = 'smartsit_mem9';
 		// Password
-        $settings['dbpassword'] = 'pw';
+		$settings['dbpassword'] = '$bLUe123!*';
+		
+		if($this->getEnvironment() == 'dev') {
+			$settings['dbhost'] = 'localhost';
+			// Database name
+			$settings['dbname'] = 'members9';
+			// Username
+			$settings['dbusername'] = 'members9';
+			// Password
+			$settings['dbpassword'] = 'pw';
+		}
 
         /**
          *    User session  settings
          */  
         
-		$settings['session_time'] = 1 * 30 * 60 * 120; // 2 hours
+		$settings['session_time'] = 1 * 30 * 60 * 60; // 30 mins for testing!
 		
-		$settings['hostname'] = 'http://dev2020-vbox';
+		$settings['hostname'] = 'https://vip.surfsouthoz.com.au';
+
+		if($this->getEnvironment() == 'dev') {
+			$settings['hostname'] = 'http://dev2020-vbox';
+		}
 		
 		return $settings;
+	}
+
+	public function getEnvironment() {
+		$host = $_SERVER['HTTP_HOST']; 
+		
+		$settings['environment'] = 'dev';
+		
+		if(strpos($host, 'vip.surfsouthoz') > -1) {
+			$settings['environment'] = 'prod';
+		}
+
+		if(strpos($host, 'app2.surfsouthoz') > -1) {
+			$settings['environment'] = 'uat';
+		}
+
+		return $settings['environment'];
 	}
 }
 

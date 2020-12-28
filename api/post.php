@@ -42,6 +42,7 @@ $im = $postObj->image;
 $txt = $postObj->comment;
 $user_id = $postObj->userid;
 $feed_id = $postObj->feedid;
+$visibility = $postObj->visibility;
 $basefolder = $postObj->basefolder;
 
 $feed = new Feed();
@@ -87,7 +88,7 @@ if($im != '') {
 
 $id = $post->add();
 $v = new Visibility();
-$v->setLevel(0);
+$v->setLevel($visibility);
 $post->setVisibility($v, $id);
 
 $notification = new Notification($user);

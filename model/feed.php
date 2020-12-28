@@ -60,23 +60,27 @@ class Feed {
         $this->posts = $this->repository->getFeedPosts($this);
         $sort_terms = explode("_", $this->sort_by);
         $sort_term = $sort_terms[0];
-        $sort_order = "desc";
+        if(array_key_exists(1, $sort_terms)) {
+            $sort_order = "desc";
+        } else {
+            $sort_order = $sort_terms[1];
+        }
+       
         $range = $this->range;
 
         $posts = [];   
         $st = explode(',', $sort_term);    
        
-        try{
+        /*
             if( $st[1]) {
                 $sort_order = trim($st[1]);
             }
-        } catch(String $e) {
-            
-        }
         
+        */
+
         //TODO: properly implement sort terms, e.g. popularity, relevance
                   
-        if($this->sort_by == "date, desc") {
+        if($this->sort_by == "date, desc" || $this->sort_by == "date_desc") {
             $posts = array_reverse($this->posts);
         } else {
             $posts = $this->posts;

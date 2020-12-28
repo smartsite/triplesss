@@ -254,11 +254,11 @@ class Repository {
         $r1 = $db->query($qry);
 
         $qry = 'UPDATE `text` JOIN content_post on content_id = text.id AND content_type="text" 
-        JOIN `post` ON  post.id = content_post.post_id SET visibility = '.$visibility.' WHERE post.post_id="'.$p_id.'"';
+        JOIN `post` ON  post.id = content_post.post_id SET text.visibility = '.$visibility.' WHERE post.post_id="'.$p_id.'"';
         $r = $db->query($qry);
 
         $qry = 'UPDATE `image` JOIN content_post on content_id = image.id AND content_type="image" 
-        JOIN `post` ON  post.id = content_post.post_id SET visibility = '.$visibility.' WHERE post.post_id="'.$p_id.'"';
+        JOIN `post` ON  post.id = content_post.post_id SET image.visibility = '.$visibility.' WHERE post.post_id="'.$p_id.'"';
         $r = $db->query($qry);
 
         return $r1;        
@@ -383,14 +383,21 @@ class Repository {
 
         $userid = $aggregator->userid;
         // query to fetch all post ids for connected users 
-        $s = 'SELECT owner, p1.post_id FROM feed_post
-            JOIN post AS p1 ON  feed_post.post_id = p1.post_id 
-            JOIN
-            (SELECT DISTINCT * FROM 
-            (SELECT from_id con FROM connection WHERE connection_type IN (1,2)  AND to_id = '.$userid.' AND from_id <> '.$userid.' UNION 
-            SELECT to_id con FROM connection WHERE connection_type IN (1,2) AND from_id = '.$userid.' AND to_id <> '.$userid.') connected) connection 
-            ON connection.con = p1.owner 
-            ORDER BY p1.id DESC';
+        if($userid > 1) {
+            $s = 'SELECT owner, p1.post_id FROM feed_post
+                JOIN post AS p1 ON  feed_post.post_id = p1.post_id 
+                JOIN
+                (SELECT DISTINCT * FROM 
+                (SELECT from_id con FROM connection WHERE connection_type IN (1,2)  AND to_id = '.$userid.' AND from_id <> '.$userid.' UNION 
+                SELECT to_id con FROM connection WHERE connection_type IN (1,2) AND from_id = '.$userid.' AND to_id <> '.$userid.') connected) connection 
+                ON connection.con = p1.owner 
+                ORDER BY p1.id DESC';
+        } else {
+            // it's a wall aggregator
+            $s = 'SELECT owner, p1.post_id FROM feed_post
+            JOIN post AS p1 ON  feed_post.post_id = p1.post_id WHERE p1.visibility = 4 ORDER BY p1.id DESC';
+        }   
+        
         if($limit !== '' && $offset !== '') {
             $s.= ' LIMIT '.$limit. ' OFFSET '.$offset;
         } 
@@ -1113,7 +1120,11 @@ class Repository {
         $error = [];
         if($content['content_type'] == 'image' || $content['content_type'] == 'text') {
             $s = 'UPDATE '.$content['content_type'].' SET tags="'.$tags.'" WHERE id='.$content['content_id'].' LIMIT 1';
-            $p = $db->query($s);           
+            if($db->query($s)) {
+                $p = ['success' => true];
+            } else {
+                $p = ['success' => false];
+            }         
         } else {
             $error['message'] = "Invalid content type";
             $error['success'] = "false";
