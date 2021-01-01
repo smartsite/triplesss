@@ -5,12 +5,29 @@ html {
     &.lb {
         scroll-behavior: auto;
     }
+
+    .emoji-picker {
+        top: 230px !important;
+    }
     
     body{
         font-family: 'Raleway', sans-serif;
         height:100%;
         border:0;
         margin:0;
+
+        .bodywrap {
+            background-image: url('/img/sand1.jpg');
+            background-attachment: fixed;
+
+            &.fullheight {
+                height:100%;
+            }
+
+            &.autoheight {
+                height:auto;
+            }
+        }
 
         .toprow {
             position:fixed;
@@ -32,6 +49,15 @@ html {
                     margin-top:-20px;
                 }
             }
+
+            .reg-header {
+                position:absolute;
+                z-index:9;
+                top:10px;
+                left:50%;
+                margin-left:-100px;
+            }
+           
 
             h3 {
                 position:absolute;                  
@@ -86,6 +112,17 @@ html {
                     height:40px;
                 }                
             }
+        }
+
+
+        .redCross {
+            color: transparent; 
+            text-shadow:0 0 0 rgb(220,20,20);
+        }
+
+        .greenTick { 
+            color: transparent; 
+            text-shadow:0 0 0 rgb(70, 190, 20);
         }
 
         #intro {
@@ -191,6 +228,13 @@ html {
             padding-top:50px;
             background-image: url('/img/sand1.jpg');
             background-attachment: fixed;
+
+            @media only screen and (min-width: 768px) {
+                width:800px;
+                position:relative;
+                left:50%;
+                margin-left:-400px;
+            }
             
             &.loggedout {
                 height:100%;
@@ -211,18 +255,60 @@ html {
 
                 &#addpost {
                     button {
-                        height:36px;
+                        height:46px;
+                        &.loading {
+                            font-size: 0.01px;
+                            width:46px;
+                            background-image: url('/img/button-loader.gif');
+                            background-repeat: no-repeat;
+                            background-position: 50% 50%;
+                        }
+                    }
+
+                    input[type="file"] {
+                        position:relative;                       
+                        z-index:1;
+                        &:before {
+                            content: '';
+                        }
+
+                        &::-webkit-file-upload-button {
+                           
+                            border-radius:5px;
+                            padding:15px;
+                            border:1px solid #aaa;
+                        }
+                    }
+
+                    #ul-button {
+                        display:none;
+                        padding: 15px;
+                        position: absolute;
+                        margin-top: 5px;
+                        background-color: #eee;
+                        border: 1px solid #aaa;
+                        border-radius: 5px;
+                        font-size: 14px;
+                        z-index: 0;
+                        font-family: Arial, Helvetica;
                     }
                 }
             }
 
             input[type="file"] {
-                display: none;
+                display: block;
+                margin:10px 0px;
+
+                &::-webkit-file-upload-button {
+                           
+                    border-radius:5px;
+                    padding:15px;
+                    border:1px solid #aaa;
+                }
             }
 
             .file-upload {
-                border: 1px solid #aaa;
-                display: inline-block;
+                border: 1px solid #aaa;                
                 width: 44px;
                 height: 44px;
                 margin-bottom: 10px;
@@ -230,13 +316,54 @@ html {
                 background-color: #eee;
                 text-align: center;
                 line-height: 44px;
+              
             }
+
+            #emoji-select {
+                position:absolute;
+                z-index:9; 
+                top:100px; 
+                background: #fff;
+                width:86%;        
+                      
+                span {
+                    font-size: 22px;
+                    vertical-align: middle;
+                    text-align: center;
+                    width: 36px;
+                    height: 36px;
+                    display: inline-block;
+                }
+
+            }
+
+            #resetbox, #passwordsentbox {
+                top:100px;
+            }
+
+            #reset-password {
+                &.loading {
+                    font-size: 0.01px;
+                    width:46px;
+                    background-image: url('/img/button-loader.gif');
+                    background-repeat: no-repeat;
+                    background-position: 50% 50%;
+                }
+            }
+
+            #subscribe {
+                a {
+                    text-decoration: underline;
+                }
+            }
+           
 
             #profile-upload-filename {
                 position: absolute;
                 margin-left: 130px;
                 font-size: 14px;
                 margin-top:-56px;
+                display:none;
             }
 
             #profile-upload-pic {
@@ -260,9 +387,16 @@ html {
                 }
             }
 
+            #feed {
+                
+            }
+
             .feed {
                 padding-bottom:10px;
-                z-index:0;                     
+                z-index:0; 
+                &.showhelp {
+                    margin-top:115px;
+                }                    
             }  
             
             .lowlight {
@@ -272,15 +406,18 @@ html {
 
             .postbox {
                 position: absolute;
+                top: 100px;
                 z-index: 1000;
-                border:1px solid #ccc;
-                background-color:#fff;
-                margin:15px 10px;
-                border-radius:5px;
+                border: 1px solid #ccc;
+                background-color: #fff;   
+                padding: 3%;
+                border-radius: 5px;
+                -webkit-box-shadow: 2px 2px 4px #666;
                 box-shadow: 2px 2px 4px #666;
-                width:82%;
-                padding:15px;
-                margin-top:20px;
+                width: 90%;
+                max-width: 450px;   
+                left: 50%;
+                margin-left: -48%;
 
                 input {
                     padding:5px;
@@ -302,7 +439,11 @@ html {
                 &.lowlight {
                     z-index:-1;
                     display:none;
-                }               
+                }  
+                
+                #reset-email {
+                    font-weight:bold;
+                }
                 
             }
 
@@ -312,7 +453,7 @@ html {
                 }
 
                 .field_error {
-                    background:lightpink;
+                    background-color:lightpink;
                     border:1px solid red;
                 }
             }
@@ -358,11 +499,16 @@ html {
                 }                    
             }
 
-            #editbox, #reportbox, #tagbox, #deletebox, #privacybox {
+            #editbox, #reportbox, #tagbox, #deletebox, #privacybox, #resetbox, #passwordsentbox {
                 button {
                     &.cancel {
                         top:0px;
                     }
+                }
+
+                textarea {
+                    font:inherit;
+                    border-radius:7px;
                 }
             }
 
@@ -376,43 +522,71 @@ html {
                 }
             }
 
+            #privacybox {
+                &.postbox {
+                    padding-top:50px;
+                }
+
+                select {
+                    font-family: inherit;
+                    border-radius: 5px;
+                    height: 38px;
+                    margin-top: 5px;
+                }
+
+                button {
+                    margin-top:-1px;
+                }
+
+                button.cancel {
+                    margin-top:15px;
+                }
+            }
+
             #add-user {
                 select {
                     padding:3px;
                 }
 
                 label {
-                    width:120px;
+                    width:100%;
                     display:block;
-                    margin-top:5px;
+                    margin-top:10px;
+                    margin-bottom:5px;
+                }        
+
+                #show-password {
+                    padding:7px;                   
+                    &.active {
+                        i {
+                            color:red;
+                        }
+                    }
                 }
-               
+
+                          
                 input {
                     font-size: 18px;
                     border-radius: 7px;
                     border:1px solid #999;
                     padding:5px;
+
+                   &.pwshown:-internal-autofill-selected {                    
+                        -webkit-text-fill-color: #666;                    
+                    }                     
+                   
+                }
+
+                input.field_error:-internal-autofill-selected {
+                    background-color:pink !important;                    
                 }
 
                 button {
                     padding:10px;
                     border-radius:5px;
                     border:1px solid #999;
-                }  
-                
-                span {
-                    /*
-                    color: transparent;                   
-                    font-size: 22px;
-                    border: solid 1px #999;
-                    border-radius: 30px;
-                    width: 25px;
-                    height: 25px;
-                    display: inline-block;
-                    text-align: center;
-                    background: rgba(255,255,255,0.3);
-                    */
-                }
+                }              
+               
              
             }
 
@@ -433,7 +607,36 @@ html {
             }
 
             #addpost {
-                background-color: rgba(210,210,210,.75)
+                background-color: rgba(210,210,210,.75);
+                #post-comment {
+                    margin-top:5px;
+                }
+
+                p {
+                    width:150px;
+                }
+
+                form {
+                    margin-block-end: 0;
+                }
+
+                #add-post-emoticon {
+                    /* display: inline-block;    */
+                    display:none;              
+                    margin-top: -36px;
+                    margin-left: 130px;
+                    border: none;
+                    padding: 0;                    
+                    height: auto;
+                    background:none;
+                }
+
+                select {
+                    font-family: inherit;
+                    border-radius: 5px;
+                    height: 38px;
+                    margin-top: 5px;
+                }
             }  
 
             #hidebox {
@@ -501,6 +704,12 @@ html {
               
             }
 
+            #userconnect {
+                a {
+                    color:#666;
+                }
+            }
+
             #notifications {
                 background-color: rgba(210,210,210,.75);
                 
@@ -509,6 +718,7 @@ html {
                     padding: 5px;
                     border-radius: 5px;
                     margin-bottom: 10px;
+                    min-height: 45px; 
 
                     a {
                         text-decoration: none;
@@ -519,9 +729,10 @@ html {
                     p {
                         font-size:0.9em;
                         margin-left: 70px;
-                        margin-top: -30px;
-                        position:absolute;
+                        margin-top: -38px; 
+                        /* position:absolute; */
                         width:65%;
+                        margin-bottom:5px;
                     }
 
                     h3 {
@@ -553,13 +764,36 @@ html {
                         margin-top: -30px; 
                     }                   
                 }
+
+                .issue-button {
+                    float: right;
+                    margin-top: -50px;
+                    color: red;
+                }
             }
 
             #search {
                 input {
                     padding:5px;
                 }               
-            }            
+            }  
+            
+            #help-profile {
+                position: fixed;
+                z-index: 999;
+              
+                top: 50px;
+                width: 92%;
+                background: rgb(255,255,255);
+                background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(167,182,207,1) 100%);  
+                h3 {
+                    i {
+                        vertical-align: middle;
+                        color:darkblue;
+                        padding-bottom:5px;
+                    }
+                }
+            }
                     
 
             #connections, #follow {
@@ -659,6 +893,26 @@ html {
                 padding-top:55px;
                 top:100px;
                 position:fixed;
+            }
+
+            #issuebox {
+                &.postbox{
+                    .cancel {
+                        margin-top: 0px;
+                    }
+
+                    p{
+                        margin-top:20px;
+                    }
+
+                    textarea {
+                        font-family: inherit;
+                        font-size:16px;  
+                        width:100%;  
+                        border-radius:7px;      
+                    }
+                }
+                
             }
 
             #profile {
@@ -790,11 +1044,8 @@ html {
 
                         img {
                             width:100%;
-                        }
-
-                        &.text {
-                           
-                        }
+                            position:relative; 
+                        }                       
                     }
 
                     .date-time {
@@ -865,6 +1116,11 @@ html {
                         &.red {
                             color:red;
                         }
+
+                        &.public {
+                            text-shadow: 2px 2px 2px lime;
+                            background-color:cornflowerblue;
+                        }
                     }
                 }
 
@@ -917,15 +1173,25 @@ html {
                 padding:10px;  
                 textarea {
                     font-family: inherit;
-                    font-size:14px;                   
-                }            
+                    font-size:16px;  
+                    width:100%; 
+                    border-radius:7px;                
+                } 
+
+                .greentext {
+                    color: #099b04;
+                }  
+
+                .redtext {
+                    color:#fc3200e8;
+                }         
             }
 
             .details {
                 padding:10px;
 
                 .field_error {
-                    background:lightpink;
+                    background-color:lightpink;
                     border:1px solid red;
                 }
             }
@@ -972,6 +1238,10 @@ html {
                 #add-bio {
                     textarea {
                         width:100%;
+                        font-family: inherit;
+                        font-size: 16px;
+                        width: 100%;
+                        border-radius:7px;
                     }
 
                     input {
@@ -983,9 +1253,13 @@ html {
                         border-radius: 5px;
                         border: 1px solid #aaa;
                         padding: 15px;
+                        padding-bottom:20px;
                         height:46px;
                         font-size:14px;
-                        width:70px;                        
+                        width:70px;  
+                        position:absolute;  
+                        margin:5px;
+                        z-index:9;                    
                     }
 
                     #post-bio {
