@@ -1,0 +1,454 @@
+<html>
+
+<head>
+    <title>Confirm registration test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https//fonts.googleapis.com/css2?family=Raleway&display=swap rel=" stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/vivify.min.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+        }
+
+
+        .add,
+        .details {
+            padding: 5px;
+            background-color: #e7e7e7;
+        }
+      
+
+
+        .lightbox {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background-color: #000;
+            opacity: 0.7;
+            z-index: 1;
+            display: none;
+        }
+
+        .lightbox.active {
+            z-index: 1;
+            display: block;
+        }
+
+
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            /* Preferred icon size */
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+
+            /* Support for all WebKit browsers. */
+            -webkit-font-smoothing: antialiased;
+            /* Support for Safari and Chrome. */
+            text-rendering: optimizeLegibility;
+
+            /* Support for Firefox. */
+            -moz-osx-font-smoothing: grayscale;
+
+            /* Support for IE. */
+            font-feature-settings: 'liga';
+        }
+
+        .red {
+            color: rgb(200, 30, 30);
+        }
+
+        .lime {
+            color: rgb(20, 180, 20);
+        }
+
+
+        .hidden {
+            display: none;
+        }
+
+        .unhidden {
+            display: block;
+        }
+
+        .field_error {
+            background: lightpink;
+            border: 1px solid red;
+        }
+
+        .wrap {
+            height: auto;
+        }
+
+        .wrap a {
+            color: #666;
+            text-decoration: none;
+        }
+
+
+        @keyframes redFadeOut {
+            from {
+                color: red;
+                opacity: 1
+            }
+
+            to {
+                color: white;
+                opacity: 0
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1
+            }
+
+            to {
+                opacity: 0
+            }
+        }
+
+        .fadeIn {
+            animation: fadeIn 0.5s;
+        }
+
+        .fadeOut {
+            animation: fadeOut 0.5s;
+        }
+    </style>
+    <link href="/css/user.css" rel="stylesheet" type="text/css">
+    <style>
+         .toprow h3 input {
+            border-radius: 5px;
+            padding: 10px;
+            margin: 7px;
+            border: 1px solid #999;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="toprow">
+        <div id="head-wave"><img src="img/head_wave.svg" /></div>
+        <h3>
+            <input type="button" value="&lt; back to registration" onclick="window.history.back()" /> 
+            <span id="uname"></span></h3>
+        <div class="clear"></div>
+    </div>
+    <div class="wrap">
+        <div class="add" id="terms">
+            <div class="container">
+                <div class="g-page__header">
+
+                    <h1 class="g-page-title">Terms of Service</h1>
+                    <div><br></div>
+                </div>
+                <div class="b-static-content">
+                    <div class="b-static-content">(Last amended: Dec 2020)</div>
+                    <p><br></p>
+                    <p><strong>Definitions:&nbsp;</strong></p>
+                    <p><strong>surfsouthoz</strong>: The platform owned and operated by Smartsite ABN <a
+                            href="https://abr.business.gov.au/ABN/View?abn=25840311040"
+                            style="color: rgb(0, 102, 153); font-family: DroidSansRegular, helvetica, arial, sans-serif; font-size: 14.4px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;">25
+                            840 311 040</a></p>
+                    <p><strong>member website</strong>: the web application / website at
+                        https://vip.surfsouthoz.com.au&nbsp;</p>
+                    <p><strong>subscribers</strong>: users that have paid the subscription fee</p>
+                    <p><strong>user content:</strong> images and text uploaded by subscribers</p>
+                    <p><strong>account</strong>: a paid membership allowing you access to the member website</p>
+                    <p><br></p>
+                    <div class="b-static-content">
+                        <ol>
+                            <li>The Website is a social media website and application service which allows Users to
+                                create a profile, and upload photos and / or text.<br><br></li>
+                            <li>These Terms govern your use of the member website, including any content,
+                                functionality, and services offered on or through the member website whether part of
+                                surfsouthoz or the member website. By registering with and using the member website,
+                                you hereby accept and agree to be bound by and abide by these Terms. If you do not
+                                want to agree to these Terms of Service, you must not access or use the member
+                                website.<br><br></li>
+                            <li>Any information given on the Website including responses to &ldquo;frequently
+                                answered questions&rdquo; is not legally binding. It is informative only and does
+                                not form part of the Terms.<br><br></li>
+                            <li>The member website is only offered and available to subscribers who are 18 years of
+                                age or older. By using the member website, you represent and warrant that you are 18
+                                years of age, that you are of legal age to form a binding contract with surfsouthoz.
+                                If you do not meet all of these conditions, you must not access or use the member
+                                website.<br><br></li>
+                            <li>surfsouthoz reserves the right to make changes to these Terms at any time and at
+                                surfsouthoz&#39;s sole discretion. All changes are effective immediately from the
+                                time surfsouthoz posts them, and apply to all access to and use of the member
+                                website thereafter. By continuing to use the website, you agree to the Terms as
+                                modified or as they currently appear. You are expected to check this page from time
+                                to time so you are aware of any changes, as they are binding on you.<br><br></li>
+                            <li>By using the member website you consent to receiving communications from surfsouthoz
+                                &nbsp;electronically, including emails and messages posted to your surfsouthoz
+                                &nbsp;account, all as more fully detailed in the Privacy Policy (available here)
+                                (https://vip.surfsouthoz.com.au/privacy). You acknowledge and agree that all
+                                communications that surfsouthoz sends to you electronically satisfy any legal
+                                requirement that such communications be in writing. If you wish at any time to
+                                withdraw your consent to receiving communications from surfsouthoz&lt; , please
+                                email support@surfsouthoz.com.au, notifying us of the withdrawal of your
+                                consent.<br><br></li>
+                            <li>surfsouthoz does not own User Content on the member website and views expressed by
+                                subscribers on surfsouthoz do not represent the views of surfsouthoz. Surfsouthoz
+                                retains the rights to images, video and text posted under the surfsouthoz
+                                account.<br><br></li>
+                            <li>surfsouthoz reserves the right at any time and without notice to:<ol>
+                                    <li>modify, suspend or terminate surfsouthoz, the member wesbite, or any portion
+                                        thereof;</li>
+                                    <li>restrict, limit, suspend or terminate your access to surfsouthoz or any
+                                        portion thereof;</li>
+                                    <li>delete any content you post on the member website as a Creator if in
+                                        surfsouthoz&#39;s reasonable opinion it does not comply with these Terms
+                                        and/or any applicable law;</li>
+                                    <li>monitor your use of the member website (including any content or message you
+                                        post or broadcast on surfsouthoz) to verify compliance with these Terms
+                                        and/or any applicable law;</li>
+                                    <li>investigate any suspected or alleged misuse or unlawful use of the member
+                                        website and cooperate with law enforcement agencies in such investigation;
+                                    </li>
+                                    <li>disclose information about your use of the member website in connection with
+                                        law enforcement investigation of any suspected or alleged illegal activity,
+                                        or in response to a lawful court order; or</li>
+                                    <li>change the Payment Providers. If surfsouthoz does this thensurfsouthoz
+                                        &nbsp;will use its reasonable endeavours to verify the bona fides and good
+                                        standing of the new Payment Provider and notify the User and applicable
+                                        details will be uploaded to the User Account.<br><br></li>
+                                </ol>
+                            </li>
+                            <li>From time to time, surfsouthoz may restrict access to some parts of the member
+                                website, or the entire Website, to Users.<br><br></li>
+                            <li>All content produced by surfsouthoz is copyright surfsouthoz. Redistributing or
+                                re-publishing any part of this content will result in the immediate suspension of
+                                your account.<br><br></li>
+                            <li>The content provided on the member website is provided as-is. surfsouthoz offers no
+                                guarantee as to the timeliness or accuracy of any information uploaded to the member
+                                website.<br><br></li>
+                            <li>surfsouthoz and smartsite ABN <a
+                                    href="https://abr.business.gov.au/ABN/View?abn=25840311040">25 840 311 040</a> will not be liable for any damage or loss related to the use or
+                                misuse of any content uploaded to the member website.<br><br></li>
+                            <li>Content provided by surfsouthoz should be considered editorial, and for
+                                entertainment only. No content on surfsouthoz can be considered
+                                advice.&nbsp;Subscribers are solely responsible for determining risk in regard to
+                                participating in any watersport activity.<br><br></li>
+                            <li>You are fully responsible for any and all activities that occur on your account and
+                                you are responsible for keeping your login details confidential and secure. You
+                                agree not to disclose these details to any other person or entity and immediately
+                                notify surfsouthoz at support@surfsouthoz.com.au if you believe someone has used or
+                                is using your account without your permission or if your account has been subject to
+                                any other breach of security. You also agree to ensure that you log out of your
+                                account at the end of each session. You should use particular caution when accessing
+                                your account from a public or shared computer so that others are not able to access,
+                                view or record your password or other personal information.<br><br></li>
+                            <li>By registering on surfsouthoz, you confirm that:<br><br>
+                                <ol>
+                                    <li>all User Account registration and profile information is truthful and
+                                        accurate and that any User Content you provide is your own and does not
+                                        infringe the intellectual property rights or any other proprietorial rights
+                                        of a third party;</li>
+                                    <li>if you previously had an account with surfsouthoz, your old &nbsp;account
+                                        was not terminated or suspended by surfsouthoz for violation of the Terms of
+                                        Service;</li>
+                                    <li>you register on surfsouthoz for your own personal use and you will not sell,
+                                        rent or transfer your surfsouthoz &nbsp;account to any third party; and</li>
+                                    <li>surfsouthoz reserves the right, at any time, to verify the information which
+                                        you provide to surfsouthoz as well as your compliance with the Terms.
+                                        Ifsurfsouthoz is unable to verify this then surfsouthoz reserve the right to
+                                        suspend your account.</li>
+                                    <li>you will not use any third party payment processors to accept payments for
+                                        subscriptions, or any other service, via surfsouthoz</li>
+                                </ol>
+                            </li>
+                        </ol>
+                        <h1>Acceptable Use</h1>
+                        <ol>
+                            <li>surfsouthoz requires that all subsribers respect and comply with these Terms below,
+                                at all times, when using surfsouthoz .</li>
+                            <li>You may not:<ol>
+                                    <li>use the member website other than for your own lawful and personal use in
+                                        accordance with these Terms;</li>
+                                    <li>impersonate surfsouthoz, a moderator, another User, or any other person or
+                                        entity or falsely state, suggest or otherwise misrepresent any affiliation,
+                                        endorsement, sponsorship between you and surfsouthoz and/or any other person
+                                        or entity;</li>
+                                    <li>falsify account registration information, or make unauthorized use of
+                                        another&#39;s information or content;</li>
+                                    <li>use surfsouthoz in any manner or for any purpose that is illegal or
+                                        unlawful, including engaging in any activity that violates any right of any
+                                        person or entity;</li>
+                                    <li>copy, reproduce, distribute, modify, or create derivative works from, any
+                                        portion of surfsouthoz without surfsouthoz express written permission;</li>
+                                    <li>use surfsouthoz for the purpose of exploiting, harming, or attempting to
+                                        exploit or harm minors in any way by exposing them to inappropriate content,
+                                        asking for personally identifiable information, or otherwise;</li>
+                                    <li>transmit, or procure the sending of, any advertising or promotional
+                                        material, including any &ldquo;junk mail&rdquo;, &ldquo;chain letter&rdquo;,
+                                        &ldquo;spam&rdquo;, or any other similar solicitation;</li>
+                                    <li>engage in any other conduct that restricts or inhibits anyone&rsquo;s use or
+                                        enjoyment of the Website, or which, as determined by surfsouthoz , may harm
+                                        surfsouthoz or subscribers of the member website or expose them to
+                                        liability;</li>
+                                </ol>
+                            </li>
+                            <li>You shall not create, upload, post, display, publish or distribute User Content
+                                that:<ol>
+                                    <li>is obscene, illegal, fraudulent, defamatory, libelous, hateful,
+                                        discriminatory, threatening or harassing, or in any way which incites
+                                        violence or violates any of the aforementioned prohibitions;</li>
+                                    <li>violates another&#39;s copyright, trademark, right of privacy, right of
+                                        publicity, or other property or personal right (for example, using the name,
+                                        likeness, image or other identity of another without proper consent);</li>
+                                    <li>promotes or advertises escort services;</li>
+                                    <li>promotes or advertises fireams or other weapons, drugs, or drug
+                                        paraphernalia;</li>
+                                    <li>promotes any illegal activity, or advocates, promotes, or assists any
+                                        unlawful act;</li>
+                                    <li>causes annoyance, inconvenience, or needless anxiety or is likely to upset,
+                                        embarrass, alarm, or annoy any other person;</li>
+                                    <li>involves 3rd party commercial activities or sales, such as contests,
+                                        sweepstakes and other sales promotions, barter, or advertising;</li>
+                                    <li>gives the impression that it emanates from or is endorsed by surfsouthoz or
+                                        any other person or entity, if this is not the case.</li>
+                                </ol>
+                            </li>
+                            <li>You shall not remove, erase, modify or tamper with any copyright, trademark or other
+                                proprietary rights notice that is contained in any User Content that you do not own.
+                            </li>
+                            <li>You shall not use the Website in any manner that could disable, overburden, damage,
+                                or impair the site or interfere with any other party&rsquo;s use of the Website,
+                                including their ability to engage in real time activities through the Website.</li>
+                            <li>You shall not decompile, disassemble, reverse engineer, or otherwise attempt to
+                                discover or derive the source code of surfsouthoz .</li>
+                            <li>You shall not interfere in any way with the operation of surfsouthoz or any server,
+                                network or system associated with surfsouthoz , including, without limitation:
+                                hacking, mail-bombing, flooding, overloading, or making &quot;denial of
+                                service&quot; attacks; probing, scanning or testing the vulnerability of the site or
+                                any server, network or system associated with the site; breaching or circumventing
+                                firewall, encryption, security or authentication routines; accessing information not
+                                intended for you, or accessing another user&#39;s account that you are not expressly
+                                authorized to access.</li>
+                            <li>You shall not use surfsouthoz for any unauthorized purpose, including, without
+                                limitation, for purposes of building a competitive product or service, performance
+                                or functionality, or for any other competitive purposes;</li>
+                            <li>You shall not use any automated program, tool or process (including without
+                                limitation, web crawlers, robots, bots spiders, and automated scripts) to access
+                                surfsouthoz or any server, network or system associated with surfsouthoz , or to
+                                extract, collect, harvest or gather content or information from surfsouthoz.</li>
+                            <li>You shall not make any other use of surfsouthoz that violates these Terms or any
+                                applicable law.</li>
+                            <li>Any content posted that is reported by another User or surfsouthoz , and that is
+                                deemed unacceptable by surfsouthoz, will be deleted and the User notified via email.
+                                Users who repeatedly violate surfsouthoz Acceptable Use policy may be deactivated.
+                                If surfsouthoz becomes aware that a User is underage, surfsouthoz will promptly
+                                deactivate that User&#39;s account and delete all information and content of that
+                                User from surfsouthoz . If you are a parent or legal guardian and become aware that
+                                your minor-child has registered on surfsouthoz, please immediately notify surfsouthoz
+                                at support@surfsouthoz.com.au.</li>
+                            <li>By registering an account with surfsouthoz, you represent and warrant that:<ol>
+                                    <li>you are at least 18 years of age;</li>
+                                    <li>you will fully comply with these Terms;</li>
+                                    <li>you accept full responsibility for the use of surfsouthoz on any device,
+                                        whether or not it is owned by you;</li>
+                                    <li>you accept full responsibility for any User Content created or provided by
+                                        you; and</li>
+                                    <li>your use of surfsouthoz will not violate these Terms or any applicable law.
+                                        If you are using surfsouthoz on behalf of a business or other entity, you
+                                        warrant that you are authorised to grant all the licences stipulated in or
+                                        entailed by these Terms and that you are authorised to bind the business or
+                                        other entity to these Terms.</li>
+                                </ol>
+                            </li>
+                        </ol>
+                        <h1>Disclaimer of Warranties; Limitations of Liability</h1>
+                        By using surfsouthoz, you acknowledge and agree as follows:
+                        <ol>
+                            <li>surfsouthoz and all of its services and features are provided without
+                                warranties of any kind, express or implied. To the fullest extent permitted
+                                by law, surfsouthoz disclaim any and all warranties, express or implied,
+                                with respect to surfsouthoz and all of its services and features, including,
+                                and without limitation, implied warranties of merchantability and fitness
+                                for a particular purpose. surfsouthoz does not warrant or guarantee the
+                                accuracy, usefulness, completeness or reliability of surfsouthoz, or the
+                                results of your use of the member website. surfsouthoz disclaim all
+                                liability and responsibility arising from any reliance placed on such
+                                materials by you or any other visitor to the Website, or by anyone who may
+                                be informed of any of its contents. surfsouthoz also do not warrant or
+                                guarantee that surfsouthoz
+                                and all of its services and features will be available at any particular
+                                time or location; that surfsouthoz
+                                and all of its services and features will be secure, uninterrupted, and
+                                error-free; that any defect or error will be corrected; or that surfsouthoz
+                                and all of its services and features will be free of viruses and other
+                                harmful components. You are responsible for implementing sufficient
+                                procedures and checkpoints to satisfy your particular requirements for
+                                antivirus protection and accuracy of data input and output, and for
+                                maintaining a means external to the Website for any reconstruction of any
+                                lost data. To the fullest extent provided by law, surfsouthoz will not be
+                                liable for any loss or damage caused by a distributed denial-of-service
+                                attack, viruses, or other technologically harmful material that may infect
+                                your computer equipment, computer programs, data, or other proprietary
+                                material due to your use of the Website or any services or items obtained
+                                through the Website or to your downloading of any material posted on it, or
+                                on any website linked to it. Your use of surfsouthoz
+                                and its services and features will be solely and entirely at your own risk.
+                                The foregoing does not affect any warranties that cannot be excluded or
+                                limited under applicable law;</li>
+                            <li>Surfsouthoz does not warrant or guarantee that use of the Website will be
+                                uninterrupted or error free twenty-four hours a day, seven days a week,
+                                since surfsouthoz may need to carry out maintenance of the Website from time
+                                to time. However, surfsouthoz will use its reasonable endeavours to carry
+                                out any such maintenance of the Website outside of business hours (between
+                                20:00 and 05:00 ACST) and surfsouthoz will endeavour to give reasonable
+                                notice, however this may not always be possible;</li>
+                            <li>in no event shall surfsouthoz be liable (strictly or otherwise) in contract,
+                                tort, negligence, strict liability or under any other legal or equitable
+                                principle, for any indirect, incidental, exemplary, special, punitive or
+                                consequential damages (including, and without limitation, loss of use,
+                                profits, data or information, or loss of business goodwill or opportunity)
+                                arising out of or related to your use of (or your inability to use) surfsouthoz
+                                or any of its services or features, nor shall surfsouthoz be held liable in
+                                the event your User Content is illegally distributed by another User,
+                                however where such distribution does occur please contact surfsouthoz at
+                                support@surfsouthoz.com.au and surfsouthoz will seek to prevent continuance
+                                of such distribution where surfsouthoz is reasonably able to do so.</li>
+                        </ol>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="lightbox" id="lbox"><br></div>
+    </div>
+</body>
+
+</html>

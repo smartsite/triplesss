@@ -7,13 +7,15 @@
         <meta http-equiv="expires" content="0" />
         <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
         <meta http-equiv="pragma" content="no-cache" />
-        <link href="https//fonts.googleapis.com/css2?family=Raleway&display=swap rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Raleway" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="/css/vivify.min.css" rel="stylesheet" type="text/css">
         <link href="/css/main.css" rel="stylesheet" type="text/css">
        
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script> 
-        <script type="text/javascript" src="/js/pinchzoom.js"></script>           
+        
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emoji-button@latest/dist/index.min.js"></script> 
+        <script type="text/javascript" src="/js/_pinchzoom.js"></script>   
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>       
     </head>
     <body>  
         <div class="bodywrap">     
@@ -30,6 +32,10 @@
             </div>    
             <div id="menu">
                 <div class="menuwrap">
+                    <button id="menu-reports"><i class="material-icons">photo_camera</i>Reports</button>
+                    <button id="menu-forecast"><i class="material-icons">cloud_queue</i>Forecast</button>
+                    <button id="menu-wall"><i class="material-icons">surfing</i>the Lookout</button>
+                    <button id="menu-help"><i class="material-icons">help_center</i>Help channel</button>
                     <button id="menu-profile"><i class="material-icons">face</i>Profile</button>
                     <button id="menu-feed"><i class="material-icons">insert_photo</i>Feed</button>
                     <button id="menu-user"><i class="material-icons">account_box</i>My posts</button>
@@ -75,10 +81,9 @@
                     <form id="add-bio" method="POST">
                         <textarea id="bio-comment" rows="3" cols="40"></textarea><br /><br />
                         <!-- <input type="hidden" id="feedid" name="feedid" value="0" /> -->
-                        <label class="file-upload"> &#129333;
-                            <input id="bio-image" name="image" type="file" accept="image/x-png,image/gif,image/jpeg" />   
-                        </label>                        
-                        <div id="profile-upload-filename"></div>               
+                        <label>Hint: square images work best! You might need to rotate 90&deg; as well :)</label> <br />  
+                        <input id="bio-image" name="image" type="file" accept="image/x-png,image/gif,image/jpeg" />                                                                 
+                        <div id="profile-upload-filename"></div>           
                         <button id="post-bio">Save</button>
                         <div id="profile-upload-pic">
                             <img id="temp-profile" class="hidden loading" src="/img/loading1.gif" />
@@ -114,15 +119,24 @@
                 <div id="addpost" class="add">
                     <label>Select a channel</label>
                     <select id="feed_id"></select>
-                    <p>Type something</p>
+                    <p>Type something</p> <button id="add-post-emoticon"><i class="material-icons">add_reaction</i></button>
                     <form id="add-post" method="POST">
-                    <textarea id="add-comment" rows="3" cols="36"></textarea><br /><br />
+                    <textarea id="add-comment" rows="4" cols="36"></textarea><br /><br />
                     <input type="hidden" id="userid" name="userid" value="2">
                     <input type="hidden" id="feedid" name="feedid" value="<?php //echo $feed->getId();  ?>">
-                    <label class="file-upload">&#128247;
-                        <input id="image" name="image" type="file" accept="image/x-png,image/gif,image/jpeg" />
-                    </label>    
-                    <button id="post-comment">Post</button>
+                    <label>Upload an image (optional)</label>  
+                    <div id="ul-button">Choose file</div>    
+                    <input id="image" name="image" type="file" accept="image/x-png,image/gif,image/jpeg" /> 
+                                   
+                    <button id="post-comment">Post update</button>
+                    <span class='whosees'>&nbsp;&nbsp;visibility</span>
+                    <select id="post-visibility">
+                        <option value=0>Me</options>
+                        <option value=1>Group</options>
+                        <option value=2 selected>Friends</options>
+                        <option value=3>Friends of friends</options>
+                        <option value=4>Anyone</options>
+                    </select>
                     </form>
                 </div> 
                 <div id="search" class="add">
@@ -135,14 +149,15 @@
                     <h3 id="login-heading">Message</h3>
                     <form id="add-user" method="POST">                  
                         <span id="login-prompt"><p>You can now log in: </p></span>
-                        <label>user name</label>
-                        <input type="text" id="username" name="username" value="">
+                        <label>user name (hint: NOT your email address!)</label>
+                        <input type="text" id="username" name="username" value="">                       
                         <label>password</label>
-                        <input type="password" id="password" name="password" value="">
+                        <input type="password" id="password" name="password" value=""> <button id="show-password"><i class="material-icons">visibility</i></button>
                         <br />
                         <br />
-                        <button id="log-in">Log in</button>                         
-                        <p>If you don't have an account, just <a href="/new_user.html">sign up</a>!</p>                             
+                        <button id="log-in">Log in</button><span id="resetlink">&nbsp;Help! <a href="#">What's my password?</a></span>                         
+                        <p>If you don't have an account, just <a href="/new_user.html">sign up</a>!</p>
+                        <p>Having trouble signing in? Contact us via email: <a href="mailto:support@surfsouthoz.com.au">support@surfsouthoz.com.au</a> or send us a <a href="https://www.facebook.com/vip.surfsouthoz">message on Facebook</a></p>
                     </form>               
                 </div> 
                 <div id="fail" class="add">
@@ -179,6 +194,7 @@
                 </div>  
                 <div id="tagbox" class="vivify postbox lowlight">
                     <p>Add or edit tags</p>
+                    <p>( separate with a comma, e.g. yorkes, westcape, barrels )</p> 
                     <input type="text" /><br /><br />      
                     <button id="tagpost">Save</button>
                     <button class="cancel">&#10005;</button>
@@ -192,8 +208,23 @@
                     <p>Delete this post?</p>
                     <button id="delete-yes">Yes, delete it</button>&nbsp;  <button class="cancel">No! keep it</button> 
                 </div>  
+                <div id="resetbox" class="vivify postbox lowlight">
+                    <h4>Lost password</h4>
+                    <p>If you have forgotten or lost your password, we can send you an email with a reset link.</p>
+                    <p>Just click the button below</p>                             
+                    <button id="reset-password">Reset my password</button>
+                    <button class="cancel">&#10005;</button>
+                </div>  
+                <div id="passwordsentbox" class="vivify postbox lowlight">
+                    <h4>Request sent</h4>
+                    <p>We just sent a password reset link to <span id="reset-email"></span>. Please check your email, 
+                    and once you get the message, just click or tap on the link.</p>
+                    <button id="close-reset">Close this message</button>
+                </div>
                 <div id="privacybox" class="vivify postbox lowlight">
-                    <p>Adjust who can see this post</p>
+                    <p>Adjust who can see this post<br>
+                    ( posts set to "anyone" will appear on the Lookout )</p>
+                    <br />
                     <select id="visibility">
                         <option value=0>Me</options>
                         <option value=1>Group</options>
@@ -215,12 +246,26 @@
                     <p>Hide this post from your feed ( it will come back when you reload the page )?</p>
                     <button id="hide-post">Yep!</button>
                     <button class="cancel">&#10005;</button>
-                </div>   
+                </div> 
+                <div id="issuebox" class="vivify postbox lowlight">
+                    <h3>Report a problem</h3> 
+                    <p>Please describe what went wrong!</p>
+                    <textarea id="issue-text" rows="5" cols="36"></textarea><br />  
+                    <button id="issue-post">Send to Administrator</button>
+                    <button class="cancel">&#10005;</button>                    
+                </div>              
                 <div id="feed" class="feed">
                 </div>  
                 <div id="userpage" class="feed">
                 </div>           
                 <div id="follow" class="add">
+                </div>
+                <div id="userconnect" class="add">
+                    <p>You can't see anything because you're not connected to this user.</p>
+                    <p id="user-connect-buttons"><a href="javascript:setView('follow')">Click or tap</a>  to connect.</p>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
+                    <p>&nbsp;</p>
                 </div>
                 <div id="connections" class="add">                
                     <h4>Connections</h4>
@@ -243,6 +288,15 @@
                     <h3>&nbsp;</h3>
                     <h3>&nbsp;</h3>
                 </div>
+                <div id="settings" class="add hidden">               
+                    <h3>Settings</h3>
+                </div> 
+                <div id="emoji-select" class="vivify postbox lowlight"></div>   
+                <!--
+                <div id="help-profile" class="add">
+                    <h3><i class="material-icons">help_outline</i> Help channel</h3>
+                </div>
+                -->
                 <div id="lbox" class="lightbox"></div>           
             </div>
         </div>
@@ -257,12 +311,14 @@
             let currentView = "feed";    
             let count = 10;
             let offset = 0;  
-            let triggered = false;         
+            let triggered = false;   
+            let bioButton;      
             
             window.onload = () => {                      
                        
                  // UX elements                    
                  
+                let emojis = [];
                 const intro = document.getElementById("intro");  
                 const username = document.getElementById("username");
                 const password = document.getElementById("password");  
@@ -273,7 +329,6 @@
                 const postButton = document.getElementById("post-comment");
                 const post = document.querySelectorAll('.post');
                 const profile = document.getElementById("profile");  
-                const bioButton = document.getElementById('post-bio'); 
                 const nouser = document.getElementById("nouser"); 
                 const addpost = document.getElementById("addpost");
                 const feedId = document.getElementById('feed_id');   
@@ -297,12 +352,36 @@
                 const hidePostButton = document.getElementById("hide-post");
                 const profileUpload = document.getElementById("bio-image");
                 const tempProfileUpload = document.getElementById("temp-profile");
+                const userAvatar = document.getElementById("avatar");
+                const bugReportButton = document.getElementById("issue-post");
+
+                const emojiSelect = document.getElementById("emoji-select"); 
 
                 const profileUploadFilename = document.getElementById("profile-upload-filename");
                 const profileUploadPic = document.getElementById("profile-upload-pic");
-                                           
+
+                const resetLink = document.querySelectorAll('#resetlink a')[0];
+                const resetPasswordButton = document.getElementById("reset-password");
+                const closeResetButton = document.getElementById('close-reset');
+                const resetSentBox = document.getElementById('passwordsentbox');
+                const showPasswordLink = document.getElementById('show-password');   
+                const setPrivacyButton = document.getElementById('privacypost');   
+                
+
+                bioButton = document.getElementById('post-bio');            
+                        
                 lightbox = document.getElementById("lbox");
-                user_id = getCookie('userID'); 
+                user_id = getCookie('userID');                
+
+                /*
+                range((128567 - 128512), 128512).map((e) => {
+                    emojis.push('&#' + e + ';');
+                    const span = document.createElement('span');
+                    span.id = "em_" + e;
+                    span.innerHTML =  '&#' + e + ';'
+                    emojiSelect.appendChild(span);
+                });
+                */
 
                 showBox(false, 'intro');
                 showBox(false, 'keycheck');
@@ -313,21 +392,51 @@
                 showBox(false, 'feed'); 
                 showBox(false, 'follow'); 
                 showBox(false, 'success');   
-                showBox(false, 'connections');              
+                showBox(false, 'connections');   
+                      
+                showPasswordLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if(password.classList.contains('pwshown')) {
+                        this.classList.remove('active');
+                        password.setAttribute('type', 'password');
+                        password.classList.add('fadeOut');
+                        password.classList.remove('fadeIn');
+                        password.classList.remove('pwshown');
+                    } else {
+                        this.classList.add('active');
+                        password.setAttribute('type', 'text');
+                        password.classList.add('fadeIn');
+                        password.classList.remove('fadeOut');
+                        password.classList.add('pwshown');
+                    }                   
+
+                })       
+
+
+
+
+
+                let addCommentBox = document.getElementById('add-comment');
+                let picker = new EmojiButton ({ position: 'bottom'});
+                let emojiButton = document.getElementById('add-post-emoticon');
+
+                picker.on('emoji', function(emoji) {
+                    addCommentBox.value += emoji;
+                })
+
+                emojiButton.addEventListener('click', function() {
+                    picker.pickerVisible ? picker.hidePicker() : picker.showPicker(addCommentBox);
+                })
+
+                
+                           
                
-                
-                
-           
-                
-                /*    
-                isloggedin(function(d) {
-                        
-                    });
-                */    
+                addHandler(loginButton, 'click', function(e, el){
+                    password.setAttribute('type', 'password');
+                    dologin()
+                });
 
-                // Event handlers                
-
-                addHandler(loginButton, 'click', function(e, el){dologin()});
+                addHandler(resetPasswordButton, 'click', function(e, el){resetPassword()});
                 
                 //addHandler(logoutButton, 'click', function(e, el){dologout()});
                 
@@ -344,6 +453,16 @@
                         menu.classList.add('show'); 
                     }
                 });  
+
+                addHandler(closeResetButton, 'click', function(e, el){
+                    resetSentBox.classList.add('lowlight');
+                    showBox(true, 'keycheck');
+                    lightboxshow(false);
+                });
+
+                userAvatar.addEventListener('click', function(e) {
+                    setView('profile');
+                })
                 
                 profileUpload.addEventListener('change', function(e) {
                     //console.log(this.files[0]);
@@ -389,6 +508,9 @@
                         lightboxshow(false);
                         setScrollPos();
                         hideAllMenus();
+                        if(el.parentElement.id == "resetbox") {
+                            showBox(true, 'keycheck');
+                        }
                         el.parentElement.classList.add('lowlight');
                     });
                 });
@@ -411,16 +533,43 @@
                 addHandler(tagPostButton, 'click', function(e, el){
                     setScrollPos(); 
                     editTags(el);       
+                });   
+
+                addHandler(setPrivacyButton,'click', function(e, el){
+                    setScrollPos(); 
+                    console.log(el);
+
+                    const selectVis = document.getElementById('visibility');
+                    
+                    const post_id = el.parentElement.getAttribute('data-post_id');
+                    const user_id = getCookie('userID');
+                 
+                    let is_admin = false;
+                    const data = {};
+
+                    if(user_id == 1) { // special powers, man!
+                        is_admin = true;
+                    }
+
+                    data.post_id = post_id;                   
+                    data.level = selectVis.value;
+                    data.user_id = user_id;
+                    data.is_admin = is_admin;
+                    document.documentElement.classList.add('lb');                     
+                    
+                    setPostVisibility(data);               
                 });                 
                 
                 addHandler(searchButton, 'click', function(e, el){doSearch()});
+
+                addHandler(bugReportButton, 'click', function(e, el){sendBugReport(el)});
 
                 addHandler(sendReportButton, 'click', function(e, el){sendReport(el)});
                    
                 feed_id.addEventListener('change', function(e) {
                     let fid = this.value;                  
                     setCookie('feed_id', fid, 1); 
-                   feed(fid);
+                    feed(fid, offset, count);
                 });
 
                
@@ -442,12 +591,43 @@
                                 likecount.innerHTML = likes;
                             }, 1000)
                         }
-
                         if(el.classList.contains('comment')) { 
 
                         }                            
                     });
-                });                 
+                });   
+
+                username.addEventListener('keyup', function(e) {
+                    if(this.value != '') {
+                        this.classList.remove('field_error');
+                    }
+                })
+
+                resetLink.addEventListener('click', function() {
+                    const resetBox = document.getElementById('resetbox'); 
+                    if(username.value != '') {
+                        const data = {};
+                        data.username = username.value;
+                        fetch('Triplesss/api/checkuser', {
+                                method: "POST",
+                                body: JSON.stringify(data)                           
+                            }
+                        ).then(function(response) {                  
+                            response.json().then(function(d){ 
+                                if(d === true) {
+                                    hideBoxes();
+                                    resetBox.classList.remove('lowlight');
+                                    lightboxshow(true);
+                                } else {
+                                    username.classList.add('field_error');
+                                }
+                            })
+                        });        
+                      
+                    } else {
+                        username.classList.add('field_error');
+                    }                    
+                })              
                 
           
                 addHandler(connectButton, 'click', function(e, el){ doConnect('request'); });
@@ -472,12 +652,12 @@
                                                           
                     if((html.scrollHeight -  toppos) < 950 && !triggered) {
                         triggered = true;
-                        
+                                               
                         window.setTimeout(function(e) {
                             lazyLoad(currentView);
                         }, 500);                      
                     }        
-                })
+                })              
 
             }
 

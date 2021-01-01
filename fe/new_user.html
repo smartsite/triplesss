@@ -1,143 +1,81 @@
 <html>
     <head>
-        <title>Create user test</title>
+        <title>New user</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="https//fonts.googleapis.com/css2?family=Raleway&display=swap rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Raleway" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="css/vivify.min.css" rel="stylesheet" type="text/css">
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>       
-
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>      
+        <link href="/css/main.css" rel="stylesheet" type="text/css">
         <style>
-            
-            html {
-                scroll-behavior: smooth;
-            }
-
-            body{
-                font-family: 'Raleway', sans-serif;              
-            }
-
-            
-            .add, .details {
-                padding:5px;
-                background-color:#e7e7e7;
-            }
-             
-            
-            .lightbox {
-                position:fixed;
-                width:100%;
+            .wrap {
                 height:100%;
-                left:0;
-                right:0;
-                top:0;
-                bottom:0;
-                background-color: #000;
-                opacity: 0.7;
-                z-index:1;
-                display:none;
             }
 
-            .lightbox.active{
-                z-index: 1;
-                display:block;
+            .act {
+                position: relative;
+                margin-left: 160px;
+                width: 170px;
+                margin-top: -35px;
             }
 
-            
-
-
-            .red {
-                color:rgb(200,30,30);
+            #available {
+                margin-left: 140px;              
+                position: relative;
+                top: -57px;
             }
-
-            .lime {
-                color:rgb(20,180,20);
-            }
-
-            #add-user input, #add-user select {
-                padding:3px;
-            }
-
-            #add-user label {
-                width:120px;
-                display:block;
-                margin-top:5px;
-            }
-
-            .hidden {
-                display:none;
-            }
-
-            .unhidden {
-                display:block;
-            }
-
-            .field_error {
-                background:lightpink;
-                border:1px solid red;
-            }
-
-
-            @keyframes redFadeOut {from { color:red; opacity: 1 }to  { color: white; opacity: 0}}
-            @keyframes fadeIn {from { opacity: 0 }to  { opacity: 1}}
-            @keyframes fadeOut {from { opacity: 1 }to  { opacity: 0}}
-
-            .like-button-click { animation: redFadeOut 0.75s; }
-
-            .fadeIn {animation: fadeIn 0.5s; }
-            .fadeOut {animation: fadeOut 0.5s; }     
-  
         </style>
     </head>
     <body>
-        <h2>New user test</h2>
+        <div class="toprow">
+            <div id="head-wave"><img src="/img/head_wave.svg" /></div>
+            <div class="reg-header">
+                <img src="/img/bw_logo1.png" />
+            </div>           
+            <div class="clear"></div>            
+        </div>    
+       
         <div class="wrap">
             <div id="namecheck" class="add">
                 <h3>Enter a user name</h3>
-                <form id="add-user" method="POST">                  
-                  
+                <p>( no spaces, characters, or underscores, <b>at least</b> 5 characters )</p>
+                <p><b>Examples</b></p>
+                <span class="greenTick"> &#10004;</span> richie <br />                  
+                <span class="greenTick"> &#10004;</span> Fred99 <br />   
+                <span class="greenTick"> &#10004;</span> RegGrundy <br />    
+                <span class="redCross"> &#10006;</span> me  <br />    
+                <span class="redCross"> &#10006;</span> Jeff St.John  <br />
+                <span class="redCross"> &#10006;</span> julialouise-dreyfuss<br /> 
+                <span class="redCross"> &#10006;</span> 101101001<br />  
+                <span class="redCross"> &#10006;</span> =kit^^ty=<br />  
+                <br />  
+
+                <form id="add-user" method="POST">    
                    <input type="text" id="username" name="username" value="">
                    <input type="hidden" id="userid" name="userid" value="1">
                     <br />
                     <br />
-                   <button id="post-user">Check availability</button>
+                   <button id="post-user">Check availability</button><div class="act">  &#9664; type a valid<br />&nbsp;&nbsp;&nbsp; username to &nbsp;&nbsp;&nbsp;&nbsp;activate</div>
                    <span id="available"></span>
                 </form>
             </div>
 
             <div id="details" class="details hidden">
                 <h3>Add details</h3>
-                <form id="add-user" method="POST">                  
-                    <label>First name</label>
-                    <input type="text" id="firstname" name="firstname" value=""><br />
-                    <label>Last name</label>
-                    <input type="text" id="lastname" name="lastname" value=""><br />
-                    <label>email</label>
-                    <input type="email" id="email" name="email" value=""><br />
-                    <label>address</label>
-                    <input type="text" id="address1" name="address1" value=""><br />
-                    <label></label>
-                    <input type="text" id="address2" name="address2" value=""><br />
-                    <label>State</label>
-                    <select id="state">
-                        <option value="SA">SA</option>
-                        <option value="SA">VIC</option>
-                        <option value="SA">NSW</option>
-                        <option value="SA">QLD</option>
-                        <option value="SA">WA</option>
-                        <option value="SA">NT</option>
-                        <option value="SA">TAS</option>
-                    </select>
-                    <label>Suburb</label>
-                    <select id="suburb">
-                    </select>    
-                    <input type="hidden" id="postcode" name="postcode" value=""><br />
-                    <label>Mobile Phone</label>
-                    <input type="phone" id="mobile" name="mobile" value=""><br />
-                    <label>Password</label>
-                    <input type="password" id="password1" name="password1" value=""><br />
-                    <label>Password (again)</label>
-                    <input type="password" id="password2" name="password2" value=""><br />                 
+                <p>( none of these details can be seen by other users - only your username is visible )</p>
+                <form id="add-detail" method="POST">                  
+                   
+                    <input type="text" id="firstname" name="firstname" value="" placeholder="First name"><br />
+                  
+                    <input type="text" id="lastname" name="lastname" value="" placeholder="Last name"><br />
+                  
+                    <input type="email" id="email" name="email" value="" placeholder="email"><br />                                                       
+                  
+                    <p>( min length 8 characters, at least one uppercase letter, a character, and a number e.g. bLUe234! )</p>
+                    <input type="password" id="password1" name="password1" value="" placeholder="password"><br />
+                    <br />
+                    
+                    <input type="password" id="password2" name="password2" value="" placeholder="password (again)"><br />                 
                     <br />
                    <button id="register-user">Register</button>
                    <span id="available"></span>
@@ -160,13 +98,55 @@
             </div>    
            
             <div id="lbox" class="lightbox"></div>           
-        </div>
+        </div>       
 
         <script language="Javascript">
 
             let lightbox;
 
-            let showBox = (show, id) => {
+            const setCookie = (name, value, exdays) => {
+                var exdate = new Date();
+                exdate.setDate(exdate.getDate() + exdays);
+                var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString());
+                document.cookie = name + "=" + c_value;
+            }
+
+            const getCookie = (name) => {
+                var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+                if (match) return match[2];
+            }
+
+            const resendLink = () => {              
+                
+                const user_id = getCookie('userID');
+                const confirmSpan = document.getElementById('confirm-email');
+                const from = "admin@surfsouthoz.com.au";
+                const reply = "register@surfsouthoz.com.au";
+
+                fetch('Triplesss/api/register_link?user_id=' + user_id + '&from_email=' + from + '&reply_email=' + reply, {
+                            method: "GET"
+                                                
+                    }
+                ).then(function(response) {                  
+                    response.json().then(function(d){
+                        console.log(d);
+                        if(d.hasOwnProperty('email')) {
+                           
+                            if(d.email != '') {
+                                confirmSpan.innerText = d.email;
+                                showBox(true, 'confirm');
+                                showBox(false, 'fail');
+                            } else {
+                                // something went wrong :(    
+                            }
+                        } else {
+                            // something went wrong :(    
+                        }                                                       
+                    })                  
+                });
+            } 
+
+            const showBox = (show, id) => {
                 if(show == true) {
                     document.getElementById(id).classList.remove('hidden');
                     document.getElementById(id).classList.add('fadeIn');
@@ -177,10 +157,9 @@
                     document.getElementById(id).classList.add('hidden');
                     document.getElementById(id).classList.remove('fadeIn');
                 }
-            }
-            
+            }            
 
-            let fieldError = (t, status) => {
+            const fieldError = (t, status) => {
                 t.classList.add('field_error'); 
                 if(status == true) {
                     t.classList.remove('field_error');                     
@@ -188,7 +167,7 @@
                 return status;
             }
             
-            let usernameStatus = (avail) => {
+            const usernameStatus = (avail) => {
                 var availableBox = document.getElementById("available");
                
                 if(avail == true) {
@@ -201,33 +180,9 @@
                     availableBox.style = "color: transparent; text-shadow:0 0 0 rgb(20,200,20)";
                     showBox(true, 'details');
                 }
-            }
+            }         
 
-            let getSuburbs = (username) => {              
-              let data = {};
-              let suburb_select = document.getElementById('suburb');
-              let state = document.getElementById('state').value;
-              fetch('Triplesss/api/au_suburbs.php?state=' + state, {
-                    method: "GET",                     
-                }
-              ).then(function(response) {
-                response.json().then(function(d){
-                      
-                        d.map(function(s) {
-                           
-                            let suburb =  s.suburb;
-                            let postcode = s.postcode;
-                            let option = document.createElement('option');
-                            option.text = suburb + " (" + postcode + ")";
-                            option.value = suburb + "|" + postcode;
-                            suburb_select.add(option);
-                        })                                 
-                    })
-                });
-            };  
-
-
-            let checkUser = (username) => {              
+            const checkUser = (username) => {              
               let data = {};
               data.username = username;
               fetch('Triplesss/api/checkuser', {
@@ -241,38 +196,38 @@
               });             
             }            
 
-            let checkNameFieldLength = (t, length) => {
+            const checkNameFieldLength = (t, length) => {
                 return t.value.length > length;	
-            }
-
-            let checkNames = (t) => {                
+            }          
+     
+            const checkNames = (t) => {                
                 return fieldError(t, t.value.length > 2 && isAlpha(t.value));                
             }
 
-            let checkPostcode = (t) => {               
+            const checkPostcode = (t) => {               
                 return fieldError(t, t.value.length == 4);                
             }
 
-            let checkPassword = (t) => {
+            const checkPassword = (t) => {
                 const mediumRegex = new RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})");
                 const strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
                 return fieldError(t, strongRegex.test(t.value));
             }
 
-            let checkEmail = (t) => {
+            const checkEmail = (t) => {
                 const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 return fieldError(t, re.test(t.value));
             }
 
-            let checkAddress = (t) => {                
+            const checkAddress = (t) => {                
                 return fieldError(t, checkNameFieldLength(t,3));
             }
 
-            let checkPhone = (t) => {                
+            const checkPhone = (t) => {                
                 return fieldError(t,  !isNaN(t.value) && t.value.length === 10 );
             }          
             
-            let addUser = () => {
+            const addUser = () => {
               
                 let conf = document.getElementById("confirm-email");
                 let user_id = document.getElementById("userid");
@@ -282,13 +237,12 @@
                 data.first_name = document.getElementById('firstname').value;
                 data.last_name = document.getElementById('lastname').value;
                 data.email = document.getElementById('email').value;
-                data.address_1 = document.getElementById('address1').value;
-                data.address_2 = document.getElementById('address2').value;
-                data.city = document.getElementById('suburb').value;
-                data.state = document.getElementById('state').value;
-                data.postcode = document.getElementById('postcode').value;
-                data.phone = document.getElementById('mobile').value;
+                data.password = document.getElementById('password1').value;
+                data.hash = true;
+                data.from_email = 'webmaster@surfsouthoz.com';
+                data.reply_email = 'register@surfsouthoz.com';
                 conf.innerText =  data.email;
+
 
                 fetch('Triplesss/api/register', {
                             method: "POST",
@@ -302,6 +256,7 @@
                             var userid = d.userid * 1;
                             if(userid > 0) {
                                 user_id.value = userid;
+                                setCookie('userID', userid, 1); // we can use this to re-send verification if we need to!
                                 showBox(false, 'details');
                                 showBox(false, 'namecheck');
                                 showBox(true, 'confirm');
@@ -316,7 +271,7 @@
                 });
             } 
 
-            let lowlightelements = (s, el) => {                      
+            const lowlightelements = (s, el) => {                      
                 el.forEach(function(el) { 
                     if(s === true) {
                         el.classList.add('lowlight');
@@ -327,7 +282,7 @@
             }
 
             
-            let lightboxshow = (s) => {
+            const lightboxshow = (s) => {
                 if(s === true) {
                     lightbox.classList.add('active');                   
                 } else {
@@ -336,7 +291,7 @@
                 lowlightelements(s, document.querySelectorAll('.post'));
             } 
 
-            let isAlpha = (text) => {
+            const isAlpha = (text) => {
                 if(text.match(/^[0-9a-zA-Z]+$/)) {
                     return true;
                 } else {                   
@@ -344,15 +299,15 @@
                 } 
             }
             
-            let validusername = (text) => {
-                if(text.length > 4 && text.length < 33 && isAlpha(text)) {
+            const validusername = (text) => {
+                if(text.length > 4 && text.length < 33 && isAlpha(text) && text.indexOf('surfsouth') == -1 && text.indexOf('fuck') == -1 && text.indexOf('cunt') == -1) {
                     return true;
                 } else {
                     return false;
                 }
             }
 
-            let checkFields = () => {
+            const checkFields = () => {
                 var textFields = document.querySelectorAll("#details input");
                 var allgood = 0;
              
@@ -384,62 +339,57 @@
                         
                         case "lastname":
                             allgood+= 1 & checkNames(f);				
-                        break;
-
-                        case "mobile":
-                            allgood+= 1 & checkPhone(f);				
-                        break;
-                        
-                        case "address1":
-                            allgood+= 1 & checkAddress(f);				
-                        break;
-
-                        case "address2":
-                            allgood+= 1 & checkAddress(f);				
-                        break;                                                                      
+                        break;                                                    
                         
                     }                    
                 }
                 
-                if(allgood == 9) {
+                if(allgood == 6) {
                     addUser();
                 }
-            }                             
-            
+            }       
+                 
+          
             
             window.onload = () => {                
            
                 const postButton = document.getElementById("post-user");
                 const registerButton = document.getElementById("register-user");
                 const username = document.getElementById("username");
+                const resendButton = document.getElementById("resend");
+                const tickcross = document.getElementById("available");
 
-                postButton.setAttribute('disabled', true);
-                //lightbox = document.getElementById("lbox");
-                //lowlightelements(true, document.querySelectorAll('.tabgox'));            
+                postButton.setAttribute('disabled', true);                       
                
                 username.addEventListener('keyup', function(e) {
                     let text = e.target.value;
+                    tickcross.innerHTML = '';
+
                     if(validusername(text)) {                       
                         postButton.removeAttribute('disabled');
                     } else {                  
                         postButton.setAttribute('disabled', false);
                     }                  
                 })
-
-                getSuburbs();
-
+              
                 postButton.addEventListener('click', function(e) {
                     e.preventDefault();
-                    checkUser(username.value);
-                    //addPost();
+                    checkUser(username.value);                   
                 })
 
                 registerButton.addEventListener('click', function(e) {
                     e.preventDefault();
                     checkFields();                    
                 })
-                
-            }
+
+                resendButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    resendLink();                   
+                })
+
+            }  
+
+           
 
         </script>
     </body>

@@ -1,361 +1,570 @@
 <html>
-    <head>
-        <title>Confirm registration test</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="https//fonts.googleapis.com/css2?family=Raleway&display=swap rel="stylesheet">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <link href="css/vivify.min.css" rel="stylesheet" type="text/css">
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>       
 
-        <style>
-            
-            html {
-                scroll-behavior: smooth;
+<head>
+
+    <title>Confirm registration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/vivify.min.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+        }
+
+        .add,
+        .details {
+            padding: 5px;
+            background-color: #e7e7e7;
+        }
+
+        .lightbox {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background-color: #000;
+            opacity: 0.7;
+            z-index: 1;
+            display: none;
+        }
+
+        .lightbox.active {
+            z-index: 1;
+            display: block;
+        }
+
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            /* Preferred icon size */
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+            /* Support for all WebKit browsers. */
+            -webkit-font-smoothing: antialiased;
+            /* Support for Safari and Chrome. */
+            text-rendering: optimizeLegibility;
+            /* Support for Firefox. */
+            -moz-osx-font-smoothing: grayscale;
+            /* Support for IE. */
+            font-feature-settings: 'liga';
+        }
+
+        .red {
+            color: rgb(200, 30, 30);
+        }
+
+        .lime {
+            color: rgb(20, 180, 20);
+        }
+
+        #add-user input,
+        #add-user select {
+            padding: 3px;
+        }
+
+        #add-user label {
+            width: 120px;
+            display: block;
+            margin-top: 5px;
+        }
+
+        input[type="text"] {
+            font-size: 18px;
+            border-radius: 7px;
+            border: 1px solid #999;
+            padding: 5px;
+        }
+
+        div#fail button {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-top: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .unhidden {
+            display: block;
+        }
+
+        .field_error {
+            background: lightpink;
+            border: 1px solid red;
+        }
+
+        .wrap {
+            height: 100%;
+        }
+
+        .wrap a {
+            color: #666;
+            text-decoration: none;
+        }
+
+        .vip-pay {
+            border: 3px solid #6699cc;
+            border-radius: 10px;
+            width: 220px;
+            height: 120px;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 10px;
+            position: relative;
+            margin-left: -120px;
+            left: 50%;
+            background-color: aliceblue;
+        }
+
+        .vip-pay:nth-of-type(2) {
+            background-color: rgb(164, 234, 247);
+        }
+
+        #subscribe {
+            text-align: center;
+        }
+
+        #subscribe a {
+            text-decoration: underline;
+        }
+
+        .vip-pay h5 {
+            padding: 0;
+            margin: 0;
+            margin-top: 10px;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            color: #225580;
+        }
+
+        .vip-pay h3 {
+            font-size: 22px;
+            padding: 0;
+            margin: 0;
+            color: #225580;
+        }
+
+        .vip-pay button {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #666;
+        }
+
+        .reg-header {
+            position: absolute;
+            z-index: 9;
+            top: 10px;
+            left: 50%;
+            margin-left: -100px;
+        }
+
+        #subscribe-pay.loading {
+            width: 70px;
+            height: 40px;
+            font-size: 0.01px;
+            background-image: url('/img/button-loader.gif');
+            background-repeat: no-repeat;
+            background-position: 50% 50%;
+        }
+
+        @keyframes redFadeOut {
+            from {
+                color: red;
+                opacity: 1
             }
 
-            body{
-                font-family: 'Raleway', sans-serif;             
+            to {
+                color: white;
+                opacity: 0
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0
             }
 
-            
-            .add, .details {
-                padding:5px;
-                background-color:#e7e7e7;
+            to {
+                opacity: 1
             }
-             
-            
-            .lightbox {
-                position:fixed;
-                width:100%;
-                height:100%;
-                left:0;
-                right:0;
-                top:0;
-                bottom:0;
-                background-color: #000;
-                opacity: 0.7;
-                z-index:1;
-                display:none;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1
             }
 
-            .lightbox.active{
-                z-index: 1;
-                display:block;
+            to {
+                opacity: 0
             }
+        }
 
-            
-            .material-icons {
-                font-family: 'Material Icons';
-                font-weight: normal;
-                font-style: normal;
-                font-size: 24px;  /* Preferred icon size */
-                display: inline-block;
-                line-height: 1;
-                text-transform: none;
-                letter-spacing: normal;
-                word-wrap: normal;
-                white-space: nowrap;
-                direction: ltr;
+        .like-button-click {
+            animation: redFadeOut 0.75s;
+        }
 
-                /* Support for all WebKit browsers. */
-                -webkit-font-smoothing: antialiased;
-                /* Support for Safari and Chrome. */
-                text-rendering: optimizeLegibility;
+        .fadeIn {
+            animation: fadeIn 0.5s;
+        }
 
-                /* Support for Firefox. */
-                -moz-osx-font-smoothing: grayscale;
+        .fadeOut {
+            animation: fadeOut 0.5s;
+        }
+    </style>
 
-                /* Support for IE. */
-                font-feature-settings: 'liga';
-            }
-
-            .red {
-                color:rgb(200,30,30);
-            }
-
-            .lime {
-                color:rgb(20,180,20);
-            }
-
-            #add-user input, #add-user select {
-                padding:3px;
-            }
-
-            #add-user label {
-                width:120px;
-                display:block;
-                margin-top:5px;
-            }
-
-            input[type="text"]{
-                font-size: 18px;
-                border-radius: 7px;
-                border:1px solid #999;
-                padding:5px; 
-            }   
-            
-            div#fail button {
-                padding:10px;
-                border-radius:5px;
-                border:1px solid #ccc;
-                margin-top:5px;
-            }
-
-            .hidden {
-                display:none;
-            }
-
-            .unhidden {
-                display:block;
-            }
-
-            .field_error {
-                background:lightpink;
-                border:1px solid red;
-            }
-
-            .wrap {
-                height:100%;
-            }
-
-            .wrap a {
-                color:#666;
-                text-decoration: none;
-            }
-
-
-            @keyframes redFadeOut {from { color:red; opacity: 1 }to  { color: white; opacity: 0}}
-            @keyframes fadeIn {from { opacity: 0 }to  { opacity: 1}}
-            @keyframes fadeOut {from { opacity: 1 }to  { opacity: 0}}
-
-            .like-button-click { animation: redFadeOut 0.75s; }
-
-            .fadeIn {animation: fadeIn 0.5s; }
-            .fadeOut {animation: fadeOut 0.5s; }
- 
-        </style>
-        <link href="/css/user.css" rel="stylesheet" type="text/css">
-    </head>
-    <body>
-        <div class="toprow">
-            <div id="head-wave"><img src="img/head_wave.svg" /></div>
-            <h3>               
-                <span id="avatar">
-                    <img src="img/profile.png" />
-                </span>
-                <span id="uname"></span></h3>           
-            <div class="clear"></div>            
-        </div>     
-        <div class="wrap">
-            <div id="keycheck" class="add">
-                <h3>Registration confirmed</h3>
-                <form id="add-user" method="POST">                  
-                    <p>You can now log in: </p>
-                    <label>user name</label>
-                    <input type="text" id="username" name="username" value="">
-                    <input type="hidden" id="userid" name="userid" value="1">
-                    <label>password</label>
-                    <input type="password" id="password" name="password" value="">
-                    <br />
-                    <br />
-                   <button id="log-in">Log in</button>                  
-                </form>
-            </div> 
-            <div id="fail" class="add">
-                <h3>Verification failed</h3>  
-                <p>We could not verify your registration. Please check you email and make sure the 
-                    link is correct. </p>
-                <p>If that fails, you can try sending the verification link again.</p> 
-                <input type="text" id="regusername" name="regusername" value="" placeholder="user name"><br />     
-                <button id="send-link">send link</button>    
-
-            </div>  
-            <div id="confirm" class="add">
-                <h3>Verification link sent</h3>  
-                <p>An email has been sent to <span id="confirm-email"></span>, 
-                    and it should arrive within the next 5 minutes. Just tap or click on the link in the email 
-                    to confirm your registration.</p>
-                <p>Didn't get the email? Try the following:</p>
-                <ul>
-                    <li>Check your spam / junk mail folder</li>
-                    <li>Make sure you have waited 5 minutes!</li>
-                    <li>Make sure you are checking the email address shown above</li>
-                    <li>Try and <a id="resend" href="">re-send</a> the registration email</li>                     
-                </ul>     
-                <p>If you still have no luck, <a href="mailto:registerhelp@surfsouthoz.com">contact us</a> and we'll help!</p>
-            </div>  
-            <div id="success" class="add">
-                <h3>Welcome, <span id="new_uname"></span>.</h3>
-                <p>You now have full access to the app!</p>
-                <p>Now's a great time to upload an image for your avatar, add some bio information, heck... maybe even a few tags!</p>
-                <p><a href="/index.html?view=profile">Click here</a> to go to your profile.</p>
-            </div>   
-            <div id="lbox" class="lightbox"></div>           
+    <link href="/css/user.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div class="toprow">
+        <div id="head-wave"><img src="img/head_wave.svg" /></div>
+        <div class="reg-header">
+           <img src="img/bw_logo1.png" />
         </div>
+        <div class="clear"></div>
+     </div>
+     <div class="wrap">
+        <div id="keycheck" class="add hidden">
+           <h3>Registration confirmed</h3>
+           <form id="add-user" method="POST">
+              <p>You can now log in: </p>
+              <label>user name</label>
+              <input type="text" id="username" name="username" value="">
+              <input type="hidden" id="userid" name="userid" value="1">
+              <label>password</label>
+              <input type="password" id="password" name="password" value="">
+              <br />
+              <br />
+              <button id="log-in">Log in</button>
+           </form>
+        </div>
+        <div id="subscribe" class="add">
+           <h3>Registration confirmed</h3>
+           <form id="subscribe-user" method="POST">
+              <p>You're almost a VIP!</p>
+              <p>All you need to do now is pay for your first month to secure your spot.
+                 You then remain a VIP as long as you are a paying subscriber.
+              </p>
+              <p>One last thing - make sure you read and understand our <a href="terms">terms and conditions</a>.</p>
+              <p>Pick $5.50 for monthly billing, or the discounted annual price of $49.99</p>
+              <div class="vip-pay">
+                 <h5>surfsouthoz VIP subscription</h5>
+                 <h3>AUD$5.50 / month</h3>
+                 <button id="subscribe-pay-month">pay now</button>
+              </div>
+              <div class="vip-pay">
+                <h5>surfsouthoz VIP subscription</h5>
+                <h3>AUD$49.99 / year</h3>
+                <button id="subscribe-pay-year">pay now</button>
+             </div>
+           </form>
+        </div>
+        <div id="fail" class="add hidden">
+           <h3>Verification failed</h3>
+           <p>We could not verify your registration. Please check you email and make sure the
+              link is correct. 
+           </p>
+           <p>If that fails, you can try sending the verification link again.</p>
+           <input type="text" id="regusername" name="regusername" value="" placeholder="user name"><br />
+           <button id="send-link">send link</button>
+        </div>
+        <div id="confirm" class="add hidden">
+           <h3>Verification link sent</h3>
+           <p>An email has been sent to <span id="confirm-email"></span>,
+              and it should arrive within the next 5 minutes. Just tap or click on the link in the email
+              to confirm your registration.
+           </p>
+           <p>Didn't get the email? Try the following:</p>
+           <ul>
+              <li>Check your spam / junk mail folder</li>
+              <li>Make sure you have waited 5 minutes!</li>
+              <li>Make sure you are checking the email address shown above</li>
+              <li>Try and <a id="resend" href="">re-send</a> the registration email</li>
+           </ul>
+           <p>If you still have no luck, <a href="mailto:registerhelp@surfsouthoz.com">contact us</a> and we'll help!
+           </p>
+        </div>
+        <div id="success" class="add hidden">
+           <h3>Welcome, <span id="new_uname"></span>.</h3>
+           <p>You now have full access to the app!</p>
+           <p>Now's a great time to upload an image for your avatar, add some bio information, heck... maybe even a few
+              tags!
+           </p>
+           <p><a href="/index.html?view=profile">Click here</a> to go to your profile.</p>
+        </div>
+        <div id="lbox" class="lightbox"></div>
+     </div>
+     <script src="https://js.stripe.com/v3/"></script>
+     <script language="Javascript">
 
-        <script language="Javascript">
+    let lightbox;
 
-            let lightbox;
+    const getCookie = (name) => {
+        var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        if (match) return match[2];
+    }
 
-            const getCookie = (name) => {
-                var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-                if (match) return match[2];
-            }
+    let showBox = (show, id) => {
+        if (show == true) {
+            document.getElementById(id).classList.remove('hidden');
+            document.getElementById(id).classList.add('fadeIn');
+            window.setTimeout(function () {
+                document.getElementById(id).classList.remove('fadeIn');
+            }, 1000)
 
-            let showBox = (show, id) => {
-                if(show == true) {
-                    document.getElementById(id).classList.remove('hidden');
-                    document.getElementById(id).classList.add('fadeIn');
-                    window.setTimeout(function() {
-                        document.getElementById(id).classList.remove('fadeIn');
-                    }, 1000)
-                } else {
-                    document.getElementById(id).classList.add('hidden');
-                    document.getElementById(id).classList.remove('fadeIn');
-                }
-            }
-                        
-
-
-            let verify = () => {              
-                const urlParams = new URLSearchParams( window.location.search);
-                let key = urlParams.getAll('key');
-                let username = document.getElementById('username');
-                if(key != '') {
-                    fetch('Triplesss/api/verify.php?key=' + key, {
-                        method: "GET"                                              
-                        }
-                    ).then(function(response) {                  
-                        response.json().then(function(d) {
-                           
-                            if(d.hasOwnProperty('username')) {
-                                username.value = d.username;
-                                showBox(true, 'keycheck');
-                                showBox(false, 'fail');
-                            } else if(d.hasOwnProperty('error')) {
-                                showBox(false, 'keycheck');
-                                showBox(false, 'confirm');
-                                showBox(true, 'fail');
-                            }                                  
-                        })
-                    });  
-                } else {
-                    showBox(false, 'keycheck');
-                    showBox(false, 'confirm');
-                    showBox(true, 'fail');
-                }
-              
-                           
-            }            
-
-          
-            
-            
-            let lowlightelements = (s, el) => {                      
-                el.forEach(function(el) { 
-                    if(s === true) {
-                        el.classList.add('lowlight');
-                    } else {
-                        el.classList.remove('lowlight');
-                    }    
-                });   
-            }
-
-            
-            let lightboxshow = (s) => {
-                if(s === true) {
-                    lightbox.classList.add('active');                   
-                } else {
-                    lightbox.classList.remove('active');
-                }
-                lowlightelements(s, document.querySelectorAll('.post'));
-            } 
-            
-            let dologin = () => {
-                let data = {};
-
-                const username = document.getElementById('username');
-                const password = document.getElementById('password');
-                data.username = username.value;
-                data.password = password.value;
-
-                fetch('Triplesss/api/login.php', {
-                            method: "POST",
-                            body: JSON.stringify(data)                           
-                    }
-                ).then(function(response) {                  
-                    response.json().then(function(d){
-                       
-                        console.log(d);  
-                        if(d.success == 'false') {
-                            password.className = 'field_error';
-                        } else if(d.success == 'true') {
-                            password.className = '';
-                            showBox(false, 'keycheck');
-                            showBox(false, 'fail');
-                            showBox(false, 'confirm');
-                            showBox(true, 'success');
-                            document.getElementById('uname').innerText = d.username;
-                            document.getElementById('new_uname').innerText = d.username;
-                        }                                 
-                    })
-                });   
-            }
+        } else {
+            document.getElementById(id).classList.add('hidden');
+            document.getElementById(id).classList.remove('fadeIn');
+        }
+    }
 
 
+    const createCheckoutSession = (priceId, customerId) => {
+        let data = {};
+        data.priceId = priceId;
+        data.customerId = customerId;
+        console.log(data);
 
-            const resendLink = () => {              
-                
-                const user_id = getCookie('userID');
-                
-                fetch('Triplesss/api/register_link&userid=' + userid, {
-                            method: "GET"
-                                                
-                    }
-                ).then(function(response) {
-                  
-                    response.json().then(function(d){
+        return fetch("/stripe/checkout_session.php", {
+            method: "POST",
+            body: JSON.stringify(data)
+        }).then(function (response) {
+            return response.json();
+        });
+    };
+
+
+    let createCustomer = (user_id, price, btn) => {
+        let data = {};
+        data.user_id = user_id       
+        btn.classList.add('loading');
+
+        return fetch('Triplesss/api/member.php', {
+                method: "POST",
+                body: JSON.stringify(data)
+        })
+        .then(function (response) {
+            response.json().then(function (d) {
+
+                //console.log(d);        
+                let member_data = d;
+                member_data.name = d.first_name + ' ' + d.last_name;
+                member_data.user_id = user_id;
+                console.log(member_data);
+
+                return fetch('stripe/create_customer.php', {
+                    method: "POST",
+                    body: JSON.stringify(member_data)
+                })
+                .then(function (response) {
+                    response.json().then(function (d) {
                         console.log(d);
-                        if(d.hasOwnProperty('user_id')) {
-                            var userid = d.user_id * 1;
-                            if(userid > 0) {
-                                user_id.value = userid;
-                                showBox(true, 'confirm');
-                                showBox(false, 'fail');
-                            } else {
-                                // something went wrong :(    
-                            }
-                        } else {
-                            // something went wrong :(    
-                        }                                                       
-                    })                  
+                        let sub_data = {};
+                    
+                        sub_data.priceId = price;
+                        sub_data.id = d.id;
+
+                        createCheckoutSession(sub_data.priceId, sub_data.id).then(function (data) {
+
+                            // Call Stripe.js method to redirect to the new Checkout page
+                            console.log(data);
+                            //let stripe = Stripe('pk_test_51Ht8EiCpbPdotDK4gcsVJkpSX45KmuKYS40hFLSsq2X3eFZeaiWGzKhoy0ZxTzL4zvO8D207tKZstRs02tvBwfGS0081V5EZvP');
+                            let stripe = Stripe('pk_live_51Ht8EiCpbPdotDK4NDPHCKrUlXNw5bjEsim4e0BowI1hCELRGeYDRvQsweOggwyBsPnyt8g8SmRgFtGh5Oyd9JJ900d1Xz0aOq');
+                            console.log(stripe);
+                            stripe.redirectToCheckout({
+                                sessionId: data.sessionId
+                            }).then(function (f) {
+                                console.log(f);
+                                btn.classList.remove('loading');
+                            });
+                        });
+                    })
                 });
-            } 
+            })
+        });
+    }
 
-                
-            
-            window.onload = () => {                
-           
-                const loginButton = document.getElementById("log-in");               
-                const username = document.getElementById("username");
-                const password = document.getElementById("password");                  
-          
-                showBox(false, 'keycheck');
-                showBox(false, 'fail');
-                showBox(false, 'confirm');
-                showBox(false, 'success');                
-                verify();
 
-                loginButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    dologin();                    
-                })                
+    let verify = () => {
+
+        const urlParams = new URLSearchParams(window.location.search);
+        //const payButton = document.getElementById('subscribe-pay');
+        const payButtons = document.querySelectorAll('.vip-pay button');
+        let key = urlParams.getAll('key');
+        let username = document.getElementById('username');
+
+        if (key != '') {
+            fetch('Triplesss/api/verify.php?key=' + key, {
+                    method: "GET"
+                }
+            ).then(function (response) {
+
+                response.json().then(function (d) {
+                    console.log(d);
+                    if (d.hasOwnProperty('userid')) {
+                        payButtons[0].setAttribute('data-user_id', d.userid);
+                        payButtons[1].setAttribute('data-user_id', d.userid);
+                    }
+
+                    if (d.hasOwnProperty('username')) {
+                        username.value = d.username;
+                        showBox(false, 'keycheck');
+                        showBox(true, 'subscribe');
+                        showBox(false, 'fail');
+                    } else if (d.hasOwnProperty('error')) {
+                        showBox(false, 'keycheck');
+                        showBox(false, 'subscribe');
+                        showBox(false, 'confirm');
+                        showBox(true, 'fail');
+                    }
+                })
+            });
+        } else {
+            showBox(false, 'keycheck');
+            showBox(false, 'confirm');
+            showBox(true, 'fail');
+        }
+    }
+
+
+    let lowlightelements = (s, el) => {
+        el.forEach(function (el) {
+            if (s === true) {
+                el.classList.add('lowlight');
+            } else {
+                el.classList.remove('lowlight');
             }
+        });
+    }
 
-        </script>
-    </body>
+
+    let lightboxshow = (s) => {
+
+        if (s === true) {
+            lightbox.classList.add('active');
+        } else {
+            lightbox.classList.remove('active');
+        }
+        lowlightelements(s, document.querySelectorAll('.post'));
+    }
+
+
+    let dologin = () => {
+
+        let data = {};
+        const username = document.getElementById('username');
+        const password = document.getElementById('password');
+        data.username = username.value;
+        data.password = password.value;
+
+        fetch('Triplesss/api/login.php', {
+                method: "POST",
+                body: JSON.stringify(data)
+            }
+        ).then(function (response) {
+
+            response.json().then(function (d) {
+
+                console.log(d);
+
+                if (d.success == 'false') {
+                    password.className = 'field_error';
+                } else if (d.success == 'true') {
+                    password.className = '';
+                    showBox(false, 'keycheck');
+                    showBox(false, 'fail');
+                    showBox(false, 'confirm');
+                    showBox(true, 'success');
+                    document.getElementById('uname').innerText = d.username;
+                    document.getElementById('new_uname').innerText = d.username;
+                }
+            })
+        });
+    }
+
+
+    const resendLink = () => {
+        const user_id = getCookie('userID');
+        fetch('Triplesss/api/register_link&userid=' + userid, {
+                method: "GET"
+            }
+        ).then(function (response) {
+            response.json().then(function (d) {
+                console.log(d);
+                if (d.hasOwnProperty('user_id')) {
+                    var userid = d.user_id * 1;
+                    if (userid > 0) {
+                        user_id.value = userid;
+                        showBox(true, 'confirm');
+                        showBox(false, 'fail');
+                    } else {
+                        // something went wrong :(    
+                    }
+                } else {
+                    // something went wrong :(    
+                }
+            })
+        });
+    }
+
+
+    window.onload = () => {
+
+        const loginButton = document.getElementById("log-in");
+        const username = document.getElementById("username");
+        const password = document.getElementById("password");
+        const payButtons = document.querySelectorAll('.vip-pay button')
+        showBox(false, 'keycheck');
+        showBox(false, 'fail');
+        showBox(false, 'confirm');
+        showBox(false, 'success');
+        verify();
+
+        loginButton.addEventListener('click', function (e) {
+            e.preventDefault();
+            dologin();
+        })
+
+       
+        payButtons.forEach((button) => {
+            button.addEventListener('click', function(e, el) {
+                e.preventDefault();
+                let price = '';
+               
+                if(this.id.indexOf('-month') > 0) {
+                    price = 'price_1I01p1CpbPdotDK4CIESW7SP'
+                }
+
+                if(this.id.indexOf('-year') > 0) {
+                    price = 'price_1I1QyGCpbPdotDK4Qqao560A'
+                }        
+
+                const user_id = this.getAttribute('data-user_id');
+                createCustomer(user_id, price, button);
+            })
+        })                       
+    }
+
+    </script>
+
+</body>
+
 </html>
-
-
-
-

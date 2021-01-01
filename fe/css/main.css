@@ -7,11 +7,28 @@ html.lb {
   scroll-behavior: auto;
 }
 
+html .emoji-picker {
+  top: 230px !important;
+}
+
 html body {
   font-family: 'Raleway', sans-serif;
   height: 100%;
   border: 0;
   margin: 0;
+}
+
+html body .bodywrap {
+  background-image: url("/img/sand1.jpg");
+  background-attachment: fixed;
+}
+
+html body .bodywrap.fullheight {
+  height: 100%;
+}
+
+html body .bodywrap.autoheight {
+  height: auto;
 }
 
 html body .toprow {
@@ -35,6 +52,14 @@ html body .toprow #head-wave {
 html body .toprow #head-wave img {
   width: 100%;
   margin-top: -20px;
+}
+
+html body .toprow .reg-header {
+  position: absolute;
+  z-index: 9;
+  top: 10px;
+  left: 50%;
+  margin-left: -100px;
 }
 
 html body .toprow h3 {
@@ -87,6 +112,16 @@ html body .toprow #avatar {
 html body .toprow #avatar img {
   width: 40px;
   height: 40px;
+}
+
+html body .redCross {
+  color: transparent;
+  text-shadow: 0 0 0 #dc1414;
+}
+
+html body .greenTick {
+  color: transparent;
+  text-shadow: 0 0 0 #46be14;
 }
 
 html body #intro .mainlogo {
@@ -188,6 +223,15 @@ html body .wrap {
   background-attachment: fixed;
 }
 
+@media only screen and (min-width: 768px) {
+  html body .wrap {
+    width: 800px;
+    position: relative;
+    left: 50%;
+    margin-left: -400px;
+  }
+}
+
 html body .wrap.loggedout {
   height: 100%;
 }
@@ -205,16 +249,58 @@ html body .wrap div button {
 }
 
 html body .wrap div#addpost button {
-  height: 36px;
+  height: 46px;
+}
+
+html body .wrap div#addpost button.loading {
+  font-size: 0.01px;
+  width: 46px;
+  background-image: url("/img/button-loader.gif");
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+html body .wrap div#addpost input[type="file"] {
+  position: relative;
+  z-index: 1;
+}
+
+html body .wrap div#addpost input[type="file"]:before {
+  content: '';
+}
+
+html body .wrap div#addpost input[type="file"]::-webkit-file-upload-button {
+  border-radius: 5px;
+  padding: 15px;
+  border: 1px solid #aaa;
+}
+
+html body .wrap div#addpost #ul-button {
+  display: none;
+  padding: 15px;
+  position: absolute;
+  margin-top: 5px;
+  background-color: #eee;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  font-size: 14px;
+  z-index: 0;
+  font-family: Arial, Helvetica;
 }
 
 html body .wrap input[type="file"] {
-  display: none;
+  display: block;
+  margin: 10px 0px;
+}
+
+html body .wrap input[type="file"]::-webkit-file-upload-button {
+  border-radius: 5px;
+  padding: 15px;
+  border: 1px solid #aaa;
 }
 
 html body .wrap .file-upload {
   border: 1px solid #aaa;
-  display: inline-block;
   width: 44px;
   height: 44px;
   margin-bottom: 10px;
@@ -224,11 +310,45 @@ html body .wrap .file-upload {
   line-height: 44px;
 }
 
+html body .wrap #emoji-select {
+  position: absolute;
+  z-index: 9;
+  top: 100px;
+  background: #fff;
+  width: 86%;
+}
+
+html body .wrap #emoji-select span {
+  font-size: 22px;
+  vertical-align: middle;
+  text-align: center;
+  width: 36px;
+  height: 36px;
+  display: inline-block;
+}
+
+html body .wrap #resetbox, html body .wrap #passwordsentbox {
+  top: 100px;
+}
+
+html body .wrap #reset-password.loading {
+  font-size: 0.01px;
+  width: 46px;
+  background-image: url("/img/button-loader.gif");
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+html body .wrap #subscribe a {
+  text-decoration: underline;
+}
+
 html body .wrap #profile-upload-filename {
   position: absolute;
   margin-left: 130px;
   font-size: 14px;
   margin-top: -56px;
+  display: none;
 }
 
 html body .wrap #profile-upload-pic {
@@ -258,6 +378,10 @@ html body .wrap .feed {
   z-index: 0;
 }
 
+html body .wrap .feed.showhelp {
+  margin-top: 115px;
+}
+
 html body .wrap .lowlight {
   z-index: -1;
   display: none;
@@ -265,16 +389,18 @@ html body .wrap .lowlight {
 
 html body .wrap .postbox {
   position: absolute;
+  top: 100px;
   z-index: 1000;
   border: 1px solid #ccc;
   background-color: #fff;
-  margin: 15px 10px;
+  padding: 3%;
   border-radius: 5px;
   -webkit-box-shadow: 2px 2px 4px #666;
-          box-shadow: 2px 2px 4px #666;
-  width: 82%;
-  padding: 15px;
-  margin-top: 20px;
+  box-shadow: 2px 2px 4px #666;
+  width: 90%;
+  max-width: 450px;
+  left: 50%;
+  margin-left: -48%;
 }
 
 html body .wrap .postbox input {
@@ -297,12 +423,16 @@ html body .wrap .postbox.lowlight {
   display: none;
 }
 
+html body .wrap .postbox #reset-email {
+  font-weight: bold;
+}
+
 html body .wrap #keycheck a {
   color: #666;
 }
 
 html body .wrap #keycheck .field_error {
-  background: lightpink;
+  background-color: lightpink;
   border: 1px solid red;
 }
 
@@ -340,8 +470,13 @@ html body .wrap #fail input[type="text"] {
   padding: 5px;
 }
 
-html body .wrap #editbox button.cancel, html body .wrap #reportbox button.cancel, html body .wrap #tagbox button.cancel, html body .wrap #deletebox button.cancel, html body .wrap #privacybox button.cancel {
+html body .wrap #editbox button.cancel, html body .wrap #reportbox button.cancel, html body .wrap #tagbox button.cancel, html body .wrap #deletebox button.cancel, html body .wrap #privacybox button.cancel, html body .wrap #resetbox button.cancel, html body .wrap #passwordsentbox button.cancel {
   top: 0px;
+}
+
+html body .wrap #editbox textarea, html body .wrap #reportbox textarea, html body .wrap #tagbox textarea, html body .wrap #deletebox textarea, html body .wrap #privacybox textarea, html body .wrap #resetbox textarea, html body .wrap #passwordsentbox textarea {
+  font: inherit;
+  border-radius: 7px;
 }
 
 html body .wrap #deletebox button.cancel {
@@ -350,14 +485,42 @@ html body .wrap #deletebox button.cancel {
   margin-left: 130px;
 }
 
+html body .wrap #privacybox.postbox {
+  padding-top: 50px;
+}
+
+html body .wrap #privacybox select {
+  font-family: inherit;
+  border-radius: 5px;
+  height: 38px;
+  margin-top: 5px;
+}
+
+html body .wrap #privacybox button {
+  margin-top: -1px;
+}
+
+html body .wrap #privacybox button.cancel {
+  margin-top: 15px;
+}
+
 html body .wrap #add-user select {
   padding: 3px;
 }
 
 html body .wrap #add-user label {
-  width: 120px;
+  width: 100%;
   display: block;
-  margin-top: 5px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+html body .wrap #add-user #show-password {
+  padding: 7px;
+}
+
+html body .wrap #add-user #show-password.active i {
+  color: red;
 }
 
 html body .wrap #add-user input {
@@ -367,24 +530,18 @@ html body .wrap #add-user input {
   padding: 5px;
 }
 
+html body .wrap #add-user input.pwshown:-internal-autofill-selected {
+  -webkit-text-fill-color: #666;
+}
+
+html body .wrap #add-user input.field_error:-internal-autofill-selected {
+  background-color: pink !important;
+}
+
 html body .wrap #add-user button {
   padding: 10px;
   border-radius: 5px;
   border: 1px solid #999;
-}
-
-html body .wrap #add-user span {
-  /*
-                    color: transparent;                   
-                    font-size: 22px;
-                    border: solid 1px #999;
-                    border-radius: 30px;
-                    width: 25px;
-                    height: 25px;
-                    display: inline-block;
-                    text-align: center;
-                    background: rgba(255,255,255,0.3);
-                    */
 }
 
 html body .wrap #add-detail input {
@@ -403,6 +560,37 @@ html body .wrap #add-detail button {
 
 html body .wrap #addpost {
   background-color: rgba(210, 210, 210, 0.75);
+}
+
+html body .wrap #addpost #post-comment {
+  margin-top: 5px;
+}
+
+html body .wrap #addpost p {
+  width: 150px;
+}
+
+html body .wrap #addpost form {
+  -webkit-margin-after: 0;
+          margin-block-end: 0;
+}
+
+html body .wrap #addpost #add-post-emoticon {
+  /* display: inline-block;    */
+  display: none;
+  margin-top: -36px;
+  margin-left: 130px;
+  border: none;
+  padding: 0;
+  height: auto;
+  background: none;
+}
+
+html body .wrap #addpost select {
+  font-family: inherit;
+  border-radius: 5px;
+  height: 38px;
+  margin-top: 5px;
 }
 
 html body .wrap #hidebox .cancel {
@@ -464,6 +652,10 @@ html body .wrap #reportbox input {
   width: 30px;
 }
 
+html body .wrap #userconnect a {
+  color: #666;
+}
+
 html body .wrap #notifications {
   background-color: rgba(210, 210, 210, 0.75);
 }
@@ -473,6 +665,7 @@ html body .wrap #notifications .notify {
   padding: 5px;
   border-radius: 5px;
   margin-bottom: 10px;
+  min-height: 45px;
 }
 
 html body .wrap #notifications .notify a {
@@ -484,9 +677,10 @@ html body .wrap #notifications .notify a {
 html body .wrap #notifications .notify p {
   font-size: 0.9em;
   margin-left: 70px;
-  margin-top: -30px;
-  position: absolute;
+  margin-top: -38px;
+  /* position:absolute; */
   width: 65%;
+  margin-bottom: 5px;
 }
 
 html body .wrap #notifications .notify h3 a {
@@ -516,8 +710,30 @@ html body .wrap #notifications .notify .noteicon {
   margin-top: -30px;
 }
 
+html body .wrap #notifications .issue-button {
+  float: right;
+  margin-top: -50px;
+  color: red;
+}
+
 html body .wrap #search input {
   padding: 5px;
+}
+
+html body .wrap #help-profile {
+  position: fixed;
+  z-index: 999;
+  top: 50px;
+  width: 92%;
+  background: white;
+  background: -webkit-gradient(linear, left top, left bottom, from(white), to(#a7b6cf));
+  background: linear-gradient(180deg, white 0%, #a7b6cf 100%);
+}
+
+html body .wrap #help-profile h3 i {
+  vertical-align: middle;
+  color: darkblue;
+  padding-bottom: 5px;
 }
 
 html body .wrap #connections h3, html body .wrap #follow h3 {
@@ -601,6 +817,21 @@ html body .wrap #followbox {
   padding-top: 55px;
   top: 100px;
   position: fixed;
+}
+
+html body .wrap #issuebox.postbox .cancel {
+  margin-top: 0px;
+}
+
+html body .wrap #issuebox.postbox p {
+  margin-top: 20px;
+}
+
+html body .wrap #issuebox.postbox textarea {
+  font-family: inherit;
+  font-size: 16px;
+  width: 100%;
+  border-radius: 7px;
 }
 
 html body .wrap #profile {
@@ -730,6 +961,7 @@ html body .wrap .post .content-wrap .postcontent.image {
 
 html body .wrap .post .content-wrap .postcontent img {
   width: 100%;
+  position: relative;
 }
 
 html body .wrap .post .content-wrap .date-time {
@@ -804,6 +1036,11 @@ html body .wrap .post .optionmenu span.red {
   color: red;
 }
 
+html body .wrap .post .optionmenu span.public {
+  text-shadow: 2px 2px 2px lime;
+  background-color: cornflowerblue;
+}
+
 html body .wrap .post .reactions {
   display: block;
   float: right;
@@ -841,7 +1078,17 @@ html body .wrap .add {
 
 html body .wrap .add textarea {
   font-family: inherit;
-  font-size: 14px;
+  font-size: 16px;
+  width: 100%;
+  border-radius: 7px;
+}
+
+html body .wrap .add .greentext {
+  color: #099b04;
+}
+
+html body .wrap .add .redtext {
+  color: #fc3200e8;
 }
 
 html body .wrap .details {
@@ -849,7 +1096,7 @@ html body .wrap .details {
 }
 
 html body .wrap .details .field_error {
-  background: lightpink;
+  background-color: lightpink;
   border: 1px solid red;
 }
 
@@ -892,6 +1139,10 @@ html body .wrap .profilebox h3 {
 
 html body .wrap .profilebox #add-bio textarea {
   width: 100%;
+  font-family: inherit;
+  font-size: 16px;
+  width: 100%;
+  border-radius: 7px;
 }
 
 html body .wrap .profilebox #add-bio input {
@@ -903,9 +1154,13 @@ html body .wrap .profilebox #add-bio button {
   border-radius: 5px;
   border: 1px solid #aaa;
   padding: 15px;
+  padding-bottom: 20px;
   height: 46px;
   font-size: 14px;
   width: 70px;
+  position: absolute;
+  margin: 5px;
+  z-index: 9;
 }
 
 html body .wrap .profilebox #add-bio #post-bio.loading {

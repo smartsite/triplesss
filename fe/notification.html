@@ -133,6 +133,52 @@
                 margin:0;
             }
 
+            #menu {
+               
+               position:fixed;
+               width:330px;
+               top:60px;  
+               right:-350px;  
+                transition: right 0.3s ease-in-out; 
+               z-index:100;               
+               
+           }
+
+
+           #menu.show {
+               z-index:1001;
+               right:0px;
+           }
+
+           .menuwrap {                
+               background-color:rgba(0,0,0,0.3);
+               padding: 6px 10px;
+               border-radius: 5px 0px 0px 5px;   
+               
+           }
+
+
+           .menuwrap button {
+               width:40px;
+               height:40px;
+               margin-right:0px;
+           }
+
+           #menubutton {
+               
+               font-size: 22px;
+               background-color: rgba(255,255,255, 0.7);
+               border: none;
+               border-radius: 3px;
+               margin-top: 10px;
+               margin-right: 0;
+               border: 1px solid #aaa;
+               cursor:pointer;
+               width: 35px;
+               height: 35px;
+               
+           }
+
 
         </style>
     </head>
@@ -145,10 +191,21 @@
                     <img src="img/profile.png" />
                 </span>
                 <span id="uname"></span></h3>
-            <button id="log-out">log out</button>
+            <!-- <button id="log-out">log out</button> -->
+            <button id="menubutton">&#9776;</button>
             <div class="clear"></div>
         </div>    
-        </select>
+        <div id="menu">
+            <div class="menuwrap">
+                <button id="menu-profile"><i class="material-icons">face</i></button>
+                <button id="menu-feed"><i class="material-icons">insert_photo</i></button>
+                <button id="menu-user"><i class="material-icons">account_box</i></button>
+                <button id="menu-message"><i class="material-icons">speaker_notes</i></button>
+                <button id="menu-follow"><i class="material-icons">person_search</i></button>
+                <button id="menu-notification"><i class="material-icons">notifications_active</i></button>
+                <button id="log-out"><i class="material-icons">exit_to_app</i></button>
+            </div>
+        </div>
         <div class="wrap">
                
             <div id="addpost" class="add">
@@ -285,7 +342,7 @@
             }  
             
             let notifyIcon = (i) => {
-                const icon = ['', 'A', '&#128204;', '&#128172;', 'C', '&#128151;'];
+                const icon = ['', 'A', '&#128204;', '&#128172;', 'C', '&#128151;', '&#129305;'];
                 return icon[i];
             }
           
@@ -346,7 +403,13 @@
                               
                     });
                 });
-            }          
+            }  
+            
+            const doMenu = (e) => {   
+                
+                const command = e.id.replace('menu-', '');
+                location.href = '/' + command;
+            };
             
 
                         
@@ -356,6 +419,10 @@
                 const searchButton = document.getElementById("search-user"); 
                 const connectButton = document.getElementById("connect-request"); 
                 const cancelButton = document.querySelectorAll('.cancel');
+                const menuButton = document.getElementById('menubutton');   
+                const menu = document.getElementById('menu');  
+                const menuButtons = document.querySelectorAll('#menu button');        
+
 
 
                 lightbox = document.getElementById("lbox");
@@ -379,6 +446,18 @@
                         //showBox(false, 'follow');
                     }
                 });
+
+
+                menuButton.addEventListener('click', function(e) {
+                    menu.classList.add('show');
+                })
+
+                menuButtons.forEach((button) => {
+                    button.addEventListener('click', function(e) {
+                       menu.classList.remove('show'); 
+                       doMenu(this);                       
+                    })
+                })  
                 
 
                 logoutButton.addEventListener('click', function(e) {

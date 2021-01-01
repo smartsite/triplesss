@@ -1,0 +1,6 @@
+ErrorDocument 404 /404.html
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^user/(.*)$ user.html?q=$1 [QSA]
+RewriteRule ^([^\.]+)$ $1.html [NC,L]
+

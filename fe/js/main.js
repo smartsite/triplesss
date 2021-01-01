@@ -1,10 +1,25 @@
 // All the functions!
 
+const dateParse = (dt) => {
+    // because Date.parse() is broken in Safari :(
+    const spl = dt.split(' ');
+    const datePart = spl[0];
+    const timePart = spl[1];
+    const hms = timePart.split(':');
+    const dmy =  datePart.split('-');  
+    const ts = new Date(dmy[0], dmy[1] - 1, dmy[2], hms[0],hms[1],hms[2]);   
+    return ts.getTime();
+}
+
 const addHandler = (element, handler, callback) => {
     element.addEventListener(handler, function(e) {
         e.preventDefault();
         return callback(e, this);                   
     });
+}
+
+const range = (size, startAt = 0) => {
+    return [...Array(size).keys()].map(i => i + startAt);
 }
 
 const showBox = (show, id) => {     
@@ -51,13 +66,14 @@ const setScrollPos = () => {
 
 const timeSince = (date) => {
 
-    const seconds = Math.floor((new Date() - date) / 1000);
+    const seconds = Math.floor((new Date() - date) / 1000) + 1800;
     const yearsSince = seconds / 31536000;
     const monthsSince = seconds / 2592000;
     const daysSince = seconds / 86400;
     const hoursSince = seconds / 3600;
     const minutesSince = seconds / 60;
 
+    
     if(Math.floor(yearsSince) == 1) {
         return Math.floor(yearsSince) + " year";
     }
@@ -116,7 +132,7 @@ const newDiv = (cls = '', id = '') => {
 }
 
 // Not implemented yet, but this pattern will replace the individual AJAX calls
-// with tider, more flexible apiCall('endpoint/something', 'GET', function(), [key:value]).done(callback()) 
+// with tidier, more flexible apiCall('endpoint/something', 'GET', function(), [key:value]).done(callback()) 
 
 const apiCall = (url, method, callback, params = null) => {
     let data = '';
@@ -132,7 +148,7 @@ const apiCall = (url, method, callback, params = null) => {
         }   
     };
 
-    fetch(url, {
+    return fetch(url, {
         method: method, 
         body: data                                          
     }) 
@@ -178,7 +194,6 @@ const dologout = () => {
     })
 }
 
-
 const hideAllMenus = () => {
     const menus = document.querySelectorAll('.post .options');
     menus.forEach((menu) => {
@@ -186,7 +201,6 @@ const hideAllMenus = () => {
         menu.classList.add('hide');
     });                                    
 }
-
 
 const menuHandler = () => {
     var posts =  document.querySelectorAll('.postcontent');               
@@ -216,12 +230,10 @@ const menuHandler = () => {
     });
 }
 
-
 const notifyIcon = (i) => {
-    const icon = ['', 'A', '&#128204;', '&#128172;', 'C', '&#128151;', '&#129305;', '&#129305;', '&#128089;',' &#129324;','&#128115;','&#128163;','&#128169;', '&#9940;'];
+    const icon = ['', 'A', '&#128204;', '&#128172;', 'C', '&#128151;', '&#129305;', '&#129305;', '&#128089;',' &#129324;','&#128115;','&#128163;','&#128169;', '&#9940;','&#10067;','&#128680;'];
     return icon[i];
 }
-
 
 const notification = (n) => {
      
@@ -229,6 +241,10 @@ const notification = (n) => {
     const avatar = newDiv('avatar');
     const noteicon = newDiv('noteicon');
     const noticeType = notifyIcon(n.type);
+   
+    const dt = dateParse(n.timestamp);
+    const pd = new Date(dt);
+    const since = timeSince(pd);
 
     noteicon.innerHTML = noticeType;   
     notify.append(avatar);
@@ -242,20 +258,32 @@ const notification = (n) => {
     notify.append(avatar);
 
     const notice = document.createElement('p');
-    notice.innerHTML = n.message;
+    notice.innerHTML = n.message + ' ' + since + ' ago';
     
-    notify.append(notice);
     notify.append(noteicon);
+    notify.append(notice);
+   
     return notify;
 }
-
 
 const notifications = () => {
     const notifications = document.getElementById('notifications'); 
     const heading = document.createElement('h3');
+    const issueButton = document.createElement('button');
+    issueButton.innerText ='Report a problem';
+    issueButton.className = "issue-button";
     heading.innerText = 'Notifications';
     notifications.innerHTML = '';
     notifications.append(heading);
+    notifications.append(issueButton);
+
+    issueButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        const issueBox = document.getElementById('issuebox');
+        issueBox.classList.remove('lowlight'); 
+        lightboxshow(true);  
+    })
+
     
     const user_id = getCookie('userID'); 
     let url = 'Triplesss/api/notifications.php?userid=' + user_id;
@@ -275,8 +303,6 @@ const notifications = () => {
         });
     });
 } 
-
-
 
 const followUser = (e) => {
     const user_id = getCookie('userID'); 
@@ -343,14 +369,13 @@ const connectClick = (e) => {
 
 
 
-const doConnect = (action) => {
+const doConnect = (action, showConnectionsBox=true) => {
                 
     const user_id = getCookie('userID'); 
     const followBox = document.getElementById('followbox');
     const target_id = followBox.getAttribute('data-user_id');
     let url = 'Triplesss/api/connection.php?to=' + user_id + '&from=' + target_id + '&action=' + action;
-    console.log(url);
-   
+       
     fetch(url, { 
         method: "GET"
     })
@@ -359,12 +384,18 @@ const doConnect = (action) => {
             followBox.classList.add('lowlight'); 
             lightboxshow(false);
             doSearch();
-            connections();
+            if(showConnectionsBox) {
+                connections();
+            }          
+
+            const requestSentButton = document.createElement('button');
+            const userConnectButtons = document.getElementById('user-connect-buttons');
+            requestSentButton.innerText = 'Contact request sent';   
+            userConnectButtons.innerText = '';
+            userConnectButtons.append(requestSentButton);
         });
     });                
 }
-
-
 
 let getUserProfile = () => {
     var user_id = getCookie('userID'); 
@@ -399,8 +430,6 @@ let getUserProfile = () => {
     }    
 }
 
-
-
 const getProfile = () => {
     var user_id = getCookie('userID'); 
     let url = '/Triplesss/api/profile.php?userid=' + user_id;
@@ -409,17 +438,18 @@ const getProfile = () => {
            method: "GET",                                           
        }) 
        .then(function(response) {
-           response.json().then(function(d){                                                   
-                            
+           response.json().then(function(d){                                                 
+                                     
                 d.map(function(el) {
                     const profileImage = document.querySelectorAll('#avatar img')[0];                   
-                    if(el) {
+                    if(el) {                      
                         if(el.content_type == 'image') {
                             const src = el.path + '/' + el.link;
                             profileImage.src = src;
                         }                                   
                     }                              
-               })             
+               }) 
+                        
            })
        }
    )
@@ -435,26 +465,25 @@ const feedProfile = (user_id) => {
     .then(function(response) {
         response.json().then(function(d){    
             d.map(function(el) {
+                
                 const profileImage = document.querySelectorAll('#profile .avatar img')[0];
                 const profileName = document.querySelectorAll('#profile h3')[0];
                 const profileText = document.querySelectorAll('#profile .bio')[0];
-                if(el.content_type == 'image') {
-                    const src = el.path + '/' + el.link;
-                    profileImage.src = src;
+                if(el) {
                     profileName.innerText = el.user_name;
-                } 
+                    if(el.content_type == 'image') {
+                        const src = el.path + '/' + el.link;
+                        profileImage.src = src;                       
+                    } 
 
-                if(el.content_type == 'text') { 
-                    profileText.innerText = el.content;
-                }  
+                    if(el.content_type == 'text') { 
+                        profileText.innerText = el.content;
+                    }  
+                }    
             })
         });
     });
 };
-
-
-
-
 
 const fieldError = (t, status) => {
     t.classList.add('field_error'); 
@@ -522,7 +551,44 @@ const checkAddress = (t) => {
 
 const checkPhone = (t) => {                
     return fieldError(t,  !isNaN(t.value) && t.value.length === 10 );
-}          
+}  
+
+const resetPassword = () => {
+    const sentBox = document.getElementById('passwordsentbox');
+    const resetBox = document.getElementById('resetbox');
+    const resetButton = document.getElementById('reset-password');
+
+    resetButton.classList.add('loading');
+    let data = {};
+    data.user_name = document.getElementById('username').value;
+    data.from = 'admin@surfsouthoz.com';
+    fetch('Triplesss/api/reset_link?username=' + data.user_name + '&from=' + data.from, {
+        method: "GET"
+                                   
+    }).then(function(response) {
+        response.json().then(function(d){
+            console.log(d);
+            if(d.hasOwnProperty('link')) {
+                if(d.link.sent === true) {
+                    console.log(d.link);
+                    resetButton.classList.remove('loading');
+                    const sent_to = d.link.email;
+                    const resetEmail = document.getElementById('reset-email');
+                    resetEmail.innerText = sent_to;
+                    resetBox.classList.add('lowlight');
+                    sentBox.classList.remove('lowlight');
+
+                } else {
+                    alert("Error: could not send reset message!");
+                }
+                
+            } else {
+                alert("Error: could not send reset message.");
+            }
+            //showBox(true, 'keycheck');
+        });
+    });
+};       
 
 const addUser = () => {
   
@@ -565,8 +631,6 @@ const addUser = () => {
     });
 } 
 
-
-
 const isAlpha = (text) => {
     if(text.match(/^[0-9a-zA-Z]+$/)) {
         return true;
@@ -576,7 +640,7 @@ const isAlpha = (text) => {
 }
 
 const validusername = (text) => {
-    if(text.length > 4 && text.length < 33 && isAlpha(text) && text.indexOf('surfsouth') == -1) {
+    if(text.length > 4 && text.length < 33 && isAlpha(text) && text.indexOf('surfsouth') == -1 && text.indexOf('fuck') == -1 && text.indexOf('cunt') == -1) {
         return true;
     } else {
         return false;
@@ -625,7 +689,6 @@ const checkFields = () => {
     }
 }  
 
-
 const verify = () => {              
     const urlParams = new URLSearchParams( window.location.search);
     let key = urlParams.getAll('key');
@@ -651,10 +714,6 @@ const verify = () => {
 }   
 
 
-
-
-
-
 let getComments = (post_id) => {
                        
     return fetch('/Triplesss/api/comments.php?post_id=' + post_id, {
@@ -664,10 +723,13 @@ let getComments = (post_id) => {
         response.json().then(function(d){
             const comments = d.comments;
             const comments_box = document.getElementById('comments');
+            const addCommentBox = document.getElementById('commentbox');
             comments_box.innerHTML = '';
            
             comments.map(function(comment) {
                 
+              
+                const userid = comment.owner;
                 const wrap = document.createElement('div');
                 wrap.className = 'comment_wrap';
                 const username = comment.user_name;
@@ -676,7 +738,14 @@ let getComments = (post_id) => {
                 uspan.className = "comment_user";
                 const ulink = document.createElement('a');
                 ulink.innerText = username;
-                ulink.href = '/userpage/' + username;
+                //ulink.href = '/userpage/' + username;
+                ulink.href = '#';
+                ulink.addEventListener('click', function() {
+                    //comments_box.classList.add('lowlight');
+                    addCommentBox.classList.add('lowlight');
+                    lightboxshow(false);
+                    userPageView(userid);
+                })
                 uspan.append(ulink);
                
                 const cspan = document.createElement('span');
@@ -799,7 +868,6 @@ let getReactions = () => {
     }    
 }  
 
-
 const adminMenu = () => {
     let div = newDiv('optionmenu');
     let options = ['Edit', 'Delete', 'Notify'];
@@ -814,12 +882,10 @@ const adminMenu = () => {
     return div;    
 }
 
-
-
 const feedMenu = () => {
     let div = newDiv('optionmenu');
-    let options = ['av','Report','Hide'];
-    let icons = ['', '&#10029;','&#128374;'];
+    let options = ['av','Report','Hide']; //  &#10060;
+    let icons = ['', '&#9873;','&#128374;']; // &#128374;  &#9873; &#128169
     options.map((op, i)=> {
         let span = document.createElement('span');
         span.className = op.toLocaleLowerCase();
@@ -829,7 +895,6 @@ const feedMenu = () => {
     })
     return div;    
 }
-
 
 let feedPostMarkup = (post, container) => {               
                 
@@ -841,6 +906,7 @@ let feedPostMarkup = (post, container) => {
         const avatar = thePost[0].avatar;
         const user_name = thePost[0].user_name;  
         const postOwner =  thePost[0].owner; 
+        const visibilty = thePost[0].visibility;
 
         //console.log(thePost[0]);                       
 
@@ -850,6 +916,7 @@ let feedPostMarkup = (post, container) => {
         const dateTime = newDiv('date-time');              
         const avatarImage =  document.createElement('img');
         const profileLink = document.createElement('a');
+        const visSelect = document.getElementById('visibility');
         //profileLink.href = '/userpage/' + user_name;
         profileLink.href = 'javascript:userPageView(' + postOwner + ')';
        
@@ -884,82 +951,100 @@ let feedPostMarkup = (post, container) => {
                 if(action == 'Report') {
                     const reportBox = document.getElementById('reportbox');
                     reportBox.classList.remove('lowlight');
-                    reportBox.setAttribute('data-post-id', postId);
+                    reportBox.setAttribute('data-post_id', postId);
                     lightboxshow(true);
                 }
                 if(action == 'Hide') {
                     const hideBox = document.getElementById('hidebox');
                     hideBox.classList.remove('lowlight');
-                    hideBox.setAttribute('data-post-id', postId);
+                    hideBox.setAttribute('data-post_id', postId);
                     lightboxshow(true);
-                }   
+                } 
+                if(action == 'Share') {
+                    const reportBox = document.getElementById('privacybox');                    
+                    reportBox.classList.remove('lowlight');
+                    reportBox.setAttribute('data-post_id', postId);                   
+                    lightboxshow(true);
+                }  
                 if(action == 'Delete') {
                     const deleteBox = document.getElementById('deletebox');
                     deleteBox.classList.remove('lowlight');
-                    deleteBox.setAttribute('data-post-id', postId);
+                    deleteBox.setAttribute('data-post_id', postId);
                     lightboxshow(true);
                 } 
                 if(action == 'Notify') {
                     const notifyBox = document.getElementById('notifybox');
                     notifyBox.classList.remove('lowlight');
-                    notifyBox.setAttribute('data-post-id', postId);
+                    notifyBox.setAttribute('data-post_id', postId);
                     lightboxshow(true);
                 }                      
             });
         })
-        //console.log(thePost);
-            
+                   
         contentWrap.appendChild(dateTime);              
                                                 
         thePost.map(function(pc) {
 
-            const dt = Date.parse(thePost[0].date);
-            const pd = new Date(dt);
+            const pd = dateParse(thePost[0].date);
             const since = timeSince(pd);
-            //dateTime.innerText = pd.toDateString() + ' ' + since;
+            let screenWide = window.screen.width;
+            if(screenWide > 780) {screenWide = 780}
+            //const defaultHeight = screenWide * 3 / 4;
+          
             dateTime.innerText = since + ' ago';
 
             if(pc.content_type == "text") {
-                contentWrapText.innerText = pc.content;
+                contentWrapText.innerHTML = pc.content;
                 contentWrap.appendChild(dateTime);
-                contentWrap.appendChild(contentWrapText);
-                
+                contentWrap.appendChild(contentWrapText);                
             }
 
-            if(pc.content_type == "image") {
+            if(pc.content_type == "image") {               
+              
                 const img =  document.createElement('img');
-                img.src = pc.path + "/" + pc.link;
+                img.src = pc.path + "/" + pc.link;               
+                                
                 contentWrapImage.appendChild(img);              
                 contentWrap.appendChild(contentWrapImage);
-                contentWrap.appendChild(dateTime);
-                let pz = new PinchZoom(img);
-               
+                contentWrap.appendChild(dateTime);                                              
+                
+                img.addEventListener('load', function(i){
+                    const loadedImage = this; 
+                   
+                    const aspectRatio = this.height / this.width;                                              
+                    pz = new PinchZoom(loadedImage);                     
+                    const imageWrap = this.parentElement.parentElement;
+                    const pzWrap = imageWrap.querySelector('.pinch-zoom-container');                   
+                    const imHeight = parseInt(aspectRatio * screenWide) + "px";                   
+                    pzWrap.style.height = imHeight;                                 
+                })                                                          
             }       
-        }) 
-
-       
+        })       
             
         postWrap.appendChild(contentWrap);                          
-        container.appendChild(postWrap); 
+        container.append(postWrap); 
 
         postWrap.addEventListener('click', function() {
             document.getElementById('menu').classList.remove('show');
-        })
-    
-    }              
-                        
-    getReactions();                     
-                  
+        })    
+    }                          
+    getReactions();                    
 }
 
 
-const postMenu2 = () => {
+const postMenu2 = (p) => {
     let div = newDiv('optionmenu');
-    let options = ['Edit', 'Tag', 'Delete'];
-    let icons = ['&#9998;', '#', '&#10006;'];
+    const visibility = p[0].visibility;
+    let options = ['Edit', 'Tag', 'Delete', 'Privacy'];
+    let icons = ['&#9998;', '#', '&#10006;', '&#128064;'];
     options.map((op, i)=> {
         let span = document.createElement('span');
         span.className = op.toLocaleLowerCase();
+        if(op == "Privacy") {
+            if(visibility == 4) {
+                span.classList.add('public');
+            }
+        }
         span.innerHTML = icons[i];
         span.setAttribute('data-action', op);
         div.append(span);
@@ -972,9 +1057,12 @@ const postMenu2 = () => {
 const postMarkup = (post, container) => {               
                 
     post.map(function(p) {
-        //console.log(p);
+        console.log(p);
+        const visSelect = document.getElementById('visibility');
         if(p[0]) {
             const postId = p[0].post_id;
+            const visibility = p[0].visibility;
+            let tags = '';
             let postWrap = newDiv('post');
             let contentWrap = newDiv('content-wrap');
             postWrap.id = postId;
@@ -984,7 +1072,7 @@ const postMarkup = (post, container) => {
             let contentWrapText = newDiv('postcontent text');            
                               
             //postWrap.appendChild(postMenu3());             
-            postWrap.appendChild(postMenu2()); 
+            postWrap.appendChild(postMenu2(p)); 
             postWrap.appendChild(reactions(p));         
             
             const pw = postWrap.querySelectorAll('.optionmenu span');
@@ -992,8 +1080,11 @@ const postMarkup = (post, container) => {
             pw.forEach(function(el){
                 el.addEventListener('click', function() {
                     const action = this.getAttribute('data-action');
-                    console.log(action);
+                   
                     postAction(action, el);
+                    if(action == 'Privacy') {                      
+                        visSelect.value = visibility;
+                    }
                     //if(action == 'Report') {
                         //const reportBox = document.getElementById('reportbox');
                         //reportBox.classList.remove('lowlight');
@@ -1003,20 +1094,29 @@ const postMarkup = (post, container) => {
                 });        
             });
 
+           
+
 
             p.map(function(po) {                      
                 if(po.content_type == "text") {
-                    contentWrapText.innerText = po.content;
+                    contentWrapText.innerHTML = po.content;
                     contentWrap.appendChild(contentWrapText);
+                    if(tags == '') {
+                        tags = po.tags;
+                    }
+                    
                 }
                 if(po.content_type == "image") {
                     const img =  document.createElement('img');
                     img.src = po.path + "/" + po.link;
                     contentWrapImage.appendChild(img);
-                    contentWrap.appendChild(contentWrapImage);
+                    contentWrap.appendChild(contentWrapImage);  
+                    tags = po.tags; // favour image tags over text                  
                 }
+               
             })
 
+            postWrap.setAttribute('data-tags', tags);
             postWrap.appendChild(contentWrap);                          
             container.appendChild(postWrap);
 
@@ -1044,6 +1144,8 @@ const setSelect = (selectObj, index) => {
 let aggregator = (user_id, offset = 0, length = 10) => {
 
     let container = document.querySelectorAll('.feed')[0];
+    const loadingBox = document.getElementById('loading');
+    loadingBox.classList.add('show');
     //container.innerHTML = '';
     return fetch('Triplesss/api/aggregator.php?userid=' + user_id + '&offset=' + offset + '&length=' + length, {
                 method: "GET"                                                    
@@ -1051,6 +1153,7 @@ let aggregator = (user_id, offset = 0, length = 10) => {
     .then(function(response) {
         response.json().then(function(d){
             feedPostMarkup(d, container); 
+            loadingBox.classList.remove('show');
             triggered = false; 
             return function(triggered) {
                 return triggered;
@@ -1060,34 +1163,40 @@ let aggregator = (user_id, offset = 0, length = 10) => {
 }
 
 const lazyLoad = (view) => {
+  
     const userid = getCookie('userID');
     if(view == 'feed') {
         offset = count + offset;
-        aggregator(userid, offset, count); 
-        
+        aggregator(userid, offset, count);         
+    }
+
+    if(view == 'reports') { 
+        offset = count + offset;      
+        userPageView(2);
     }
 }
 
-const userfeed = (feed_id) => {
+const userfeed = (feed_id, offset, count) => {
     let container = document.querySelectorAll('.feed')[0];
-    container.innerHTML = '';
-    return fetch('/Triplesss/api/feed.php?feed_id=' + feed_id, {
+        
+    return fetch('/Triplesss/api/feed.php?feed_id=' + feed_id + '&offset=' + offset + '&count=' + count, {
                 method: "GET"                                                    
     }) 
     .then(function(response) {
-        response.json().then(function(d){
-            //postMarkup(d, container);  
-            feedPostMarkup(d, container);  
-            //menuHandler();                     
+        response.json().then(function(d){          
+            feedPostMarkup(d, container); 
+            triggered = false; 
+            return function(triggered) {
+                return triggered;
+            }                      
         });
     });       
 }
 
-
-const feed = (feed_id) => {
-    let container = document.querySelectorAll('.feed')[0];
+const feed = (feed_id, offset, count) => {
+    let container = document.querySelectorAll('.feed')[0];   
     container.innerHTML = '';
-    return fetch('/Triplesss/api/feed.php?feed_id=' + feed_id, {
+    return fetch('/Triplesss/api/feed.php?feed_id=' + feed_id + '&offset=' + offset + '&count=' + count, {
                 method: "GET"                                                    
     }) 
     .then(function(response) {
@@ -1151,13 +1260,37 @@ const getReportType = () => {
     }
 }
 
+const sendBugReport = (e) => { 
+    const adminUserId = 1;
+    const userid = getCookie('userID');
+    const reportType = 'bug';
+    const reportBox = document.getElementById('issuebox');
+    const reportTextBox = document.getElementById('issue-text');
+    const message = reportTextBox.value;
+    e.parentElement.classList.add('fadeOut');
+    const url = '/Triplesss/api/notification.php?from_user_id=' + userid + '&to_user_id=' + adminUserId + '&action=' + reportType + '&message=' + message + '&post_id=-1';
+    fetch(url, {
+        method: "GET"                                                    
+    }) 
+    .then(function(response) {
+        response.json().then(function(d){ 
+            //console.log(d);
+            window.setTimeout(function(){
+                e.parentElement.classList.add('lowlight');
+                e.parentElement.classList.remove('fadeOut');
+                lightboxshow(false);
+            }, 500);
+        });
+    });    
+
+}
 
 const sendReport = (e) => {
                
     const adminUserId = 1;
     const userid = getCookie('userID');
     const groupId = e.parentElement.className.replace("reportbox vivify ", "");
-    const postId = e.parentElement.getAttribute('data-post-id');
+    const postId = e.parentElement.getAttribute('data-post_id');
     const post = document.getElementById(postId);
     const postButton = post.getElementsByClassName('report')[0];            
     e.parentElement.classList.add('fadeOut');
@@ -1193,7 +1326,6 @@ const sendReport = (e) => {
     */
 }
 
-
 const doPost = (data) => {
     return fetch('/Triplesss/api/post.php', {
                 method: "POST",
@@ -1225,11 +1357,13 @@ const getTags = (el) => {
         response.json().then(function(d){
            // show tags in the textbox   
            let tags = "";
+           console.log(d);
            if(d.tags) {
                 if(d.tags.length > 0) {
                     const tag_array = d.tags.split(',');
                     tags = tag_array.map((tag)=>{
-                        return "#" + tag;
+                        //return "#" + tag;
+                        return tag.trim();
                     }).join(' ');
                 }                            
             }                       
@@ -1243,7 +1377,8 @@ const editTags = (el) => {
     const data = {};
     const post_id =  el.parentElement.getAttribute('data-post_id');    
     const user_id = getCookie('userID');  
-    const tags = document.querySelectorAll('#tagbox input')[0].value;               
+    const tags = document.querySelectorAll('#tagbox input')[0].value;  
+    const thePost = document.getElementById(post_id);             
     data.post_id = post_id; 
     data.user_id = user_id;
     data.tags = tags;
@@ -1253,13 +1388,16 @@ const editTags = (el) => {
                 body: JSON.stringify(data)                           
     }) 
     .then(function(response) {
-        response.json().then(function(d){
-           
-           if(d == true) {
-                // tags added
-           } else {
-               // show error modal
-           }
+       
+        response.json().then(function(d) {
+                
+            if(d.hasOwnProperty('success')) {              
+                if(d.success === true) {                   
+                    thePost.setAttribute('data-tags', tags);
+                }
+            } else {                
+                console.log(d.error)
+            }
 
            document.getElementById('tagbox').classList.add('lowlight');
            lightboxshow(false);  
@@ -1270,7 +1408,7 @@ const editTags = (el) => {
 }
 
 const hidePost = (el) => {
-    const post_id = el.parentElement.getAttribute('data-post-id');
+    const post_id = el.parentElement.getAttribute('data-post_id');
     const hideBox = document.getElementById('hidebox');
     let postBox = document.getElementById(post_id);
     postBox.parentNode.removeChild(postBox);
@@ -1279,23 +1417,36 @@ const hidePost = (el) => {
     setScrollPos();     
 }
 
+const getPostVisibility = (postid, callback) => {
+
+}
+
 const setPostVisibility = (data) => {
 
     return fetch('/Triplesss/api/post_visibility.php', {
-                method: "POST",
-                body: JSON.stringify(data)                           
+        method: "POST",
+        body: JSON.stringify(data)                           
     }) 
     .then(function(response) {
         response.json().then(function(d){
            
            if(d == true) {
                 let postBox = document.getElementById(data.post_id);
-                postBox.parentNode.removeChild(postBox);
+                if(data.level == -1) {
+                    postBox.parentNode.removeChild(postBox);
+                } 
+                if(data.level == 4) {  
+                    postBox.querySelectorAll('.optionmenu .privacy')[0].classList.add('public');
+                } else {
+                    postBox.querySelectorAll('.optionmenu .privacy')[0].classList.remove('public'); 
+                }           
+               
            } else {
                // show error modal
            }
 
            document.getElementById('deletebox').classList.add('lowlight');
+           document.getElementById('privacybox').classList.add('lowlight');
            lightboxshow(false);  
            setScrollPos();
            hideAllMenus();
@@ -1308,7 +1459,15 @@ const addPost = () => {
     const user_id = document.getElementById('userid').value;
     const feed_id = document.getElementById('feed_id').value;
     const comment = document.getElementById('add-comment').value;
-    let data = {'comment': comment, 'userid': user_id, 'feedid': feed_id, 'basefolder' : '../../storage' };
+    const visibility = document.getElementById('post-visibility').value;
+    const postButton = document.getElementById('post-comment')    
+    postButton.classList.add('loading');
+    postButton.setAttribute('disabled', true);
+
+    count = 10;
+    offset = 0;
+
+    let data = {'comment': comment, 'userid': user_id, 'feedid': feed_id, 'visibility' : visibility, 'basefolder' : '../../storage' };
 
     // Check if there's an image
     var reader = new FileReader();
@@ -1316,8 +1475,11 @@ const addPost = () => {
     reader.onload = (function(t) {
         return function(e) {
             data.image = e.target.result;                       
-            doPost(data).then(function(){
-                feed(feed_id);
+            doPost(data).then(function() {
+               
+                feed(feed_id, offset, count);
+                postButton.classList.remove('loading');
+                postButton.removeAttribute('disabled');
             });                  
         }
     })(img); 
@@ -1328,15 +1490,17 @@ const addPost = () => {
     } else { 
         // we don't have an image... just text
        data.image = '';
-        doPost(data).then(function(){
-            feed(feed_id);
+        doPost(data).then(function() {           
+            feed(feed_id, offset, count);
+            postButton.classList.remove('loading');
+            postButton.removeAttribute('disabled');
         });    
     }
 } 
 
 const deletePost = (el) => {
 
-    const post_id = el.parentElement.getAttribute('data-post-id');
+    const post_id = el.parentElement.getAttribute('data-post_id');
     const user_id = getCookie('userID');
     const text = document.getElementById('edit-comment').value;
     let is_admin = false;
@@ -1387,13 +1551,13 @@ const savePost = (el) => {
     })
 }
 
-
 const postAction = (action, el) => {                
                                           
     if(action == 'Tag' || action == 'Delete' || action == 'Edit' || action == 'Privacy') {
         const boxname = action.toLowerCase() + "box";
         const box = document.getElementById(boxname);      
         const post_id = el.parentElement.parentElement.id;
+        const tags = el.parentElement.parentElement.getAttribute('data-tags');
 
         box.classList.remove('lowlight');   
         box.setAttribute('data-post_id', post_id);
@@ -1408,12 +1572,10 @@ const postAction = (action, el) => {
         }    
 
         if(action == 'Tag') {
-            getTags(el);
+            document.querySelectorAll('#tagbox input')[0].value = tags;  
         }               
     }
 }  
-
-
 
 let addReact = (el) => {
     el.addEventListener('click', function(e) {
@@ -1471,28 +1633,6 @@ const gotoPost = (post_id) => {
     console.log(post_id);
 }
 
-
-
-
-
-let getFeedPosts = (feed_id, offset, count, sort_by, filter_options) => {
-               
-    var url = 'Triplesss/api/feed.php?feed_id=' + feed_id + '&offset=' + offset + '&count=' + count + '&sort_by=' + sort_by + '&filter_options=' + filter_options;
-
-    fetch(url, {
-            method: "GET",                                           
-        }) 
-        .then(function(response) {
-            response.json().then(function(d){                                                   
-                //console.log(d);
-                const container = document.querySelectorAll('.feed')[0];
-                addPosts(container, d);
-                //addPostEvents();
-            })
-        }
-    )
-} 
-
 let profileedit = () => {
     const profilebox = document.querySelectorAll('.profilebox');
     const textBox = document.getElementById('bio-comment');
@@ -1501,7 +1641,6 @@ let profileedit = () => {
     lightboxshow(true);
     lowlightelements(false, profilebox);
 }  
-
 
 let postBio = (user_id) => {
     
@@ -1520,7 +1659,7 @@ let postBio = (user_id) => {
     reader.onload = (function(t) {
         return function(e) {
             var im = e.target.result;
-            const data = {'comment': comment, 'image' : im, 'userid': user_id, 'feedid': feed_id, 'basefolder' : '../../storage', 'maxImageWidth': 400 };
+            const data = {'comment': comment, 'image' : im, 'userid': user_id, 'feedid': feed_id, 'basefolder' : '../../storage', 'maxImageWidth': 400, 'visibility' : 2 };
             const profilebox = document.querySelectorAll('.profilebox');
             
             fetch('Triplesss/api/post.php', {
@@ -1578,9 +1717,20 @@ let doSearch = () => {
             const heading = document.createElement('h3');
             heading.innerText = 'Matches';
             followBox.append(heading);
-            response.json().then(function(d) {                      
-                if(d.length > 0) {
-                    d.map(function(p) {
+            response.json().then(function(d) {    
+                
+                let unconnected = [];
+                d.map(function(p, i) {
+                    const connection_type = p.connection_type;
+                    if(connection_type === "friend" || connection_type === "follow" || connection_type === "request_friend" || connection_type === "friend_request") {
+                        //d.splice(i);
+                    } else {
+                        unconnected.push(d[i]);
+                    }                  
+                })
+                
+                if(unconnected.length > 0) {
+                    unconnected.map(function(p) {
                         p.buttons = ['follow', 'connect'];
                         const profile = listProfile(p);
                         followBox.append(profile);
@@ -1591,8 +1741,7 @@ let doSearch = () => {
                     empty.buttons = [];
                     const profile = listProfile(empty);
                     followBox.append(profile);
-                }
-                                    
+                }                                    
             }); 
         }); 
     }     
@@ -1626,7 +1775,8 @@ let listProfile = (p) => {
     connectButton.setAttribute('data-username', p.user_name);
     if(p.relation == 'friend') {
         connectButton.innerText = 'Disconnect';  
-        connectButton.setAttribute('data-action', 'disconnect');             
+        connectButton.setAttribute('data-action', 'disconnect');   
+        connectButton.classList.add('redtext');           
         connectButton.addEventListener('click', function(e) { connectClick(e); })
         buttons.append(connectButton);
     } else if(p.relation == 'follow'){
@@ -1639,7 +1789,8 @@ let listProfile = (p) => {
         buttons.append(connectButton);  
     } else if (p.relation == 'friend_request') {
         // user has requested a connection                   
-        connectButton.innerText = 'Approve';   
+        connectButton.innerText = 'Approve';  
+        connectButton.classList.add('greentext'); 
         connectButton.setAttribute('data-action', 'accept'); 
         connectButton.addEventListener('click', function(e) { connectClick(e); })  
         buttons.append(connectButton); 
@@ -1668,6 +1819,27 @@ let listProfile = (p) => {
     follow.append(username);
     follow.append(buttons);
     return follow;               
+}
+
+const connection = (to_user) => {
+    const user_id = getCookie('userID');
+    let url = 'Triplesss/api/connections.php?userid=' + to_user;
+    
+    return fetch(url, { 
+        method: "GET"
+    })
+    .then(function(response) {
+        return response.json().then(function(d) {  
+            //console.log(d);
+            let conn = false;
+            d.map(function(user) {
+                if(user.id == user_id) {
+                    conn = user; 
+                }
+            });
+            return conn;            
+        })
+    })
 }
 
 
@@ -1764,10 +1936,14 @@ const hideBoxes = () => {
     showBox(false, 'notifications');  
     showBox(false, 'messages');     
     showBox(false, 'connections');  
+    showBox(false, 'userconnect');   
+    //showBox(false, 'help-profile'); 
+    document.querySelector('.bodywrap').classList.remove('fullheight');
+    document.querySelector('.bodywrap').classList.remove('autoheight');
 }
 
 
-const dologin = () => {
+const dologin = (redirect = '') => {
     let data = {};
 
     const username = document.getElementById('username');
@@ -1784,10 +1960,20 @@ const dologin = () => {
            
             console.log(d);  
             if(d.success == 'false') {
-                password.className = 'field_error';
+              
+                if(d.message == "Unknown user") {
+                    username.className = 'field_error'; 
+                } else {
+                    password.className = 'field_error';
+                }               
             } else if(d.success == 'true') {
+                //location.href = '/';
+                if(redirect == '') {
+                    location.reload();
+                } else {
+                    location.href= redirect;
+                }
                 
-                location.reload();
                 password.className = '';
                 hideBoxes();
                 showBox(true, 'feed');
@@ -1799,12 +1985,54 @@ const dologin = () => {
     });   
 };
 
+const assUserConnect = (p, buttons) => {    
+        
+    const connectButton = document.createElement('button');
+    connectButton.innerText = 'Send a connect request';   
+    connectButton.id = "user-connect-button"; 
+
+    /*
+     Follows - TODO!
+    const followButton = document.createElement('button');
+    followButton.setAttribute('data-id', p.id);
+    followButton.setAttribute('data-action', 'follow');
+    followButton.setAttribute('data-username', p.user_name);
+    followButton.innerText = 'Follow';              
+    followButton.addEventListener('click', function(e) { followUser(e); })    
+    */
+              
+    connectButton.addEventListener('click', function(e) { 
+         
+        const user_id = getCookie('userID'); 
+        let url = 'Triplesss/api/connection.php?to=' + user_id + '&from=' + p.id + '&action=request';
+           
+        fetch(url, { 
+            method: "GET"
+        })
+        .then(function(response) {
+            response.json().then(function(d) {                  
+                connectButton.innerText = 'Contact request sent';                 
+            });
+        });     
+               
+    })
+    //buttons.append(followButton);
+    buttons.append(connectButton);
+}
+
 
 const userPageView = (userid) => {
-    hideBoxes();
-    showBox(true, 'feed');  
-    showBox(true, 'profile');     
+    if(offset == 0) {
+        hideBoxes(); 
+    }
 
+      
+    showBox(false, 'follow');  
+    showBox(true, 'profile');  
+    const loadingBox = document.getElementById('loading');
+    loadingBox.classList.add('show');
+    const loggedInUserId = getCookie('userID'); 
+     
     if(userid > 0) {
         feedProfile(userid);
         fetch('/Triplesss/api/feeds.php?userid=' + userid, {
@@ -1812,41 +2040,157 @@ const userPageView = (userid) => {
         }) 
         .then(function(response) {
             response.json().then(function(d){
-                const feed_id = d[0].id;
-                userfeed(feed_id);
+                loadingBox.classList.remove('show');  
+                try{
+                    const feed_id = d[0].id;                                    
+                    userfeed(feed_id, offset, count);                   
+                    
+                } catch (e) {
+                    console.log('User feed does not exist');
+                }
             });
         })    
     } else {
         showBox(true, 'nouser');         
-    }     
+    }    
+
+    connection(userid).then(
+        function(conn) {
+           
+            const userNameSpan = document.querySelectorAll('#profile h3')[0];
+            const userConnectButtons = document.getElementById('user-connect-buttons');
+            const requestSentButton = document.createElement('button');
+            requestSentButton.innerText = 'Contact request sent';     
+
+            let userName = '';
+            if(userNameSpan) {
+                userName = userNameSpan.innerText;
+            }
+            if(conn) {
+                
+                if(conn.relation == 'friend' || conn.relation == 'follow' ) {
+                    if(offset == 0) {
+                        showBox(true, 'feed');  
+                    }                                        
+                }
+
+                if(conn.relation == 'friend_request' ) { 
+                    showBox(true, 'userconnect');  
+                    //showBox(false, 'follow');
+                    userConnectButtons.innerText = '';
+                    userConnectButtons.append(requestSentButton);
+                }
+
+            } else {
+                showBox(true, 'userconnect');  
+                const p = {};
+                p.id = userid;
+                p.user_name = userName; 
+                userConnectButtons.innerText = '';
+                assUserConnect(p, userConnectButtons);
+
+            }
+            if(loggedInUserId < 3) {
+                showBox(true, 'feed');  
+                showBox(false, 'userconnect');       
+            }
+        }
+    );     
+    
 }
 
 
+const helpView = () => {
+    // find the help user's id, then get their user feed
+    const helpUserName = 'helpymchelpface';
+    const url = '/Triplesss/api/search_user?username=' + helpUserName;
+
+    fetch(url, {
+        method: "GET"                                                    
+    }) 
+    .then(function(response) {
+        response.json().then(function(d){            
+            
+            const helpUserId = d[0].id;
+            connection(helpUserId).then(
+                function(conn) {
+                    if(conn) {
+                        userPageView(helpUserId);
+                    } else {
+                        showBox(false, 'addpost');
+                        // if not a freind of helpy, force them to be!
+                        let url = '/Triplesss/api/connection.php?to=' + helpUserId + '&from=' + user_id + '&action=accept';                      
+                        fetch(url, { 
+                            method: "GET"
+                        })
+                        .then(function(response) {
+                            response.json().then(function(d){   
+                                userPageView(helpUserId);
+                            }) 
+                        });   
+                    }
+                }
+            );       
+        })
+    });  
+
+}
+
+const forecastView = () => {
+    count = 10;
+    offset = 0;  
+    hideBoxes();
+    showBox(true, 'feed'); 
+    userfeed(5,offset, count);
+}
+
+const wallView = () => {
+    count = 10;
+    offset = 0;  
+    hideBoxes();
+    showBox(true, 'feed');   
+    aggregator(1, offset, count); 
+}
+
 const notificationView = () => {
+    count = 25;
+    offset = 0;  
     hideBoxes();
     showBox(true, 'notifications');  
     notifications();
+    document.querySelector('.bodywrap').classList.add('autoheight');
 }
 
 const feedView = () => {
+    count = 10;
+    offset = 0;  
     hideBoxes();
     showBox(true, 'feed');   
     aggregator(user_id, offset, count); 
+    window.setTimeout(function() {
+        // feed watchdog
+        const feedBox = document.getElementById('feed');
+        feedBox.classList.remove('hidden');
+    }, 1000);
 }
 
 const userView = () => {
+    count = 10;
+    offset = 0;  
     hideBoxes();
     showBox(true, 'addpost');   
     showBox(true, 'feed');     
     const feed_select = document.getElementById('feed_id');
-    let feed_id = feed_select.value;
-    feed(feed_id);     
+    let feed_id = feed_select.value;   
+    feed(feed_id, offset, count);   
+    document.querySelector('.bodywrap').classList.add('fullheight');
 }
 
 const profileView = () => {
     hideBoxes();
     getUserProfile();             
-    showBox(true, 'user-profile');    
+    showBox(true, 'user-profile');   
+    document.querySelector('.bodywrap').classList.add('fullheight'); 
 }
 
 const welcomeView = () => {
@@ -1859,13 +2203,13 @@ const followView = () => {
     showBox(true, 'search');  
     showBox(true, 'connections');  
     connections();
+    document.querySelector('.bodywrap').classList.add('fullheight');
 }
 
 const messageView = () => {
     hideBoxes();
     showBox(true, 'messages');  
 }
-
 
 const setView = (view) => {
     
@@ -1874,12 +2218,32 @@ const setView = (view) => {
     currentView = view;
     let feedContainer = document.querySelectorAll('.feed')[0];
     feedContainer.innerHTML = '';
-    count = 10;
+    count = 15;
     offset = 0;
     triggered = false;
-
    
     switch(view) {
+
+        case "reports": 
+            userPageView(2); // hard coded for user_id 2!
+            //aggregator(2, offset, count);
+           
+            break;
+
+        case "forecast": 
+            forecastView();
+            //aggregator(2, offset, count);
+            break;
+
+
+        case "wall": 
+            wallView();  
+            break;     
+
+        case "help": 
+            helpView();  
+            break;    
+
         case "user": 
             userView();
             break;
@@ -1889,7 +2253,7 @@ const setView = (view) => {
             break; 
             
         case "feed": 
-            feedView();
+            feedView();            
             break;  
             
         case "follow": 

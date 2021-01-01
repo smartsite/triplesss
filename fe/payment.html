@@ -1,0 +1,466 @@
+<html>
+    <head>
+        <title>Checkout result</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://fonts.googleapis.com/css2?family=Raleway" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="css/vivify.min.css" rel="stylesheet" type="text/css">        
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>       
+
+        <style>
+            
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body{
+                font-family: 'Raleway', sans-serif;             
+            }
+
+            
+            .add, .details {
+                padding:5px;
+                background-color:#e7e7e7;
+            }
+             
+            
+            .lightbox {
+                position:fixed;
+                width:100%;
+                height:100%;
+                left:0;
+                right:0;
+                top:0;
+                bottom:0;
+                background-color: #000;
+                opacity: 0.7;
+                z-index:1;
+                display:none;
+            }
+
+            .lightbox.active{
+                z-index: 1;
+                display:block;
+            }
+
+            
+            .material-icons {
+                font-family: 'Material Icons';
+                font-weight: normal;
+                font-style: normal;
+                font-size: 24px;  /* Preferred icon size */
+                display: inline-block;
+                line-height: 1;
+                text-transform: none;
+                letter-spacing: normal;
+                word-wrap: normal;
+                white-space: nowrap;
+                direction: ltr;
+
+                /* Support for all WebKit browsers. */
+                -webkit-font-smoothing: antialiased;
+                /* Support for Safari and Chrome. */
+                text-rendering: optimizeLegibility;
+
+                /* Support for Firefox. */
+                -moz-osx-font-smoothing: grayscale;
+
+                /* Support for IE. */
+                font-feature-settings: 'liga';
+            }
+
+            .red {
+                color:rgb(200,30,30);
+            }
+
+            .lime {
+                color:rgb(20,180,20);
+            }
+
+            #add-user input, #add-user select {
+                padding:3px;
+            }
+
+            #add-user label {
+                width:100%;
+                display:block;
+                margin-top:5px;
+                margin-bottom:5px;
+            }
+
+            input[type="text"],  input[type="password"]{
+                font-size: 18px;
+                border-radius: 7px;
+                border:1px solid #999;
+                padding:5px; 
+            }   
+
+            #show-password {
+                text-decoration:underline;
+            }
+            
+            div#fail button {
+                padding:10px;
+                border-radius:5px;
+                border:1px solid #ccc;
+                margin-top:5px;
+            }
+
+            .hidden {
+                display:none;
+            }
+
+            .unhidden {
+                display:block;
+            }
+
+            .field_error {
+                background:lightpink;
+                border:1px solid red;
+            }
+
+            .wrap {
+                height:100%;
+            }
+
+            .wrap a {
+                color:#666;
+                text-decoration: none;
+            }
+
+            .vip-pay {
+                border: 3px solid #6699cc;
+                border-radius: 10px;
+                width: 180px;
+                height: 180px;
+                padding: 10px;
+                text-align: center;
+                margin-bottom: 10px;
+                position:relative;
+                margin-left:-100px;
+                left:50%;
+                background-color:aliceblue;
+            }
+
+            #subscribe {
+                text-align:center;
+            }
+
+            .vip-pay h5 {
+                padding:0;
+                margin:0;
+                margin-top:15px;
+                font-size:0.9em;
+                margin-bottom:15px;
+                color: #225580;
+            }
+
+            .vip-pay h3 {
+                font-size: 22px;
+                padding:0;
+                margin:0;
+                color: #225580;
+            }
+
+            .vip-pay button {
+                margin-top:10px;
+                padding:10px;
+                border-radius:5px;
+                border:1px solid #666;
+            }
+
+            .pwshown {
+                color:#666;
+            }
+
+            .reg-header {
+                position:absolute;
+                z-index:9;
+                top:10px;
+                left:50%;
+                margin-left:-100px;
+            }
+
+
+            @keyframes redFadeOut {from { color:red; opacity: 1 }to  { color: white; opacity: 0}}
+            @keyframes fadeIn {from { opacity: 0 }to  { opacity: 1}}
+            @keyframes fadeOut {from { opacity: 1 }to  { opacity: 0}}
+
+            .like-button-click { animation: redFadeOut 0.75s; }
+
+            .fadeIn {animation: fadeIn 0.5s; }
+            .fadeOut {animation: fadeOut 0.5s; }
+ 
+        </style>
+        <!-- <link href="/css/user.css" rel="stylesheet" type="text/css"> -->
+        <link href="/css/main.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <div class="toprow">
+            <div id="head-wave"><img src="img/head_wave.svg" /></div>
+            <div class="reg-header">
+                <img src="img/bw_logo1.png" />
+            </div>    
+            <div class="clear"></div>            
+        </div>     
+        <div class="wrap">
+            <div id="success" class="add">
+                <h3>Payment accepted</h3>
+                <form id="add-user" method="POST">                  
+                    <p>You can now log in: </p>
+                    <label>user name</label>
+                    <input type="text" id="username" name="username" value="">
+                    <input type="hidden" id="userid" name="userid" value="1">
+                    <label>password</label>
+                    <input type="password" id="password" name="password" value=""> <button id="show-password"><i class="material-icons">visibility</i></button>
+                    <br />
+                    <br />
+                   <button id="log-in">Log in</button> <span id="resetlink">&nbsp;Help! <a href="#">What's my password?</a></span>                       
+                </form>
+            </div> 
+            <div id="failure" class="add hidden">
+                <h3>Payment failed</h3>
+                <form id="subscribe-user" method="POST">                  
+                    <p>There was a problem processing your payment.</p>
+                    <p>Click here to go to check your payment details.</p>             
+                </form>
+            </div> 
+            <div id="resetbox" class="vivify postbox lowlight">
+                <h4>Lost password</h4>
+                <p>If you have forgotten or lost your password, we can send you an email with a reset link.</p>
+                <p>Just click the button below</p>                             
+                <button id="reset-password">Reset my password</button>
+                <button class="cancel">&#10005;</button>
+            </div>  
+            <div id="passwordsentbox" class="vivify postbox lowlight">
+                <h4>Request sent</h4>
+                <p>We just sent a password reset link to <span id="reset-email"></span>. Please check your email, 
+                and once you get the message, just click or tap on the link.</p>
+                <button id="close-reset">Close this message</button>
+            </div>          
+            
+            <div id="lbox" class="lightbox"></div>           
+        </div>
+        <script src="https://js.stripe.com/v3/"></script>
+        <script src="js/main.js"></script>
+
+        <script language="Javascript">
+
+            let lightbox;
+            let toppos = 0;  
+            
+
+           
+
+            const getMember = () => {
+                let user_id = getCookie('userID');
+                console.log("User id: " + user_id);
+                if(!user_id) {
+                    user_id = -1;
+                }
+                
+                const url = 'Triplesss/api/member?user_id=' + user_id;                
+
+                return fetch(url, {
+                    method: "GET"
+                }).then(function(response) {
+                    const details = response.json();
+                    console.log(details);
+                    return details;                       
+                });
+                
+            }
+
+
+            const createCheckoutSession = (priceId, customerId) => {
+                let data = {};
+                data.priceId = priceId;
+                if(customerId) {
+                    data.customerId = customerId;
+                }              
+
+                console.log(data);
+
+                return fetch("/stripe/checkout_session.php", {
+                    method: "POST",
+                    body: JSON.stringify(data)
+                }).then(function(response) {
+                    return response.json();
+                });
+            };
+   
+                   
+            
+           
+            
+           
+            
+            /*
+            let dologin = () => {
+                let data = {};
+
+                const username = document.getElementById('username');
+                const password = document.getElementById('password');
+                data.username = username.value;
+                data.password = password.value;
+
+                fetch('Triplesss/api/login.php', {
+                            method: "POST",
+                            body: JSON.stringify(data)                           
+                    }
+                ).then(function(response) {                  
+                    response.json().then(function(d) {                       
+                     
+                        if(d.success == 'false') {
+                            password.className = 'field_error';
+                        } else if(d.success == 'true') {
+                            password.className = '';
+                            location.href = '/';                           
+                        }                                 
+                    })
+                });   
+            }
+            */
+    
+                
+            
+            window.onload = () => {                
+           
+                const loginButton = document.getElementById("log-in");   
+                //const cancelButton = document.querySelectorAll('.cancel');            
+                const username = document.getElementById("username");
+                const password = document.getElementById("password");       
+                const payButton = document.getElementById("subscribe-pay");   
+                const showPasswordLink = document.getElementById('show-password');   
+
+                const resetLink = document.querySelectorAll('#resetlink a')[0];
+                const resetPasswordButton = document.getElementById("reset-password");
+                const closeResetButton = document.getElementById('close-reset');
+                const resetSentBox = document.getElementById('passwordsentbox');
+                const resetCancel = document.querySelectorAll('#resetbox .cancel')[0];
+                const resetBox = document.getElementById('resetbox');
+
+                lightbox = document.getElementById("lbox"); 
+                          
+
+                loginButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    password.setAttribute('type', 'password');
+                    dologin('/');                    
+                })   
+                
+                showPasswordLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if(password.classList.contains('pwshown')) {
+                        this.classList.remove('active');
+                        password.setAttribute('type', 'password');
+                        password.classList.add('fadeOut');
+                        password.classList.remove('fadeIn');
+                        password.classList.remove('pwshown');
+                    } else {
+                        this.classList.add('active');
+                        password.setAttribute('type', 'text');
+                        password.classList.add('fadeIn');
+                        password.classList.remove('fadeOut');
+                        password.classList.add('pwshown');
+                    }                   
+                })    
+                resetPasswordButton.addEventListener('click', function(e, el){resetPassword()});
+
+                resetLink.addEventListener('click', function() {
+                    const resetBox = document.getElementById('resetbox'); 
+                    if(username.value != '') {
+                        const data = {};
+                        data.username = username.value;
+                        fetch('Triplesss/api/checkuser', {
+                                method: "POST",
+                                body: JSON.stringify(data)                           
+                            }
+                        ).then(function(response) {                  
+                            response.json().then(function(d){ 
+                                if(d === true) {
+                                    hideBoxes();
+                                    resetBox.classList.remove('lowlight');
+                                    lightboxshow(true);
+                                } else {
+                                    username.classList.add('field_error');
+                                }
+                            })
+                        });        
+                      
+                    } else {
+                        username.classList.add('field_error');
+                    }                    
+                })  
+
+                /*
+                const setScrollPos = () => {
+                    let doc = document.body;
+                    doc.scrollTop = toppos;                               
+                }
+                */
+
+                resetCancel.addEventListener('click', function() {                    
+                   resetBox.classList.add('lowlight');
+                    lightboxshow(false);
+                })
+
+                closeResetButton.addEventListener('click', function() {                    
+                   resetSentBox.classList.add('lowlight');
+                    lightboxshow(false);
+                })
+              
+                getMember().then(function(d){
+                                     
+                    const userNameField = document.getElementById('username');    
+                    
+                    const urlParams = new URLSearchParams( window.location.search);
+                    let session_id = urlParams.getAll('session_id');                
+                    
+                    let userName = '';
+                    let customerId = '';
+                    let active = 0;
+                    if(d) {
+                        customerId = d.customer_id;
+                        userName = d.user_name;    
+                        active = d.active;
+                    } else {
+                        userName = document.getElementById('username').value;
+                    }
+
+                    if(userName != '') {
+                        setCookie('userName', userName);
+                    }
+                             
+                    fetch('stripe/subscription.php?customer_id=' + customerId + '&session_id=' + session_id, {
+                        method: "GET"                                                
+                    }).then(function(response) {                  
+                        response.json().then(function(d) { 
+                            active = d.active;
+                            if(active == 1) {
+                                showBox(true, 'success'); 
+                                showBox(false, 'failure'); 
+                                userNameField.value = userName;
+                            } else {
+                                showBox(false, 'success'); 
+                                showBox(true, 'failure'); 
+                            }
+                        }) 
+                    });                    
+                }) 
+                
+                const hideBoxes = () => {
+                     
+                }
+                         
+                
+                
+            }
+
+        </script>
+    </body>
+</html>
+
+
+
+
