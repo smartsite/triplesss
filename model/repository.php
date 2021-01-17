@@ -525,8 +525,26 @@ class Repository {
             $r = $rows[0];
             return !is_null($r);
         }
-        return false;      
-                
+        return false;                   
+    }
+
+    public function getUserValue($user_id, $key) {
+        $db = $this->db;
+        $s = 'SELECT key_value FROM user_detail WHERE user_id='.$user_id.' AND key_name="'.$key.'"';
+        $p = $db->query($s);
+        $r = $db->fetchAll($p);
+        if($r) {
+            return $r[0]['key_value'];
+        } else {
+            return false;
+        }
+    }
+
+    public function setUserValue($user_id, $key, $value) {
+        $db = $this->db;
+        $s = 'INSERT INTO  user_detail (user_id, key_name, key_value) VALUES ('.$user_id.', "'.$key.'", "'.$value.'") ON DUPLICATE KEY UPDATE key_value="'.$value.'"';
+        $p = $db->query($s);
+        return $p;
     }
 
     public function temporaryPassword(Int $length = 10) :String {

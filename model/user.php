@@ -150,6 +150,16 @@ class User {
         $this->userid = $userid;
     }
 
+    public function setValue($key, $value) {
+        $repository = $this->repository;
+        return $repository->setUserValue($this->userid, $key, $value);
+    }
+
+    public function getValue(String $key) {
+        $repository = $this->repository;
+        return $repository->getUserValue($this->userid, $key);
+    }
+
     public function login(String $username, String $password) {
         $repository = $this->repository;
         return $repository->userLogin($username, $password);

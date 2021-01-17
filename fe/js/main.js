@@ -1900,13 +1900,8 @@ const isloggedin = () => {
                 feedlist();                            
 
             }  else {
-                showBox(false, 'profile');
-                showBox(false, 'user-profile');
-                showBox(false, 'feed');
+                hideBoxes();
                 showBox(true, 'keycheck');
-                showBox(false, 'fail');
-                showBox(false, 'addpost');  
-                showBox(false, 'follow');
                 //logoutButton.classList.add('hidden');
                 menuButton.classList.add('hidden');
                 wrap.classList.add('loggedout');
