@@ -237,8 +237,9 @@ class User {
         return $this->connections; 
     }
 
-    public function getNotifications() {
-        $notifications = $this->repository->getNotifications($this);
+    public function getNotifications($start, $count) {
+        $n = $this->repository->getNotifications($this);
+        $notifications = array_slice($n, $start, $count);
         $this->notifications = $notifications;
         return $this->notifications; 
     }
