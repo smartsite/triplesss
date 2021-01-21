@@ -1,8 +1,5 @@
 <?php
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 require '../model/auth.php';
 require '../model/filter.php';
 require '../model/notification.php';
