@@ -2,7 +2,7 @@
 
 ## Super. Simple. Social.
 
-** Experimental only **
+** Experimental / proof of concept only! **
 
 A white label social media platform written in PHP / MySQL, presenting a RESTful API. You can write the UX any way you like -  VueJs, React, even plain old HTML5 + pure Javascript. 
 
