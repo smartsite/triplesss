@@ -2,6 +2,8 @@
 
 ## Super. Simple. Social.
 
+** Experimental only **
+
 A white label social media platform written in PHP / MySQL, presenting a RESTful API. You can write the UX any way you like -  VueJs, React, even plain old HTML5 + pure Javascript. 
 
 The API and class structure have been strongly influenced by [stream-php](https://github.com/GetStream/stream-php), without depending on https://getstream.io.
