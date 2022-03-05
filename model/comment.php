@@ -4,6 +4,7 @@ namespace  Triplesss\post;
 use Triplesss\repository\Repository;
 use Triplesss\post\Post;
 use Triplesss\filter\Filter;
+use Triplesss\visibility\Visibility;
 
 /**
  *   A comment is no different from a normal post, it uses the same content
@@ -55,8 +56,8 @@ class Comment extends Post {
         //$this->repository->addPostToFeed($post);
     }
 
-    function getAll() {
-        return $this->repository->getPostComments($this->parent_post);
+    function getAll(Int $visibility) {
+        return $this->repository->getPostComments($this->parent_post, $visibility);
     }
 
     function addFilter(Filter $filter) {

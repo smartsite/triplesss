@@ -16,7 +16,7 @@ class Notification {
     
     public function __construct(User $user) {
         $this->to_user = $user;
-        // By default, all notifications come system unless it's overridden
+        // By default, all notifications come from the system user unless overridden
         $system = new User();
         $system->setUserId(0);
         $this->from_user = $system;

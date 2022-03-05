@@ -20,6 +20,7 @@ class Feed {
         $this->repository = new Repository();
         $this->range = [0,100];
         $this->sort_by = 'date_desc';
+        $this->filter = null;
     }
 
     Public function new(Int $owner_id, String $name, String $description)  {
@@ -98,6 +99,10 @@ class Feed {
         $this->filter = $filter;
     }
 
+    public function getFilter() {
+        return $this->filter;
+    }
+
     public function sortBy($sort_by = "date_desc") {
         $this->sort_by = $sort_by;
     }
@@ -113,11 +118,13 @@ class Feed {
         if($filterType == 'tag') {
             $tags = $filter->getTags();
             // TODO: loop through posts to find tag matches
+            $posts = $this->repository->getFeedPosts($this);
+            $this->posts = $posts;
         }
 
         if($filterType == 'userid') {
                       
-            $op = $this->repository->getFeedPosts($this, $filter);
+            $op = $this->repository->getFeedPosts($this);
             $posts = end($op);
             $this->posts = $posts;         
         }

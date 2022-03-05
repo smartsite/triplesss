@@ -88,7 +88,7 @@ class content {
             // This is the database insert ID
             $id = $this->repository->imageAdd($stored['name'], $stored['folder'], $stored['type'], $stored['mime_type'], $this->userId, '');           
         }
-
+        
         if($this->contentType == 'text') {
             $txt = new Text();
             $txt->setText($this->content);

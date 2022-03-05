@@ -54,7 +54,7 @@ $ag = $feed->getPosts();
 $posts = array_filter(array_map(function($u) {
     $fu = new User();
     $fu->setUserId($u[0]['owner']);
-    $u[0]['avatar'] = $fu->getAvatar();   
+    $u[0]['avatar'] = $fu->getAvatar();      
     return $u;
 }, $ag));
 

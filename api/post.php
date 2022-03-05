@@ -57,9 +57,11 @@ $p1 = $post;
 
 $allowed = array_map(function($t) {
     return '&#'.$t.';';
-}, range(128512,128567));
+}, range(127744,129510));
 
-$more_tags = ['<h3>', '<h4>', '<h5>', '<br>', '<b>'];
+// range(128512,128567)
+
+$more_tags = ['<h3>', '<h4>', '<h5>', '<br>', '<br />', '<b>', '<p>'];
 
 $allowed = array_merge($allowed, $more_tags);
 
@@ -68,12 +70,13 @@ if($txt != '') {
     //$cleanText = $em->Encode($cleanText);
     $cleanText = strip_tags($txt, $allowed);
     $cleanText = addslashes($cleanText);
-    
+       
     $postContent = new Content();
     $postContent->setUserId($user_id);
     $postContent->setContentType('text');   
     $postContent->setContent($cleanText);
     $postContent->write();
+  
     $post->addContent($postContent);
 }
 

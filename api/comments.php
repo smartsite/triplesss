@@ -22,16 +22,19 @@ use Triplesss\visibility\Visibility;
 
 header('Content-Type: application/json');
 $comments = [];
+isset($_GET['visibility']) ? $visibility = $_GET['visibility'] : $visibility = 0;
 
 //$user_id = $postObj->userid;
 $user_id = 0;
 if(isset($_GET['post_id'])) {
     $post_id = $_GET['post_id'];
     $comment = new Comment($user_id);
+    
+    //$comment->setVisibility($visibility, $post_id);
     $comment->setParentId($post_id);
 
     // should return the comment count!
-    $comments = $comment->getAll();
+    $comments = $comment->getAll($visibility);
 }
 
 echo json_encode(['count' => count($comments), 'comments' => $comments]);

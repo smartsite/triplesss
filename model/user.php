@@ -184,32 +184,23 @@ class User {
         return $this->level;
     }
 
-    public function getAvatar() {
-        $feed = new Feed();
-        $feed->setId(0); // user posts to feed_id=0 are profiles!
+    public function getProfile() {
+        $repository = $this->repository;
+        return  $repository->getUserProfile($this->userid);
+    }
+
+    public function getAvatar() {      
+
+        $profile = $this->getProfile();
         $avatar = false;
-
-        $filter = new Filter();
-        $filter->setType('userid');
-        $filter->setUserid($this->userid);
-        $feed->setFilter($filter);
-
-        $posts = $feed->getFilteredPosts();
-        if(!$posts) {
-            $posts[0] = null;
-            $posts[1] = null;
-        } else {
-            $image_post = $posts[0];
-            if($image_post['content_type'] != 'image') {
-                $image_post = $posts[1];
-                if($image_post['content_type'] == 'image') {
-                    $avatar = $image_post['path'].'/'.$image_post['link'];
-                } 
-            } else {
-                $avatar = $image_post['path'].'/'.$image_post['link'];
+        
+        array_map(function($p) use(&$avatar) {
+            if($p['content_type'] == 'image') {
+                $avatar = $p['content'];
             }
-        }
-        return $avatar;
+        }, $profile);
+        
+        return $avatar;        
     }
 
     public function getFeeds() :Array {

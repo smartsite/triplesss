@@ -10,6 +10,7 @@ require '../model/text.php';
 require '../model/post.php';
 require '../model/feed.php';
 require '../model/content.php';
+require '../model/emoji.php';
 require '../model/comment.php';
 require '../model/visibility.php';
 require '../model/notification.php';
@@ -23,6 +24,7 @@ use Triplesss\content\Content as Content;
 use Triplesss\post\Comment as Comment;
 use Triplesss\visibility\Visibility;
 use Triplesss\notification\Notification;
+//use Triplesss\text\Emoji;
 
 //use Triplesss\visibility\Visibility as Visibility;
 
@@ -64,11 +66,21 @@ $comment = new Comment($user_id);
 $comment->setContentType('text');
 $comment->setParentId($post_id);
 
+/*
+$emojis = new Emoji();
+$emoji_txt =  $emojis->Encode($txt);  
+if($txt != $emoji_txt) {
+    $txt = $emoji_txt;
+}
+*/
+
 if($txt != '') {
+    
     $postContent = new Content();
     $postContent->setUserId($user_id);
     $postContent->setContentType('text');
-    $postContent->setContent($txt);
+    $encoded_text = bin2hex($txt);
+    $postContent->setContent($encoded_text);
     $postContent->write();
     $comment->addContent($postContent);
 }
@@ -100,8 +112,7 @@ $notification->setPostId($post_id);
 $notification->setType('comment');
 $notification->notify();
 
-
 // should return the comment count!
-$comments = $comment->getAll();
+$comments = $comment->getAll($v->getLevel());
 
 echo json_encode(['count' => count($comments), 'comments' => $comments]);

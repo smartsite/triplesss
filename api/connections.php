@@ -34,7 +34,7 @@ if(!is_null($connections[0])) {
     $cu = array_filter(array_map(function($u) {
         $fu = new User();
         $fu->setUserId($u['id']);
-        $u['avatar'] = $fu->getAvatar();
+        $u['avatar'] = $fu->getAvatar();       
         //$u['connection_type'] = 'friend';
         return $u;
     }, $connections));    

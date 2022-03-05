@@ -43,7 +43,7 @@ class Settings
 		$settings['hostname'] = 'https://vip.surfsouthoz.com.au';
 
 		if($this->getEnvironment() == 'dev') {
-			$settings['hostname'] = 'http://dev2020-vbox';
+			$settings['hostname'] = 'http://uat.surfsouthoz';
 		}
 		
 		return $settings;

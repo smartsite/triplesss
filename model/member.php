@@ -91,9 +91,7 @@ class Member extends User {
     public function getMemberByCustomerId(String $customer_id) {
         // only returns a member if exists
         return $this->repository->getMemberByCustomerId($customer_id);
-    }
-
-    
+    }    
 
     Public function getPaymentMethod() :String {
         return $this->payment_method;
