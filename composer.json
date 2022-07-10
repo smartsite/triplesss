@@ -12,6 +12,6 @@
     "minimum-stability": "dev",
     "require" : {"php": ">=7.4"},
     "autoload-dev": {
-        "psr-4": {"Triplesss\\": "src/"}
+        "psr-4": {"triplesss\\": "src/"}
     }
 }
