@@ -31,9 +31,7 @@
                 <div class="clear"></div>
             </div>    
             <div id="menu">
-                <div class="menuwrap">
-                    <button id="menu-reports"><i class="material-icons">photo_camera</i>Reports</button>
-                    <button id="menu-forecast"><i class="material-icons">cloud_queue</i>Forecast</button>
+                <div class="menuwrap">                   
                     <button id="menu-wall"><i class="material-icons">surfing</i>the Lookout</button>
                     <button id="menu-help"><i class="material-icons">help_center</i>Help channel</button>
                     <button id="menu-profile"><i class="material-icons">face</i>Profile</button>
@@ -53,15 +51,8 @@
                     </path>
                 </svg>
             </div>
-            <div id="intro" class="intro">                
-                <div class="mainlogo">
-                    <img src="img/ssoz_3colour2.svg" width="100%" height="100%" />
-                </div>
-                <div id="head-wave">
-                    <img src="img/head_wave.svg" />
-                </div>
-                <div class="enter">
-                    <!-- <p>South Australia's<br /> premier online surfing community.</p> -->
+            <div id="intro" class="intro">               
+                <div class="enter">                   
                     <span class="join-button">
                         <a href="/new_user.html">join</a>
                     </span>
@@ -156,8 +147,7 @@
                         <br />
                         <br />
                         <button id="log-in">Log in</button><span id="resetlink">&nbsp;Help! <a href="#">What's my password?</a></span>                         
-                        <p>If you don't have an account, just <a href="/new_user.html">sign up</a>!</p>
-                        <p>Having trouble signing in? Contact us via email: <a href="mailto:support@surfsouthoz.com.au">support@surfsouthoz.com.au</a> or send us a <a href="https://www.facebook.com/vip.surfsouthoz">message on Facebook</a></p>
+                        <p>If you don't have an account, just <a href="/new_user.html">sign up</a>!</p>                      
                     </form>               
                 </div> 
                 <div id="fail" class="add">
@@ -354,12 +344,9 @@
                 const tempProfileUpload = document.getElementById("temp-profile");
                 const userAvatar = document.getElementById("avatar");
                 const bugReportButton = document.getElementById("issue-post");
-
                 const emojiSelect = document.getElementById("emoji-select"); 
-
                 const profileUploadFilename = document.getElementById("profile-upload-filename");
                 const profileUploadPic = document.getElementById("profile-upload-pic");
-
                 const resetLink = document.querySelectorAll('#resetlink a')[0];
                 const resetPasswordButton = document.getElementById("reset-password");
                 const closeResetButton = document.getElementById('close-reset');
@@ -368,8 +355,7 @@
                 const setPrivacyButton = document.getElementById('privacypost');   
                 
 
-                bioButton = document.getElementById('post-bio');            
-                        
+                bioButton = document.getElementById('post-bio');           
                 lightbox = document.getElementById("lbox");
                 user_id = getCookie('userID');                
 
@@ -436,9 +422,7 @@
                     dologin()
                 });
 
-                addHandler(resetPasswordButton, 'click', function(e, el){resetPassword()});
-                
-                //addHandler(logoutButton, 'click', function(e, el){dologout()});
+                addHandler(resetPasswordButton, 'click', function(e, el){resetPassword()});               
                 
                 addHandler(postButton, 'click', function(e, el){addPost()});      
 
@@ -465,7 +449,7 @@
                 })
                 
                 profileUpload.addEventListener('change', function(e) {
-                    //console.log(this.files[0]);
+                  
                     const img = this.files[0];
                     const fileName = img.name;
                     console.log(img);
@@ -478,8 +462,7 @@
 
                     reader.onload = (function(t) {
                         return function(e) {
-                            const im = e.target.result;  
-                            //console.log(im);  
+                            const im = e.target.result; 
                             tempProfileUpload.src = im; 
                             tempProfileUpload.classList.remove('loading');                       
                         }
@@ -490,8 +473,6 @@
                     } else {
                        
                     } 
-
-
                 })
 
                 menuButtons.forEach((button) => {
@@ -657,8 +638,7 @@
                             lazyLoad(currentView);
                         }, 500);                      
                     }        
-                })              
-
+                })
             }
 
         </script>

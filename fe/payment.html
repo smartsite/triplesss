@@ -197,10 +197,7 @@
     </head>
     <body>
         <div class="toprow">
-            <div id="head-wave"><img src="img/head_wave.svg" /></div>
-            <div class="reg-header">
-                <img src="img/bw_logo1.png" />
-            </div>    
+           
             <div class="clear"></div>            
         </div>     
         <div class="wrap">
@@ -287,42 +284,8 @@
                 }).then(function(response) {
                     return response.json();
                 });
-            };
-   
-                   
-            
-           
-            
-           
-            
-            /*
-            let dologin = () => {
-                let data = {};
-
-                const username = document.getElementById('username');
-                const password = document.getElementById('password');
-                data.username = username.value;
-                data.password = password.value;
-
-                fetch('Triplesss/api/login.php', {
-                            method: "POST",
-                            body: JSON.stringify(data)                           
-                    }
-                ).then(function(response) {                  
-                    response.json().then(function(d) {                       
-                     
-                        if(d.success == 'false') {
-                            password.className = 'field_error';
-                        } else if(d.success == 'true') {
-                            password.className = '';
-                            location.href = '/';                           
-                        }                                 
-                    })
-                });   
-            }
-            */
-    
-                
+            };   
+               
             
             window.onload = () => {                
            

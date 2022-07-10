@@ -2131,13 +2131,6 @@ const helpView = () => {
 
 }
 
-const forecastView = () => {
-    count = 10;
-    offset = 0;  
-    hideBoxes();
-    showBox(true, 'feed'); 
-    userfeed(5,offset, count);
-}
 
 const wallView = () => {
     count = 10;
@@ -2218,18 +2211,7 @@ const setView = (view) => {
     triggered = false;
    
     switch(view) {
-
-        case "reports": 
-            userPageView(2); // hard coded for user_id 2!
-            //aggregator(2, offset, count);
-           
-            break;
-
-        case "forecast": 
-            forecastView();
-            //aggregator(2, offset, count);
-            break;
-
+       
 
         case "wall": 
             wallView();  
@@ -2275,8 +2257,7 @@ const setView = (view) => {
             dologout();
             break;    
         
-        default: 
-           //welcomeView();    
+        default:          
            feedView();
     }
 }
