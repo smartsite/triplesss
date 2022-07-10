@@ -68,30 +68,15 @@ class Feed {
         }
        
         $range = $this->range;
-
         $posts = [];   
         $st = explode(',', $sort_term);    
        
-        /*
-            if( $st[1]) {
-                $sort_order = trim($st[1]);
-            }
-        
+       /**
+        *  TODO: properly implement sort terms, e.g. popularity, relevance
         */
-
-        //TODO: properly implement sort terms, e.g. popularity, relevance
-                  
-        if($this->sort_by == "date, desc" || $this->sort_by == "date_desc") {
-            $posts = array_reverse($this->posts);
-        } else {
-            $posts = $this->posts;
-        }
-
-        $posts = array_reverse($this->posts);
-
-        $p = array_slice($posts, $range[0], $range[1]);
-        $posts = $p;        
+        //          
        
+        $posts = $this->posts;        
         return $posts;        
     }
 
@@ -111,13 +96,17 @@ class Feed {
         $this->range = $range;
     }
 
+ 
     public function getFilteredPosts() {
         $filter = $this->filter;
         $filterType = $filter->getType();
         $posts = [];
         if($filterType == 'tag') {
             $tags = $filter->getTags();
-            // TODO: loop through posts to find tag matches
+            /**
+             *  TODO: loop through posts to find tag matches
+             */
+            
             $posts = $this->repository->getFeedPosts($this);
             $this->posts = $posts;
         }
@@ -135,5 +124,4 @@ class Feed {
         $id = $this->id;
         return $this->repository->updateFeedStatus($id, $active, $status);
     }
-
 }

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ *   Get this user's notifications
+ *   
+ */
+
 require '../model/auth.php';
 require '../model/filter.php';
 require '../model/notification.php';
@@ -8,12 +13,6 @@ require '../model/user.php';
 
 use Triplesss\auth\Auth;
 use Triplesss\user\User;
-
-/**
- *   Get this user's notifications
- *   
- */
-
 
 header('Content-Type: application/json');
 

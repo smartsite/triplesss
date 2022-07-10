@@ -1,14 +1,14 @@
 <?php
 
-require '../model/user.php';
-require '../model/repository.php';
-
-use Triplesss\user\User;
-
 /**
  *   Semd a passsword reset link
  *    
 **/
+
+require '../model/user.php';
+require '../model/repository.php';
+
+use Triplesss\user\User;
 
 header('Content-Type: application/json');
 

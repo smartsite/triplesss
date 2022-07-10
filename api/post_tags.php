@@ -1,5 +1,10 @@
 <?php
 
+/**
+ *   Get or set tags for a post or user
+ *      
+ */
+
 require '../model/auth.php';
 require '../model/tags.php';
 require '../model/post.php';
@@ -8,13 +13,6 @@ require '../model/content.php';
 use Triplesss\post\Post as Post;
 use Triplesss\tag\Tag as Tag;
 use Triplesss\content\Content as Content;
-
-
-/**
- *   Get or set tags for a post or user
- *      
- */
-
 
 header('Content-Type: application/json');
 

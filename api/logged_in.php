@@ -1,12 +1,12 @@
 <?php
 
-require '../model/auth.php';
-use Triplesss\auth\Auth;
-
 /**
  *   Check logged in status. This is mainly for UX, not to be used for security!
  *    
 **/
+
+require '../model/auth.php';
+use Triplesss\auth\Auth;
 
 header('Content-Type: application/json');
 

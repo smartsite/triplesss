@@ -1,8 +1,5 @@
 <?php
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 require '../model/auth.php';
 require '../model/user.php';
 require '../model/image.php';
@@ -14,19 +11,14 @@ require '../model/emoji.php';
 require '../model/comment.php';
 require '../model/visibility.php';
 require '../model/notification.php';
-//require '../model/repository.php';
-
 
 use Triplesss\user\User;
-use Triplesss\feed\Feed as Feed;
 use Triplesss\post\Post as Post;
 use Triplesss\content\Content as Content;
 use Triplesss\post\Comment as Comment;
 use Triplesss\visibility\Visibility;
 use Triplesss\notification\Notification;
-//use Triplesss\text\Emoji;
 
-//use Triplesss\visibility\Visibility as Visibility;
 
 /**
  *   A Post is an object containing AT LEAST one Content object. 
@@ -66,14 +58,6 @@ $comment = new Comment($user_id);
 $comment->setContentType('text');
 $comment->setParentId($post_id);
 
-/*
-$emojis = new Emoji();
-$emoji_txt =  $emojis->Encode($txt);  
-if($txt != $emoji_txt) {
-    $txt = $emoji_txt;
-}
-*/
-
 if($txt != '') {
     
     $postContent = new Content();
@@ -111,8 +95,5 @@ $notification->setFromUser($user);
 $notification->setPostId($post_id);
 $notification->setType('comment');
 $notification->notify();
-
-// should return the comment count!
 $comments = $comment->getAll($v->getLevel());
-
 echo json_encode(['count' => count($comments), 'comments' => $comments]);

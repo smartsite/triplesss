@@ -38,7 +38,9 @@ header('Content-Type: application/json');
 $content = trim(file_get_contents("php://input"));
 $postObj = json_decode($content);
 
-$im = $postObj->image;
+$images = $postObj->images;
+//$im = $postObj->image;
+
 $txt = $postObj->comment;
 $user_id = $postObj->userid;
 $feed_id = $postObj->feedid;
@@ -80,18 +82,22 @@ if($txt != '') {
     $post->addContent($postContent);
 }
 
-if($im != '') {
-    $maxWidth=1024;
-    $maxHeight=640;
-    $postContent = new Content();
-    $postContent->setUserId($user_id);
-    $postContent->setBaseFolder($basefolder);
-    $postContent->setContentType('image');
-    $postContent->setContent($im);
-    $postContent->setImageConstraints($maxWidth, $maxHeight);
-    $postContent->write();
-    $post->addContent($postContent);
-}
+array_map(function($im) use($user_id, $basefolder, &$post) {
+    if($im != '') {
+        $maxWidth=1024;
+        $maxHeight=640;
+        $postContent = new Content();
+        $postContent->setUserId($user_id);
+        $postContent->setBaseFolder($basefolder);
+        $postContent->setContentType('image');
+        $postContent->setContent($im);
+        $postContent->setImageConstraints($maxWidth, $maxHeight);
+        $postContent->write();
+        $post->addContent($postContent);
+    }
+},
+$images);
+
 
 $id = $post->add();
 $v = new Visibility();

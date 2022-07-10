@@ -1,14 +1,12 @@
 <?php
 
-require '../model/auth.php';
-require '../model/repository.php';
-
-
 /**
  *   A single post object rendered as HTML ( only used in non-AJAX / non-JS framework front ends)
  *     
  */
 
+require '../model/auth.php';
+require '../model/repository.php';
 
 header('Content-Type: application/json');
 

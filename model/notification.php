@@ -16,7 +16,7 @@ class Notification {
     
     public function __construct(User $user) {
         $this->to_user = $user;
-        // By default, all notifications come from the system user unless overridden
+        // By default, all notifications come from system unless it's overridden
         $system = new User();
         $system->setUserId(0);
         $this->from_user = $system;
@@ -48,8 +48,7 @@ class Notification {
         $this->message = $message;            
     }
 
-    public function getMessage() :String {
-        //$this->message =  $this->repository->getNotification($this);    
+    public function getMessage() :String {       
         return $this->message;        
     }
 

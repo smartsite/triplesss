@@ -1,14 +1,14 @@
 <?php
 
-require '../model/user.php';
-require '../model/repository.php';
-
-use Triplesss\user\User;
-
 /**
  *   Reset a user's password. Must have a valid token from a reset request.
  *    
 **/
+
+require '../model/user.php';
+require '../model/repository.php';
+
+use Triplesss\user\User;
 
 header('Content-Type: application/json');
 

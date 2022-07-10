@@ -1,5 +1,10 @@
 <?php
 
+/**
+ *   Register a new user
+ *    
+**/
+
 require '../model/user.php';
 require '../model/connection.php';
 require '../model/repository.php';
@@ -8,11 +13,6 @@ require '../model/feed.php';
 use Triplesss\user\User;
 use Triplesss\connection\Connection;
 use Triplesss\feed\Feed;
-
-/**
- *   Register a new user
- *    
-**/
 
 header('Content-Type: application/json');
 

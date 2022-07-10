@@ -1,5 +1,13 @@
 <?php
 
+/**
+ *   Sets the visibility of a post. Non-zero levels are pre-defined and can  
+ *   be customised, but assume setting visibility to 0 = private ( user only can see ),
+ *   < 0 is hidden / deleted ( nobody except admin can see ). Could be improved
+ *   so that -1 = hidden, and < -1 is not visible to admins and marked for deletion from storage
+ */
+
+
 require '../model/auth.php';
 require '../model/user.php';
 require '../model/post.php';
@@ -10,14 +18,6 @@ use Triplesss\user\User;
 use Triplesss\post\Post as Post;
 use Triplesss\notification\Notification;
 use Triplesss\visibility\Visibility;
-
-/**
- *   Sets the visibility of a post. Non-zero levels are pre-defined and can  
- *   be customised, but assume setting visibility to 0 = private ( user only can see ),
- *   < 0 is hidden / deleted ( nobody except admin can see ). Could be improved
- *   so that -1 = hidden, and < -1 is not visible to admins and marked for deletion from storage
- */
-
 
 header('Content-Type: application/json');
 

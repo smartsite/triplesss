@@ -8,8 +8,7 @@ class Error {
     Public $type = null;
     Public $level = 0;
     
-    function __construct() {
-        
+    function __construct() {        
     }
 
     function setMessage(String $message) {
@@ -43,6 +42,4 @@ class Error {
     function getLevel() :String {
         return $this->level;
     }
-
-
 }

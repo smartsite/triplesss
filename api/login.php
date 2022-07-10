@@ -1,12 +1,12 @@
 <?php
 
-require '../model/auth.php';
-use Triplesss\auth\Auth;
-
 /**
  *   Log a user in
  *    
 **/
+
+require '../model/auth.php';
+use Triplesss\auth\Auth;
 
 header('Content-Type: application/json');
 

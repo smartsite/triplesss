@@ -1,5 +1,11 @@
 <?php
 
+/**
+ *   Send a notification from one user to another
+ *   Includes system messages like warnings or errors,
+ *   also reports to admins 
+ */
+
 require '../model/auth.php';
 require '../model/notification.php';
 require '../model/feed.php';
@@ -9,12 +15,6 @@ use Triplesss\auth\Auth;
 use Triplesss\user\User;
 use Triplesss\post\Post;
 use Triplesss\notification\Notification;
-
-/**
- *   Send a notification from one user to another
- *   Includes system messages like warnings or errors,
- *   also reports to admins 
- */
 
 header('Content-Type: application/json');
 

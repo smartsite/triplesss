@@ -1,5 +1,11 @@
 <?php
 
+/**
+ *   Any reaction to a post - like, unlike, meh... is handled here.
+ *   This endpoint should also let a user remove their reaction, but it doesn't yet!
+ */
+
+
 require '../model/auth.php';
 require '../model/post.php';
 require '../model/user.php';
@@ -11,12 +17,6 @@ use Triplesss\user\User as User;
 use Triplesss\post\Post as Post;
 use Triplesss\reaction\Reaction as Reaction;
 use Triplesss\notification\Notification;
-
-/**
- *   Any reaction to a post - like, unlike, meh... is handled here.
- *   This endpoint should also let a user remove their reaction, but it doesn't yet!
- */
-
 
 header('Content-Type: application/json');
 

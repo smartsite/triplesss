@@ -38,8 +38,7 @@ class Comment extends Post {
         return $this->content;
     }
 
-    function add() {
-        // this does the magic!
+    function add() {       
         return $this->repository->addPostComment($this);
     }
   

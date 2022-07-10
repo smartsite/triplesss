@@ -10,15 +10,13 @@ use \Triplesss\repository\Repository;
 
 class Connection  {    
    
-    Public $type; 
-    //Public $id;
+    Public $type;  
     Public $from;
     Public $to;
     Public $repository;
         
-    //public function __construct($id) {
-    public function __construct() {    
-        //$this->id = $id;
+  
+    public function __construct() {  
         $this->repository = new Repository(); 
     }
 

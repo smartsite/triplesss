@@ -33,5 +33,4 @@ class Reaction {
     public function getUser() {
         return $this->user;
     }
-
 }   

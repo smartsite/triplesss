@@ -83,13 +83,11 @@ class Member extends User {
         $this->customerID = $this->repository->updateMember($details);        
     }
 
-    public function getMemberByUserId(Int $user_id) {
-        // only returns a member if exists
+    public function getMemberByUserId(Int $user_id) {       
         return $this->repository->getMember(-1, $user_id, true);
     }
 
-    public function getMemberByCustomerId(String $customer_id) {
-        // only returns a member if exists
+    public function getMemberByCustomerId(String $customer_id) {       
         return $this->repository->getMemberByCustomerId($customer_id);
     }    
 

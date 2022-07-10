@@ -2,14 +2,12 @@
 
 /**
  *   User authentication, log in, log out
- *   TODO; oAuth2
  * 
  */
 
 
 namespace Triplesss\auth;
 
-require_once realpath(dirname(__FILE__)).'/repository.php';
 use Triplesss\repository\Repository;
 
 class Auth {       
@@ -22,31 +20,25 @@ class Auth {
         $this->repository = new Repository();
     }
                 
-    function login(String $username, String $password) {
+    function login(String $username, String $password){
         $repository = $this->repository;
         return $repository->userLogin($username, $password, true); // last arg is hashed / not hashed
     }
 
-    function logout() {
+    function logout(){
         $repository = $this->repository;
         return $repository->userLogout();
     }    
     
-    function isLoggedIn() {
+    function isLoggedIn(){
         $repository = $this->repository;
         return $repository->isUserLoggedIn();
-    }  
-    
-    function isAdmin(Int $max_id) {
-        $repository = $this->repository;
-        return $repository->isAdminUser($max_id);
-    }
+    }        
        
     function validSessionId($sid)
     {
         return preg_match('/^[-,a-zA-Z0-9]{1,128}$/', $sid) > 0;
     }
-
 }
 
 ?>

@@ -1,15 +1,5 @@
 <?php
 
-require '../model/auth.php';
-require '../model/image.php';
-require '../model/text.php';
-require '../model/post.php';
-require '../model/content.php';
-
-use Triplesss\post\Post as Post;
-use Triplesss\content\Content as Content;
-
-
 /**
  *   A Post is an object containing AT LEAST one Content object. 
  *   Content objects can be images or text, so a Post can contain either,
@@ -22,6 +12,14 @@ use Triplesss\content\Content as Content;
  * 
  */
 
+require '../model/auth.php';
+require '../model/image.php';
+require '../model/text.php';
+require '../model/post.php';
+require '../model/content.php';
+
+use Triplesss\post\Post as Post;
+use Triplesss\content\Content as Content;
 
 header('Content-Type: application/json');
 

@@ -1,13 +1,5 @@
 <?php
 
-// GET a to read a connection
-// POST to create or remove a connection
-
-
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
-
 require '../model/auth.php';
 require '../model/connection.php';
 require '../model/user.php';
@@ -15,7 +7,6 @@ require '../model/notification.php';
 
 use Triplesss\auth\Auth;
 use Triplesss\connection\Connection;
-//use Triplesss\feed\Feed;
 use Triplesss\user\User;
 use Triplesss\notification\Notification;
 
