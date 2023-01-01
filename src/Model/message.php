@@ -1,6 +1,7 @@
 <?php
 namespace Triplesss\message;
 
+use Triplesss\repository\Repository;
 use Triplesss\post\Post;
 
 class Message extends Post {

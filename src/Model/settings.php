@@ -18,20 +18,20 @@ class Settings
 		// Host name
 		$settings['dbhost'] = 'localhost';
 		// Database name
-		$settings['dbname'] = 'smartsit_members9';
+		$settings['dbname'] = 'members';
 		// Username
-		$settings['dbusername'] = 'smartsit_mem9';
+		$settings['dbusername'] = 'mem';
 		// Password
-		$settings['dbpassword'] = '$bLUe123!*';
+		$settings['dbpassword'] = 'password';
 		
 		if($this->getEnvironment() == 'dev') {
 			$settings['dbhost'] = 'localhost';
 			// Database name
-			$settings['dbname'] = 'members9';
+			$settings['dbname'] = 'members';
 			// Username
-			$settings['dbusername'] = 'members9';
+			$settings['dbusername'] = 'members';
 			// Password
-			$settings['dbpassword'] = 'pw';
+			$settings['dbpassword'] = 'password';
 		}
 
         /**
@@ -40,10 +40,10 @@ class Settings
         
 		$settings['session_time'] = 1 * 30 * 60 * 60; // 30 mins for testing!
 		
-		$settings['hostname'] = 'https://vip.surfsouthoz.com.au';
+		$settings['hostname'] = 'https://hostymchostface.com';
 
 		if($this->getEnvironment() == 'dev') {
-			$settings['hostname'] = 'http://uat.surfsouthoz';
+			$settings['hostname'] = 'http://dev.hostymchostface.com';
 		}
 		
 		return $settings;
@@ -54,11 +54,11 @@ class Settings
 		
 		$settings['environment'] = 'dev';
 		
-		if(strpos($host, 'vip.surfsouthoz') > -1) {
+		if(strpos($host, 'hosty') > -1) {
 			$settings['environment'] = 'prod';
 		}
 
-		if(strpos($host, 'app2.surfsouthoz') > -1) {
+		if(strpos($host, 'uat.hosty') > -1) {
 			$settings['environment'] = 'uat';
 		}
 

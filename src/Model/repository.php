@@ -482,6 +482,17 @@ class Repository {
         return $p;
     }
 
+    Public function removeReaction(Post $post, Reaction $reaction) { 
+        $post_id = $post->postId;
+        $user_id = $reaction->user->userid;
+        $level = 0;
+
+        $db = $this->db;
+        $s = 'UPDATE reaction SET level=0 WHERE user_id='.$user_id.' AND post_id="'.$post_id.'", ';
+        $p = $db->query($s);
+        return $p;
+    }
+
     Public function getPostReactions(Post $post, Reaction $reaction = null) {
         $db = $this->db;
         $post_id = $post->postId;
@@ -509,7 +520,7 @@ class Repository {
         
         /**
          *  We only support text assets at the moment, but images can be added by duplicating the query
-         *  and UNION it with content_type = 'image' 
+         *  and UNION with content_type = 'image' 
          * */ 
          
 
@@ -637,6 +648,8 @@ class Repository {
         }
         return $r;
     }
+
+    // TODO: update to use JWT
 
     public function userLogin($username, $password, $hashed = false) {
         $db = $this->db;
@@ -830,7 +843,7 @@ class Repository {
             $connection_level = $connection->type;
         }       
        
-        /* danger: performance issues */
+        /* danger: performance issues! */
         
         $s = 'SELECT DISTINCT * FROM (SELECT user.id, user_name, connection_types.name relation FROM connection JOIN user ON connection.from_id = user.id 
         JOIN connection_types ON connection_types.id = connection.connection_type 
