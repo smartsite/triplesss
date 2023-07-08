@@ -3,7 +3,8 @@ namespace Triplesss\user;
 
 class Subscriber extends User {
     
-    Public $id = 0;    
+    Public $id = 0;
+    
     
     function __construct($subscriber) {
         $this->Subscriber = $subscriber;

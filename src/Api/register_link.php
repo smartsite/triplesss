@@ -1,9 +1,7 @@
 <?php
 
-/**
- *   send or re-send a registration link
- *    
-**/
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 require '../model/user.php';
 require '../model/connection.php';
@@ -11,6 +9,11 @@ require '../model/repository.php';
 require '../model/feed.php';
 
 use Triplesss\user\User;
+
+/**
+ *   send or re-send a registration link
+ *    
+**/
 
 header('Content-Type: application/json');
 

@@ -1,15 +1,20 @@
 <?php
-/**
- * creates and image on the server and returns the URL in JSON
- * TODO: 
- *      need to add a check auth
- *      require "auth.php";
- *      header('Access-Control-Allow-Origin: *'); - remove / restrict this this in production to prevent abuse!!!
- *   
- */
-
+// creates and image on the server and returns the URL in JSON
+// need to add a check auth!!!
+// header('Access-Control-Allow-Origin: *'); // remove / restrict this this in production to prevent abuse!!!
 
 namespace  Triplesss\image;
+
+//require "auth.php";
+
+//$req = $_SERVER['REQUEST_URI'];
+//$action = explode("/", $req)[count(explode("/", $req)) - 1];
+
+// POST to create
+// GET to read
+//ini_set('display_errors', 1);
+//error_reporting(E_ALL);
+
 
 class Image { 
         
@@ -22,14 +27,21 @@ class Image {
         private $imageMimeType;
         public $maxWidth;
         public $maxHeight;
-        private $rawImageData;       
+        private $rawImageData;
+
+        /*
+        public function __construct(Int $user_id) {
+            $this->$userId = $user_id;    
+        }
+        */
 
         public function __construct() {
                 
         }
 
         public function add($imageData){
-           
+            // The API call to add an image calls this
+            // $folder = $this->selectStorage();
             $this->imageFolder = $this->selectStorage();
             $this->rawImageData = $imageData;   
             $this->setImageType($imageData);
@@ -39,7 +51,10 @@ class Image {
             ob_start();
             imagejpeg( $imResized);
             $this->imageData = ob_get_clean();
-            file_put_contents( $this->imageFolder."/". $this->imageName, $this->imageData);          
+
+            file_put_contents( $this->imageFolder."/". $this->imageName, $this->imageData);
+            //echo json_encode('{"folder": "'.  $this->imageFolder.'","name":"'.$imageName.'"}');   
+            
             return ["folder" => $this->imageFolder, "name" => $this->imageName, "type" => $this->imageType, "mime_type" => $this->imageMimeType];  
         }
 
@@ -69,10 +84,7 @@ class Image {
         }
 
         public function delete(){
-                /**
-                 *       API call to delete an image ( does NOT unlink file! )
-                 */
-               
+                // API call to delete an image ( does NOT unlink file! )
         }
 
         public function setImageData($imageData) {
@@ -152,9 +164,27 @@ class Image {
 
         public function getImageFileType(){               
                 return $this->type; 
-        }       
+        }
+
+        // add image to database with ref to static file!
+
+        // find image in DB ( GET /fullpath, GET /datestamp )
 
 }
+
+//$baseFolder = "../storage/";
+
+/*
+
+isset($_POST['image']) ? $imageData = $_POST['image'] : $imageData = "";
+isset($_POST['userid']) ? $userId = $_POST['userid'] : $userID = '00';
+
+$img = new Image();
+$img->setUserId($userId);
+$img->setBaseFolder("../storage");
+$img->add($imageData);
+
+*/
 
 
 ?>

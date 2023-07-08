@@ -35,4 +35,5 @@ class Collection {
     function get() {
         return $this;
     }
+
 }

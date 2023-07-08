@@ -1,10 +1,5 @@
 <?php
 
-/**
- *   Register a new user
- *    
-**/
-
 require '../model/user.php';
 require '../model/connection.php';
 require '../model/repository.php';
@@ -13,6 +8,11 @@ require '../model/feed.php';
 use Triplesss\user\User;
 use Triplesss\connection\Connection;
 use Triplesss\feed\Feed;
+
+/**
+ *   Register a new user
+ *    
+**/
 
 header('Content-Type: application/json');
 
@@ -34,11 +34,14 @@ if(array_key_exists('hash', $postObj)) {
     }
 }
 
+$firstfollow = 1;
+if(array_key_exists('firstfollowid', $postObj)) {
+    $firstfollow = $postObj['firstfollowid'];
+}
 
 
-
-// the id of the main news account owner. This will show as the only source in the new user's feed
-isset($postObj['follow_id']) ? $to = $postObj['follow_id'] : $to = 2;
+// the id of the super user / moderation account owner. This will show as the only source in the new user's feed
+isset($postObj['follow_id']) ? $to = $postObj['follow_id'] : $to = $firstfollow;
 
 $user = new User();
 $username = $postObj['user_name'];

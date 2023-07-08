@@ -1,10 +1,5 @@
 <?php
 
-/**
- *   Whatever a user posts to feed_id = 0 becomes a profile
- *   Since the sort order is descending date by default, we only need the last one!
- */
-
 require '../model/auth.php';
 require '../model/user.php';
 require '../model/feed.php';
@@ -13,6 +8,12 @@ require '../model/filter.php';
 use Triplesss\user\User as User;
 use Triplesss\feed\Feed as Feed;
 use Triplesss\filter\Filter as Filter;
+
+/**
+ *   Whatever a user posts to feed_id = 0 becomes a profile
+ *   Since the sort order is descending date by default, we only need the last one!
+ */
+
 
 header('Content-Type: application/json');
 

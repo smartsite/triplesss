@@ -1,19 +1,25 @@
 <?php
 
+require '../../../../vendor/autoload.php';
+
+require '../model/auth.php';
+use Triplesss\auth\Auth;
+use ReallySimpleJWT\Token;
+
 /**
  *   Log a user in
  *    
 **/
 
-require '../model/auth.php';
-use Triplesss\auth\Auth;
-
 header('Content-Type: application/json');
 
 $content = trim(file_get_contents("php://input"));
+//$postObj = $_POST;
 $postObj = json_decode($content, true);
 
-$auth = new Auth();
+$tok = new Token();
+
+$auth = new Auth($tok);
 $password = $postObj['password'];
 $username = $postObj['username'];
 

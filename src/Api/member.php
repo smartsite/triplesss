@@ -1,15 +1,19 @@
 <?php
 
-/**
- *   Get an existing member or create one
- *    
-**/
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 require '../model/user.php';
 require '../model/member.php';
 require '../model/repository.php';
 
 use Triplesss\user\Member;
+
+/**
+ *   Get an existing member or create one
+ *    
+**/
 
 header('Content-Type: application/json');
 

@@ -1,19 +1,24 @@
 <?php
 
+require '../model/auth.php';
+require '../model/user.php';
+require '../model/feed.php';
+require '../model/filter.php';
+//require '../model/emoji.php';
+//require '../model/repository.php';
+
+use Triplesss\user\User as User;
+use Triplesss\feed\Feed as Feed;
+use Triplesss\filter\Filter as Filter;
+//use Triplesss\text\Emoji as Emoji;
+
+
 /**
  *   A Feed is a collection of posts, which may be filtered and  /or sorted
  *   A user owns  a feed, feeds from multiple users are combined using an aggregator
  *     
  */
 
-require '../model/auth.php';
-require '../model/user.php';
-require '../model/feed.php';
-require '../model/filter.php';
-
-use Triplesss\user\User as User;
-use Triplesss\feed\Feed as Feed;
-use Triplesss\filter\Filter as Filter;
 
 header('Content-Type: application/json');
 
@@ -24,7 +29,7 @@ if(isset($_GET)) {
 } else {
     $content = trim(file_get_contents("php://input"));
     $postObj = json_decode($content, true);
-    extract( $postObj);   
+    extract($postObj);   
 }
 
 if(!$offset) {
@@ -37,18 +42,19 @@ if(!$count) {
 
 $feed = new Feed();
 $feed->setId($feed_id);
+
 $filter = new Filter($filter_options = []);
-$filter->setType('range');
-$filter->setRange($offset, (int)($count) + (int)($offset));
 $feed->setFilter($filter);
+
 $feed->setPostRange([$offset, $count]);
 $feed->sortBy($sort_by);
+
 $ag = $feed->getPosts();
 
 $posts = array_filter(array_map(function($u) {
     $fu = new User();
     $fu->setUserId($u[0]['owner']);
-    $u[0]['avatar'] = $fu->getAvatar();      
+    $u[0]['avatar'] = $fu->getAvatar();   
     return $u;
 }, $ag));
 

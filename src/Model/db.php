@@ -9,8 +9,9 @@ use \Triplesss\settings\Settings as Settings;
 class DB extends Settings {	
 	// Connection to the database
 	function __construct() {
+		// Load settings from parent class
+		$settings = $this->getSettings();
 		
-		$settings = $this->getSettings();		
 		$host = $settings['dbhost'];
 		$name = $settings['dbname'];
 		$user = $settings['dbusername'];

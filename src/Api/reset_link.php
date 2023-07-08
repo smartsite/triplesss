@@ -1,20 +1,22 @@
 <?php
 
-/**
- *   Semd a passsword reset link
- *    
-**/
-
 require '../model/user.php';
 require '../model/repository.php';
 
 use Triplesss\user\User;
 
+/**
+ *   Send a passsword reset link
+ *    
+**/
+
 header('Content-Type: application/json');
 
-isset($_GET['from']) ? $from = $_GET['from'] : $from = '';
-isset($_GET['username']) ? $username = $_GET['username'] : $username = '';
-isset($_GET['userid']) ? $userid = $_GET['userid'] : $userid = -1;
+$postObj = json_decode($content, true);
+
+$from =  $postObj['from'];
+$username = $postObj['username'];
+$userid = $postObj['userid'];
 
 $user = new User();
 if($userid > 0) {

@@ -1,20 +1,23 @@
 <?php
 
-/**
- *   Reset a user's password. Must have a valid token from a reset request.
- *    
-**/
-
 require '../model/user.php';
 require '../model/repository.php';
 
 use Triplesss\user\User;
 
+/**
+ *   Reset a user's password. Must have a valid token from a reset request.
+ *    
+**/
+
 header('Content-Type: application/json');
 
-isset($_GET['password']) ? $password = $_GET['password'] : $password = '';
-isset($_GET['key']) ? $key = $_GET['key'] : $key = '';
-isset($_GET['userid']) ? $userid = $_GET['userid'] : $userid = -1;
+$content = trim(file_get_contents("php://input"));
+$postObj = json_decode($content);
+
+$user_id = $postObj->userid;
+$key = $postObj->key;
+$password = $postObj->password;
 
 $success = false;
 

@@ -1,5 +1,8 @@
 <?php
 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 require '../model/auth.php';
 require '../model/image.php';
 require '../model/text.php';
@@ -19,19 +22,16 @@ use Triplesss\visibility\Visibility;
 
 header('Content-Type: application/json');
 $comments = [];
-isset($_GET['visibility']) ? $visibility = $_GET['visibility'] : $visibility = 0;
 
 //$user_id = $postObj->userid;
 $user_id = 0;
 if(isset($_GET['post_id'])) {
     $post_id = $_GET['post_id'];
     $comment = new Comment($user_id);
-    
-    //$comment->setVisibility($visibility, $post_id);
     $comment->setParentId($post_id);
 
     // should return the comment count!
-    $comments = $comment->getAll($visibility);
+    $comments = $comment->getAll();
 }
 
 echo json_encode(['count' => count($comments), 'comments' => $comments]);

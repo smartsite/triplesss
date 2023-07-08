@@ -1,5 +1,8 @@
 <?php
 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 require '../model/auth.php';
 require '../model/user.php';
 require '../model/image.php';
@@ -7,18 +10,21 @@ require '../model/text.php';
 require '../model/post.php';
 require '../model/feed.php';
 require '../model/content.php';
-require '../model/emoji.php';
 require '../model/comment.php';
 require '../model/visibility.php';
 require '../model/notification.php';
+//require '../model/repository.php';
+
 
 use Triplesss\user\User;
+use Triplesss\feed\Feed as Feed;
 use Triplesss\post\Post as Post;
 use Triplesss\content\Content as Content;
 use Triplesss\post\Comment as Comment;
 use Triplesss\visibility\Visibility;
 use Triplesss\notification\Notification;
 
+//use Triplesss\visibility\Visibility as Visibility;
 
 /**
  *   A Post is an object containing AT LEAST one Content object. 
@@ -59,12 +65,10 @@ $comment->setContentType('text');
 $comment->setParentId($post_id);
 
 if($txt != '') {
-    
     $postContent = new Content();
     $postContent->setUserId($user_id);
     $postContent->setContentType('text');
-    $encoded_text = bin2hex($txt);
-    $postContent->setContent($encoded_text);
+    $postContent->setContent($txt);
     $postContent->write();
     $comment->addContent($postContent);
 }
@@ -95,5 +99,9 @@ $notification->setFromUser($user);
 $notification->setPostId($post_id);
 $notification->setType('comment');
 $notification->notify();
-$comments = $comment->getAll($v->getLevel());
+
+
+// should return the comment count!
+$comments = $comment->getAll();
+
 echo json_encode(['count' => count($comments), 'comments' => $comments]);

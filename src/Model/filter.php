@@ -56,7 +56,7 @@ class Filter {
     public function getUserid() :Int {
         return $this->userid;
     }
-    
+
     // these can be partial usernames, e.g. surf could filter "surfsouthoz" and "surfgurrl77"
     public function setUserName($username) {
         $this->username = $username;
@@ -65,4 +65,6 @@ class Filter {
     public function getUserName() :string {
         return $this->username;
     }
+
+
 }

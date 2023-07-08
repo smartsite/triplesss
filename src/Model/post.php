@@ -11,10 +11,14 @@ use Triplesss\user\User;
 use Triplesss\tag\Tag;
 
 
+//ini_set('display_errors', 1);
+//error_reporting(E_ALL);
+
 class Post {
     
     Public $id = 0;
-    Public $postId;   
+    Public $postId;
+    //Public $userId;
     Public $contentType;
     Public $text = '';
     Public $images = [];
@@ -58,6 +62,7 @@ class Post {
         return $this->repository->getPostOwnerById($this->postId);
     }
 
+
     function addContent(Content $content) {
         array_push($this->items, $content);
     }
@@ -72,8 +77,23 @@ class Post {
 
     public function getContent() {
         
-        $content = [];           
-        return $content;         
+        $content = [];
+
+        /*
+        foreach($this->items as $item) {
+            if($item->getContentType() == 'image') {
+                $im = ['basefolder' => $item->getBaseFolder(), 'name' => $item->getImageName()];
+                $content['images'][] = $im;
+            }
+
+            if($item->getContentType() == 'text') {
+                $tx = $item->getTex
+            }
+        }
+        */
+        
+        return $content;
+        //return ['text' => $this->text, 'images' => $this->images];       
     }
 
     public function add() {
@@ -83,10 +103,7 @@ class Post {
     }
 
     public function updateContent(String $post_id, String $text) { 
-        /**
-         *  TODO: handle more than one image :(
-         */
-       
+        // TODO: handle more than one image :(
         $status = $this->repository->updatePost($post_id, $text);
         return $status;
     }
@@ -97,15 +114,16 @@ class Post {
     }
 
     public function edit(String $text, Image $image) { 
-         /**
-         *  TODO: handle more than one image :(
-         */
+        // TODO: handle more than one image :(
         $status = $this->repository->editPost($this, $text, $image);
         return $status;
     }
 
     
-    public function getItems() {       
+    public function getItems() {
+        //$text = $this->repository->getPostAsset('text', $this->postId);
+        //$image = $this->repository->getPostAsset('image', $this->postId);
+        //$this->items = [$text, $image];
         $items = $this->repository->getPostById($this->postId);
         $this->items = $items;
         return $this->items;
@@ -142,12 +160,26 @@ class Post {
         $items = $this->getItems();
         return array_map(function($content) use($tags, $repository){
             return $repository->setTags($content, $tags); 
-        }, $items);     
+        }, $items);      
+       
     }
 
-    public function addReaction(Reaction $reaction) : Bool {      
+    public function addReaction(Reaction $reaction) : Bool {
+        // first, see if user has reacted
+        //$added = false;
+
         $repository = $this->repository;
-        return $repository->addReaction($this, $reaction); 
+        return $repository->addReaction($this, $reaction);  
+
+        /*
+        if(!$this->userReacted($user)) {
+            array_push($this->reactions, $reaction);
+            $added = true;
+        }
+        */
+        
+        //array_push($this->reactions, $reaction);
+        //return $added;
     }
 
     public function getReactions() :Array {
@@ -157,7 +189,9 @@ class Post {
         return $this->reactions;
     } 
 
-    public function removeReaction(User $user) {       
+    public function removeReaction(User $user) {
+        
+        // Need to loop through reactions until we find this user, and unset it
         $reactions = $this->reactions;
         $this->reactions = array_map(function($reaction, $key) use ($user, $reactions) {
             if($reaction->getUser() == $user) {
@@ -172,8 +206,10 @@ class Post {
         return $this->comments;
     }
 
-    public function userReacted(User $user) {        
+    public function userReacted(User $user) {
+        // See if User is in $this->reactions
         $reacted = false;
+
         array_map(function($reaction) use ($user, $reacted) {
             if($reaction->getUser() == $user) {
                 $reacted = false;
@@ -185,5 +221,14 @@ class Post {
 
     private function unReact(User $user) {
 
-    }    
+    }
+
+       
+    /*
+    function setOwner(User $user) {
+        $this->owner = $user;
+    }
+    */
+
+
 }

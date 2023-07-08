@@ -1,6 +1,5 @@
 <?php
 namespace  Triplesss\text;
-use Triplesss\text\Emoji;
 
 class Text {
     
@@ -19,8 +18,6 @@ class Text {
     }
 
     function setText($text) {
-        //$emoji = new Emoji();       
-        //$this->text =  $emoji->encode($text);
         $this->text = $text;
     }
 

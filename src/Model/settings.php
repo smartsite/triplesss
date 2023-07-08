@@ -18,20 +18,30 @@ class Settings
 		// Host name
 		$settings['dbhost'] = 'localhost';
 		// Database name
-		$settings['dbname'] = 'members';
+		$settings['dbname'] = 'smartsit_members9';
 		// Username
-		$settings['dbusername'] = 'mem';
+		$settings['dbusername'] = 'smartsit_mem9';
 		// Password
-		$settings['dbpassword'] = 'password';
+		$settings['dbpassword'] = '$bLUe123!*';
+		
+		/**
+		 *  JWT settings 
+		 */
+		
+		// secret
+		$settings['jwt_secret'] = file_get_contents("/var/www/html/jwt/secret.key");
+		//  public key
+		$settings['jwt_key'] = "public99";
+
 		
 		if($this->getEnvironment() == 'dev') {
 			$settings['dbhost'] = 'localhost';
 			// Database name
-			$settings['dbname'] = 'members';
+			$settings['dbname'] = 'members9';
 			// Username
-			$settings['dbusername'] = 'members';
+			$settings['dbusername'] = 'members9';
 			// Password
-			$settings['dbpassword'] = 'password';
+			$settings['dbpassword'] = 'pw';
 		}
 
         /**
@@ -40,10 +50,10 @@ class Settings
         
 		$settings['session_time'] = 1 * 30 * 60 * 60; // 30 mins for testing!
 		
-		$settings['hostname'] = 'https://hostymchostface.com';
+		$settings['hostname'] = 'https://vip.surfsouthoz.com.au';
 
 		if($this->getEnvironment() == 'dev') {
-			$settings['hostname'] = 'http://dev.hostymchostface.com';
+			$settings['hostname'] = 'http://dev2022.surfsouthoz';
 		}
 		
 		return $settings;
@@ -54,11 +64,11 @@ class Settings
 		
 		$settings['environment'] = 'dev';
 		
-		if(strpos($host, 'hosty') > -1) {
+		if(strpos($host, 'vip.surfsouthoz') > -1) {
 			$settings['environment'] = 'prod';
 		}
 
-		if(strpos($host, 'uat.hosty') > -1) {
+		if(strpos($host, 'app2.surfsouthoz') > -1) {
 			$settings['environment'] = 'uat';
 		}
 

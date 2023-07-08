@@ -63,7 +63,8 @@ class content {
         $this->content = $content;        
     }
 
-    Public function getContent(Int $id) {        
+    Public function getContent(Int $id) {
+        
         //return $this->content;
     }
 
@@ -83,13 +84,15 @@ class content {
             $im->setBaseFolder($this->baseFolder);
             $im->setUserId($this->userId);
             $im->setConstraints($this->maxImageWidth,  $this->maxImageHeight);
-            $stored = $im->add($this->content);          
+            $stored = $im->add($this->content);
+            // This is the database insert ID
             $id = $this->repository->imageAdd($stored['name'], $stored['folder'], $stored['type'], $stored['mime_type'], $this->userId, '');           
         }
-        
+
         if($this->contentType == 'text') {
             $txt = new Text();
-            $txt->setText($this->content);          
+            $txt->setText($this->content);
+            // This is the database insert ID
             $id = $this->repository->textAdd($this->content, $this->userId, '');           
         }
         $this->contentId = $id;
@@ -105,4 +108,8 @@ class content {
         $this->tags = $tags;
         return $this->repository->setTags($this);
     }
+
+
+
+
 }

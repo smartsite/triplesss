@@ -34,5 +34,7 @@ class Gallery extends Image {
 
     function getCount() :Int {
         return count($this->images);
-    }   
+    }
+    
+
 }

@@ -9,5 +9,7 @@ class Helper  {
     function __construct($content) {
         // Helper methods
     }
+
+
 }    
        

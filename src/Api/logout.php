@@ -1,12 +1,12 @@
 <?php
 
+require '../model/auth.php';
+use Triplesss\auth\Auth;
+
 /**
  *   Log a user out
  *    
 **/
-
-require '../model/auth.php';
-use Triplesss\auth\Auth;
 
 header('Content-Type: application/json');
 

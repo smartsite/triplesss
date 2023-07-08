@@ -20,7 +20,6 @@ class Feed {
         $this->repository = new Repository();
         $this->range = [0,100];
         $this->sort_by = 'date_desc';
-        $this->filter = null;
     }
 
     Public function new(Int $owner_id, String $name, String $description)  {
@@ -68,24 +67,35 @@ class Feed {
         }
        
         $range = $this->range;
+
         $posts = [];   
         $st = explode(',', $sort_term);    
        
-       /**
-        *  TODO: properly implement sort terms, e.g. popularity, relevance
+        /*
+            if( $st[1]) {
+                $sort_order = trim($st[1]);
+            }
+        
         */
-        //          
+
+        //TODO: properly implement sort terms, e.g. popularity, relevance
+                  
+        if($this->sort_by == "date, desc" || $this->sort_by == "date_desc") {
+            $posts = array_reverse($this->posts);
+        } else {
+            $posts = $this->posts;
+        }
+
+        $posts = array_reverse($this->posts);
+
+        $p = array_slice($posts, $range[0], $range[1]);
+        $posts = $p;        
        
-        $posts = $this->posts;        
         return $posts;        
     }
 
     public function setFilter($filter) {
         $this->filter = $filter;
-    }
-
-    public function getFilter() {
-        return $this->filter;
     }
 
     public function sortBy($sort_by = "date_desc") {
@@ -96,24 +106,18 @@ class Feed {
         $this->range = $range;
     }
 
- 
     public function getFilteredPosts() {
         $filter = $this->filter;
         $filterType = $filter->getType();
         $posts = [];
         if($filterType == 'tag') {
             $tags = $filter->getTags();
-            /**
-             *  TODO: loop through posts to find tag matches
-             */
-            
-            $posts = $this->repository->getFeedPosts($this);
-            $this->posts = $posts;
+            // TODO: loop through posts to find tag matches
         }
 
         if($filterType == 'userid') {
                       
-            $op = $this->repository->getFeedPosts($this);
+            $op = $this->repository->getFeedPosts($this, $filter);
             $posts = end($op);
             $this->posts = $posts;         
         }
@@ -124,4 +128,5 @@ class Feed {
         $id = $this->id;
         return $this->repository->updateFeedStatus($id, $active, $status);
     }
+
 }

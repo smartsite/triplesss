@@ -1,5 +1,8 @@
 <?php
 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 require '../model/auth.php';
 require '../model/user.php';
 require '../model/image.php';
@@ -32,26 +35,25 @@ use Triplesss\notification\Notification;
  * 
  */
 
-
 header('Content-Type: application/json');
 
 $content = trim(file_get_contents("php://input"));
 $postObj = json_decode($content);
 
-$images = $postObj->images;
 //$im = $postObj->image;
-
+$images = $postObj->images;
 $txt = $postObj->comment;
 $user_id = $postObj->userid;
 $feed_id = $postObj->feedid;
 $visibility = $postObj->visibility;
-$basefolder = $postObj->basefolder;
+//$basefolder = $postObj->basefolder;
+$basefolder = $_SERVER['DOCUMENT_ROOT']."/".$postObj->basefolder;
+
 
 $feed = new Feed();
 $feed->setId($feed_id);
 $post = new Post($user_id);
 $post->setContentType('text');
-
 $user = new User();
 $user->setUserId($user_id);
 
@@ -59,11 +61,9 @@ $p1 = $post;
 
 $allowed = array_map(function($t) {
     return '&#'.$t.';';
-}, range(127744,129510));
+}, range(128512,128567));
 
-// range(128512,128567)
-
-$more_tags = ['<h3>', '<h4>', '<h5>', '<br>', '<br />', '<b>', '<p>'];
+$more_tags = ['<h3>', '<h4>', '<h5>', '<br>', '<b>'];
 
 $allowed = array_merge($allowed, $more_tags);
 
@@ -72,32 +72,29 @@ if($txt != '') {
     //$cleanText = $em->Encode($cleanText);
     $cleanText = strip_tags($txt, $allowed);
     $cleanText = addslashes($cleanText);
-       
+    
     $postContent = new Content();
     $postContent->setUserId($user_id);
     $postContent->setContentType('text');   
     $postContent->setContent($cleanText);
     $postContent->write();
-  
     $post->addContent($postContent);
 }
 
-array_map(function($im) use($user_id, $basefolder, &$post) {
-    if($im != '') {
-        $maxWidth=1024;
-        $maxHeight=640;
-        $postContent = new Content();
-        $postContent->setUserId($user_id);
-        $postContent->setBaseFolder($basefolder);
-        $postContent->setContentType('image');
-        $postContent->setContent($im);
-        $postContent->setImageConstraints($maxWidth, $maxHeight);
-        $postContent->write();
-        $post->addContent($postContent);
-    }
-},
-$images);
 
+array_map(function($im) use($post, $user_id, $basefolder) {
+    $maxWidth=1024;
+    $maxHeight=640;
+    $postContent = new Content();
+    $postContent->setUserId($user_id);
+    $postContent->setBaseFolder($basefolder);
+    $postContent->setContentType('image');
+    $postContent->setContent($im);
+    $postContent->setImageConstraints($maxWidth, $maxHeight);
+    $postContent->write();
+    $post->addContent($postContent);
+}, $images);
+    
 
 $id = $post->add();
 $v = new Visibility();

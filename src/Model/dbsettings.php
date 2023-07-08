@@ -14,11 +14,11 @@ class DBSettings
 		// Host name
 		$settings['dbhost'] = 'localhost';
 		// Database name
-		$settings['dbname'] = 'dbname';
+		$settings['dbname'] = 'members9';
 		// Username
-		$settings['dbusername'] = 'dbusername';
+		$settings['dbusername'] = 'members9';
 		// Password
-        $settings['dbpassword'] = 'dbpassword';
+		$settings['dbpassword'] = 'pw';
 		
 		return $settings;
 	}

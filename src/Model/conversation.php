@@ -8,7 +8,8 @@ use Triplesss\message\Message;
 class Conversation { 
 
 
-    Public $participants = [];   
+    Public $participants = [];
+   
 
     function __construct() {       
         $this->repository = new Repository();
