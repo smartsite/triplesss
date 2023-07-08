@@ -11,18 +11,20 @@ class Settings
 	function getSettings()
 	{
         /**
-         *    Database settings
-         */  
+         *   Database settings
+         *   ( moving to .env )
+		 */  
 			
+		 
         
 		// Host name
 		$settings['dbhost'] = 'localhost';
 		// Database name
-		$settings['dbname'] = 'smartsit_members9';
+		$settings['dbname'] = 'members';
 		// Username
-		$settings['dbusername'] = 'smartsit_mem9';
+		$settings['dbusername'] = 'members';
 		// Password
-		$settings['dbpassword'] = '$bLUe123!*';
+		$settings['dbpassword'] = 'members';
 		
 		/**
 		 *  JWT settings 
